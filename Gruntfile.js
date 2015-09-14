@@ -40,7 +40,7 @@ module.exports = function(grunt) {
             templates: {
                 files: [{
                     expand: true,
-                    cwd: 'frontend/fest',
+                    cwd: 'frontend/templates',
                     src: '**/*.xml',
                     dest: 'public_html/js/tmpl'
                 }],
