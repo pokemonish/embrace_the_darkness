@@ -1,0 +1,12 @@
+body {
+    color: blue;
+}
+
+.menu__buttons {
+
+}
+
+.menu__button {
+    display:block;
+    margin: 5px;
+}
