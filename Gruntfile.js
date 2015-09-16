@@ -6,7 +6,7 @@ module.exports = function(grunt) {
         shell: {
             options: {
                 stdout: true,
-                stderr: true
+                stderr: true,
             },
             runServer: {
                 command: 'java -cp server.jar main.Main 8080'
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
                 files: [
                     'backend/classes/artifacts/embrace_the_darkness_jar/embrace_the_darkness.jar'
                 ],
-                tasks: ['copy:jar'],
+                tasks: ['copy:jar', 'shell:runServer'],
                 options: {
                     interrupt: true,
                     livereload: true
@@ -95,7 +95,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-requirejs');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-concurrent');
-    grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-shell-spawn');
     grunt.loadNpmTasks('grunt-fest');
     grunt.loadNpmTasks('grunt-sass');
     grunt.loadNpmTasks('grunt-concat-css');
@@ -107,7 +107,7 @@ module.exports = function(grunt) {
 
 
     grunt.registerTask('default', ['fest', 'copy']);
-    grunt.registerTask('dev', ['fest', 'copy', 'concurrent']);
     grunt.registerTask('run', ['shell:runServer']);
+    grunt.registerTask('dev_run', ['concurrent']);
 
 }
