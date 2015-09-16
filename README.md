@@ -2,6 +2,13 @@
 
 Cute game about darkness.
 
+## Frontend
+ 
+grunt dev
+
+
+## Backend
+
 #### To compile jar in Idea:
  Go to "file -> project_structure -> Artifacts"
  
@@ -10,3 +17,6 @@ Cute game about darkness.
  Check "Build on make"
  
  Click "OK"
+
+ 
+ After that you can just Make your project when running grunt dev.
