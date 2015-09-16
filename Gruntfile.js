@@ -8,9 +8,6 @@ module.exports = function(grunt) {
                 stdout: true,
                 stderr: true
             },
-            buildServer: {
-                command: (process.platform === 'win32' ? 'build_server.bat' : 'sh build_server.sh')
-            },
             runServer: {
                 command: 'java -cp server.jar main.Main 8080'
             }
@@ -33,7 +30,18 @@ module.exports = function(grunt) {
                     interrupt: true,
                     livereload: true
                 }
+            },
+            jar: {
+                files: [
+                    'backend/classes/artifacts/embrace_the_darkness_jar/embrace_the_darkness.jar'
+                ],
+                tasks: ['copy:jar'],
+                options: {
+                    interrupt: true,
+                    livereload: true
+                }
             }
+
         },
 
         fest: {
@@ -62,6 +70,15 @@ module.exports = function(grunt) {
                 src: '**',
                 dest: 'public_html/',
                 flatten: false,
+            },
+            jar: {
+                expand: true,
+                cwd: 'backend/classes/artifacts/embrace_the_darkness_jar/',
+                src: 'embrace_the_darkness.jar',
+                dest: '',
+                rename: function(dest, src) {
+                    return dest + 'server.jar';
+                }
             }
         },
 
@@ -89,9 +106,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
 
 
-    grunt.registerTask('default', ['fest', 'copy:main']);
-    grunt.registerTask('dev', ['fest', 'copy:main', 'concurrent']);
-    grunt.registerTask('build', ['fest', 'copy:main', 'shell:buildServer']);
+    grunt.registerTask('default', ['fest', 'copy']);
+    grunt.registerTask('dev', ['fest', 'copy', 'concurrent']);
     grunt.registerTask('run', ['shell:runServer']);
 
 }
