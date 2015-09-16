@@ -3,12 +3,11 @@
 Cute game about darkness.
 
 ## Frontend
- 
-grunt dev
+#### To run:
+ grunt dev
 
 
 ## Backend
-
 #### To compile jar in Idea:
  Go to "file -> project_structure -> Artifacts"
  
