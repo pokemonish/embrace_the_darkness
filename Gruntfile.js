@@ -15,7 +15,7 @@ module.exports = function(grunt) {
 
         watch: {
             fest: {
-                files: ['frontend/fest/**/*.xml'],
+                files: ['frontend/templates/**/*.xml'],
                 tasks: ['fest'],
                 options: {
                     atBegin: false,
@@ -87,7 +87,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-http');
 
     grunt.registerTask('default', ['fest', 'copy']);
-    grunt.registerTask('watch', ['default', 'watch']);
+    grunt.registerTask('watcher', ['default', 'watch']);
     grunt.registerTask('test', ['default', 'concurrent']);
 
 }
