@@ -1,10 +1,5 @@
 module.exports = function(grunt) {
 
-    var port           = 8080;
-    var jarName        = 'server.jar';
-    var dieUrl         = '/please_die/';
-    var idejarLocation = 'backend/classes/artifacts/embrace_the_darkness_jar/embrace_the_darkness.jar';
-
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
 
@@ -14,24 +9,7 @@ module.exports = function(grunt) {
                 stderr: true,
             },
             runServer: {
-                command: 'java -cp ' + jarName + ' main.Main ' + port
-            }
-        },
-
-        http: {
-            stop_jar: {
-                options: {
-                    url: 'http://127.0.0.1:' + port + '/' + dieUrl + '/',
-                    callback: function(error, response, body) {
-                        if(response.statusCode == 200) {
-                            setTimeout(function() {
-                                var fs = require('fs');
-                                fs.unlink(jarName, function(err){});
-                            }, 5000);
-                        }
-                    },
-                    ignoreErrors: true,
-                }
+                command: 'java -cp server.jar main.Main 8080'
             }
         },
 
@@ -51,28 +29,6 @@ module.exports = function(grunt) {
                 options: {
                     interrupt: true,
                     livereload: true,
-                }
-            },
-            jar: {
-                files: [
-                    idejarLocation
-                ],
-                tasks: ['http:stop_jar'],
-                options: {
-                    interrupt: true,
-                    livereload: true,
-                    event: ['added', 'changed'],
-                }
-            },
-            run_jar: {
-                files: [
-                    jarName
-                ],
-                tasks: ['copy:jar', 'shell:runServer'],
-                options: {
-                    interrupt: true,
-                    livereload: true,
-                    event: ['deleted'],
                 }
             },
         },
@@ -103,15 +59,6 @@ module.exports = function(grunt) {
                 src: '**',
                 dest: 'public_html/',
                 flatten: false,
-            },
-            jar: {
-                expand: true,
-                cwd: 'backend/classes/artifacts/embrace_the_darkness_jar/',
-                src: 'embrace_the_darkness.jar',
-                dest: '',
-                rename: function(dest, src) {
-                    return dest + jarName;
-                }
             }
         },
 
@@ -140,7 +87,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-http');
 
     grunt.registerTask('default', ['fest', 'copy']);
-    grunt.registerTask('run', ['shell:runServer']);
-    grunt.registerTask('dev_run', ['concurrent']);
+    grunt.registerTask('watch', ['default', 'watch']);
+    grunt.registerTask('test', ['default', 'concurrent']);
 
 }

@@ -31,11 +31,8 @@
     "grunt-contrib-uglify": "^0.9.2",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-fest": "^0.1.6",
-    "grunt-http": "^1.6.0",
     "grunt-run": "^0.5.0",
     "grunt-sass": "^1.0.0",
-    "grunt-shell": "^1.1.2",
-    "grunt-shell-spawn": "^0.3.9",
-    "ps-node": "0.0.4"
+    "grunt-shell-spawn": "^0.3.9"
   }
 }
