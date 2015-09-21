@@ -1,5 +1,6 @@
 node_modules
 public_html
+server_tml
 .sass-cache
 logs/
 config/

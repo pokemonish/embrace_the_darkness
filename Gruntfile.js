@@ -31,6 +31,16 @@ module.exports = function(grunt) {
                     livereload: true,
                 }
             },
+            server_tml: {
+                files: [
+                    'backend/server_tml/**/*'
+                ],
+                tasks: ['copy:server_tml'],
+                options: {
+                    interrupt: true,
+                    livereload: true,
+                }
+            },
         },
 
         fest: {
@@ -54,6 +64,13 @@ module.exports = function(grunt) {
 
         copy: {
             main: {
+                expand: true,
+                cwd: 'backend/server_tml/',
+                src: '**',
+                dest: 'server_tml/',
+                flatten: false,
+            },
+            server_tml: {
                 expand: true,
                 cwd: 'frontend/static/',
                 src: '**',
@@ -84,7 +101,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
-    grunt.loadNpmTasks('grunt-http');
 
     grunt.registerTask('default', ['fest', 'copy']);
     grunt.registerTask('watcher', ['default', 'watch']);
