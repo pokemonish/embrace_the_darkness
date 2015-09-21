@@ -31,6 +31,16 @@ module.exports = function(grunt) {
                     livereload: true,
                 }
             },
+            server_tml: {
+                files: [
+                    'backend/server_tml/**/*'
+                ],
+                tasks: ['copy:server_tml'],
+                options: {
+                    interrupt: true,
+                    livereload: true,
+                }
+            },
         },
 
         fest: {
@@ -54,6 +64,13 @@ module.exports = function(grunt) {
 
         copy: {
             main: {
+                expand: true,
+                cwd: 'backend/server_tml/',
+                src: '**',
+                dest: 'server_tml/',
+                flatten: false,
+            },
+            server_tml: {
                 expand: true,
                 cwd: 'frontend/static/',
                 src: '**',
