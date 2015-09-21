@@ -24,6 +24,7 @@ public class Frontend extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
 
 
+        assert pageVariables != null;
         pageVariables.put("lastLogin", login == null ? "" : login);
 
         String template = PageGenerator.getPage("authform.html", pageVariables);
@@ -49,6 +50,7 @@ public class Frontend extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_OK);
         }
 
+        assert pageVariables != null;
         pageVariables.put("lastLogin", login == null ? "" : login);
 
         response.getWriter().println(PageGenerator.getPage("authform.html", pageVariables));

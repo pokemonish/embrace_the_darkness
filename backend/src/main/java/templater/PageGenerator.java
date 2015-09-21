@@ -3,6 +3,7 @@ package templater;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,14 +18,17 @@ public class PageGenerator {
     private static final String HTML_DIR = "templates";
     private static final Configuration CFG = new Configuration();   // Entry point to freemaker API
 
+    @Nullable
     public static String getPage(String filename, Map<String, Object> data) {
-        Writer stream = new StringWriter();
+        Writer stream = new StringWriter();     // Maybe null
+
         try {
             Template template = CFG.getTemplate(HTML_DIR + File.separator + filename);
             template.process(data, stream);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
+
         return stream.toString();
     }
 }
