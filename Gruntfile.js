@@ -41,6 +41,16 @@ module.exports = function(grunt) {
                     livereload: true,
                 }
             },
+            public_html: {
+                files: [
+                    'public_html/**/*'
+                ],
+                tasks: ['copy:public_html'],
+                options: {
+                    interrupt: true,
+                    livereload: true,
+                }
+            },
         },
 
         fest: {
@@ -75,6 +85,13 @@ module.exports = function(grunt) {
                 cwd: 'frontend/static/',
                 src: '**',
                 dest: 'public_html/',
+                flatten: false,
+            },
+            public_html: {
+                expand: true,
+                cwd: 'public_html/',
+                src: '**',
+                dest: 'backend/public_html/',
                 flatten: false,
             }
         },
