@@ -15,7 +15,7 @@ import java.util.Map;
  * @author v.chibrikov
  */
 public class PageGenerator {
-    private static final String HTML_DIR = "templates";
+    private static final String HTML_DIR = "server_tml";
     private static final Configuration CFG = new Configuration();   // Entry point to freemaker API
 
     @Nullable
