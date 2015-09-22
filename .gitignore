@@ -1,5 +1,7 @@
 node_modules
 backend/public_html
+backend/classes/
+backend/javax/
 public_html
 server_tml
 .sass-cache

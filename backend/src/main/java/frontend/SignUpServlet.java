@@ -1,5 +1,7 @@
 package frontend;
 
+import com.sun.istack.internal.NotNull;
+import com.sun.istack.internal.Nullable;
 import main.AccountService;
 import main.UserProfile;
 import templater.PageGenerator;
@@ -28,23 +30,26 @@ public class SignUpServlet extends HttpServlet {
                       HttpServletResponse response) throws ServletException, IOException {
 
         Map<String, Object> pageVariables = new HashMap<>();
-
         HttpSession session = request.getSession();
 
         Long userId = (Long) session.getAttribute("userId");
+        String htmlToRender = "signup.html";
 
         if (userId == null) {
             pageVariables.put("signUpStatus", "");
-            response.getWriter().println(PageGenerator.getPage("signup.html", pageVariables));
         } else {
             String name = accountService.getSessions(userId.toString()).getLogin();
             name = name == null ? "user" : name;
             pageVariables.put("signUpStatus", "Hi, " + name + ", you are logged in.");
-            response.getWriter().println(PageGenerator.getPage("signupstatus.html", pageVariables));
+            htmlToRender = "signupstatus.html";
         }
+
+        response.getWriter().println(PageGenerator.getPage(htmlToRender, pageVariables));
+
         response.setStatus(HttpServletResponse.SC_OK);
     }
 
+    @Override
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
         String name = request.getParameter("email");
@@ -63,7 +68,9 @@ public class SignUpServlet extends HttpServlet {
         } else {
             pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
         }
+
         response.getWriter().println(PageGenerator.getPage(htmlToRender, pageVariables));
+
         response.setStatus(HttpServletResponse.SC_OK);
     }
 }

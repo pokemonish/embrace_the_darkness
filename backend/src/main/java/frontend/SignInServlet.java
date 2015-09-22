@@ -27,20 +27,22 @@ public class SignInServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
-
         HttpSession session = request.getSession();
 
         Long userId = (Long) session.getAttribute("userId");
+        String htmlToRender = "auth.html";
 
         if (userId == null) {
             pageVariables.put("loginStatus", "");
-            response.getWriter().println(PageGenerator.getPage("auth.html", pageVariables));
         } else {
             String name = accountService.getSessions(userId.toString()).getLogin();
             name = name == null ? "user" : name;
             pageVariables.put("loginStatus", "Hi, " + name + ", you are logged in.");
-            response.getWriter().println(PageGenerator.getPage("authstatus.html", pageVariables));
+            htmlToRender = "authstatus.html";
         }
+
+        response.getWriter().println(PageGenerator.getPage(htmlToRender, pageVariables));
+
         response.setStatus(HttpServletResponse.SC_OK);
     }
 

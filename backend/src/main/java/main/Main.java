@@ -1,5 +1,6 @@
 package main;
 
+import admin.AdminPageServlet;
 import frontend.SignInServlet;
 import frontend.SignUpServlet;
 import frontend.SignOutServlet;
@@ -17,11 +18,14 @@ import javax.servlet.Servlet;
  */
 public class Main {
     public static void main(String[] args) throws Exception {
-        int port = 8080;
-        if (args.length == 1) {
-            String portString = args[0];
-            port = Integer.valueOf(portString);
+
+        if (args.length != 1) {
+            System.out.append("Use port as the first argument");
+            System.exit(1);
         }
+
+        String portString = args[0];
+        int port = Integer.valueOf(portString);
 
         System.out.append("Starting at port: ").append(String.valueOf(port)).append('\n');
 
@@ -30,15 +34,17 @@ public class Main {
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet signOut = new SignOutServlet(accountService);
+        Servlet admin = new AdminPageServlet();
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signin), "/api/v1/auth/signin");
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
         context.addServlet(new ServletHolder(signOut), "/api/v1/auth/signout");
+        context.addServlet(new ServletHolder(admin), "/admin");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase("public_html");
+        resource_handler.setResourceBase("static");
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
