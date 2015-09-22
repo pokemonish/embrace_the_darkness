@@ -6,11 +6,22 @@
 </head>
 <body>
 
-<form method="post">
-    <input name="name" placeholder="name">
-    <input type="password" name="password" placeholder="password">
-    <button type="submit">Signup</button>
-</form>
+
+<#if profile??>
+    <p>
+        You are: ${profile}
+        <a href="/api/v1/auth/logout">Logout!</a>
+    </p>
+    <#else>
+        <form method="post">
+            <input name="name" placeholder="name">
+            <input type="password" name="password" placeholder="password">
+            <button type="submit">Signup</button>
+        </form>
+
+        <a href="/api/v1/auth/signin">Login here!</a>
+</#if>
+
 
 </body>
 </html>

@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +29,17 @@ public class SignUpServlet extends HttpServlet {
 
         Map<String, Object> pageVariables = new HashMap<>();
 
+        HttpSession session = request.getSession();
+        String sessionId = session.getId();
+
+        UserProfile profile = accountService.getSessions(sessionId);
+
+        if (profile != null) {
+            pageVariables.put("profile", profile.getLogin());
+        } else {
+            pageVariables.put("profile", null);
+        }
+
         response.getWriter().println(PageGenerator.getPage("signup.html", pageVariables));
         response.setStatus(HttpServletResponse.SC_OK);
     }
@@ -38,9 +50,22 @@ public class SignUpServlet extends HttpServlet {
         String name = request.getParameter("name");
         String password = request.getParameter("password");
 
-        response.setStatus(HttpServletResponse.SC_OK);
-
         Map<String, Object> pageVariables = new HashMap<>();
+
+        // Check auth
+        HttpSession session = request.getSession();
+        String sessionId = session.getId();
+
+        UserProfile profile = accountService.getSessions(sessionId);
+
+        if (profile != null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println();
+
+            return;
+        }
+
+        response.setStatus(HttpServletResponse.SC_OK);
 
         if (accountService.addUser(name, new UserProfile(name, password, ""))) {
             pageVariables.put("status", "New user created");
