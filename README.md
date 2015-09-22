@@ -3,19 +3,16 @@
 Cute game about darkness.
 
 ## Frontend
-#### To run:
- grunt dev
+#### Setup:
+ npm update
+ 
+ grunt
+ 
+#### Auto building:
+ grunt watcher
 
+#### Test running
+ grunt test
 
 ## Backend
-#### To compile jar in Idea:
- Go to "file -> project_structure -> Artifacts"
- 
- Use "backend\classes\artifacts\embrace_the_darkness_jar" output directory
- 
- Check "Build on make"
- 
- Click "OK"
-
- 
- After that you can just Make your project when running grunt dev.
+#### easy
