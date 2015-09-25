@@ -1,6 +1,7 @@
 package admin;
 import example.TimeHelper;
-import templater.PageGenerator;
+import main.ResponseHandler;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,20 +14,20 @@ import java.util.Map;
 public class AdminPageServlet extends HttpServlet {
 
     @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(@NotNull HttpServletRequest request,
+                      @NotNull HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> pageVariables = new HashMap<>();
         String timeString = request.getParameter("shutdown");
         if (timeString != null) {
-            int timeMS = Integer.valueOf(timeString);
+            Integer timeMS = Integer.valueOf(timeString);
             System.out.print("Server will be down after: "+ timeMS + " ms");
             TimeHelper.sleep(timeMS);
             System.out.print("\nShutdown");
             System.exit(0);
         }
         pageVariables.put("status", "run");
-        response.getWriter().println(PageGenerator.getPage("admin.html", pageVariables));
+        ResponseHandler.drawPage(response, "admin.html", pageVariables);
     }
 }

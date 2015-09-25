@@ -1,10 +1,9 @@
 package frontend;
 
-import com.sun.istack.internal.NotNull;
-import com.sun.istack.internal.Nullable;
 import main.AccountService;
+import main.ResponseHandler;
 import main.UserProfile;
-import templater.PageGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -19,15 +18,17 @@ import java.util.Map;
  * Created by v.chibrikov on 13.09.2014.
  */
 public class SignUpServlet extends HttpServlet {
+
+    @NotNull
     private AccountService accountService;
 
-    public SignUpServlet(AccountService accountService) {
+    public SignUpServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
 
     @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(@NotNull HttpServletRequest request,
+                      @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
@@ -38,22 +39,32 @@ public class SignUpServlet extends HttpServlet {
         if (userId == null) {
             pageVariables.put("signUpStatus", "");
         } else {
-            String name = accountService.getSessions(userId.toString()).getLogin();
-            name = name == null ? "user" : name;
-            pageVariables.put("signUpStatus", "Hi, " + name + ", you are logged in.");
+
+            UserProfile profile = accountService.getSessions(userId.toString());
+
+            if (profile != null) {
+
+                String name = profile.getLogin();
+
+                pageVariables.put("signUpStatus", "Hi, " + name + ", you are logged in.");
+            } else {
+                pageVariables.put("signUpStatus", "Profile not found");
+            }
             htmlToRender = "signupstatus.html";
         }
 
-        response.getWriter().println(PageGenerator.getPage(htmlToRender, pageVariables));
-
-        response.setStatus(HttpServletResponse.SC_OK);
+        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
     }
 
     @Override
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(@NotNull HttpServletRequest request,
+                       @NotNull HttpServletResponse response) throws ServletException, IOException {
+
         String name = request.getParameter("email");
+        name = name != null ? name : "";
+
         String password = request.getParameter("password");
+        password = password != null ? password : "";
 
         String htmlToRender = "signup.html";
 
@@ -69,8 +80,6 @@ public class SignUpServlet extends HttpServlet {
             pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
         }
 
-        response.getWriter().println(PageGenerator.getPage(htmlToRender, pageVariables));
-
-        response.setStatus(HttpServletResponse.SC_OK);
+        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
     }
 }

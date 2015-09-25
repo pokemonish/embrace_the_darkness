@@ -1,7 +1,9 @@
 package frontend;
 
 import main.AccountService;
-import templater.PageGenerator;
+import main.ResponseHandler;
+import main.UserProfile;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,15 +18,16 @@ import java.util.Map;
  * Created by fatman on 20/09/15.
  */
 public class SignOutServlet extends HttpServlet {
+    @NotNull
     private AccountService accountService;
 
-    public SignOutServlet(AccountService accountService) {
+    public SignOutServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
 
     @Override
-    public void doGet(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(@NotNull HttpServletRequest request,
+                      @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
         Map<String, Object> pageVariables = new HashMap<>();
@@ -33,36 +36,39 @@ public class SignOutServlet extends HttpServlet {
         String htmlToRender = "signout.html";
 
         if (userId != null) {
-            String name = accountService.getSessions(userId.toString()).getLogin();
-            name = name == null ? "user" : name;
-            pageVariables.put("signOutStatus", "Leaving alredy, " + name + '?');
+
+            UserProfile profile = accountService.getSessions(userId.toString());
+
+            if (profile != null) {
+
+                String name = profile.getLogin();
+                pageVariables.put("signOutStatus", "Leaving already, " + name + '?');
+            } else {
+                pageVariables.put("signOutStatus", "Profile not found");
+                htmlToRender = "signoutstatus.html";
+            }
         } else {
-            pageVariables.put("signOutStatus", "You are signed out");
+            pageVariables.put("signOutStatus", "You are already signed out");
             htmlToRender = "signoutstatus.html";
         }
 
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        response.getWriter().println(PageGenerator.getPage(htmlToRender, pageVariables));
+        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
     }
 
     @Override
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
+    public void doPost(@NotNull HttpServletRequest request,
+                       @NotNull HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Map<String, Object> pageVariables = new HashMap<>();
         Long userId = (Long) session.getAttribute("userId");
 
-        if (userId != null && accountService.deleteSessions(userId.toString())) {
+        if (userId != null && accountService.deleteSessions(String.valueOf(userId))) {
             session.removeAttribute("userId");
             pageVariables.put("signOutStatus", "Signed out successfully!\nSee you soon!");
         } else {
             pageVariables.put("signOutStatus", "You are alredy signed out");
         }
 
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        response.getWriter().println(PageGenerator.getPage("signoutstatus.html", pageVariables));
-
+        ResponseHandler.drawPage(response, "signoutstatus.html", pageVariables);
     }
 }
