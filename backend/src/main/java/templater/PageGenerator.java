@@ -3,6 +3,8 @@ package templater;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -16,19 +18,20 @@ import java.util.Map;
  */
 public class PageGenerator {
     private static final String HTML_DIR = "server_tml";
-    private static final Configuration CFG = new Configuration();   // Entry point to freemaker API
 
-    @Nullable
+    @NotNull
+    private static final Configuration CONFIGURATION = new Configuration();
+
+    @NotNull
     public static String getPage(String filename, Map<String, Object> data) {
-        Writer stream = new StringWriter();     // Maybe null
-
+        Writer stream = new StringWriter();
         try {
-            Template template = CFG.getTemplate(HTML_DIR + File.separator + filename);
+            Template template = CONFIGURATION.getTemplate(HTML_DIR + File.separator + filename);
             template.process(data, stream);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
 
-        return stream.toString();
+        return String.valueOf(stream);
     }
 }

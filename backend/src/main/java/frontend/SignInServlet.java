@@ -1,8 +1,9 @@
 package frontend;
 
 import main.AccountService;
+import main.ResponseHandler;
 import main.UserProfile;
-import templater.PageGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,66 +18,74 @@ import java.util.Map;
  * @author v.chibrikov
  */
 public class SignInServlet extends HttpServlet {
+
+    @NotNull
     private AccountService accountService;
 
-    public SignInServlet(AccountService accountService) {
+    public SignInServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
 
     @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
+
+    public void doGet(@NotNull HttpServletRequest request,
+                      @NotNull HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();
-
         HttpSession session = request.getSession();
-        String sessionId = session.getId();
 
-        UserProfile profile = accountService.getSessions(sessionId);
+        Long userId = (Long) session.getAttribute("userId");
+        String htmlToRender = "auth.html";
 
-        if (profile != null) {
-            pageVariables.put("profile", profile.getLogin());
+        if (userId == null) {
+            pageVariables.put("loginStatus", "");
         } else {
-            pageVariables.put("profile", null);
+            UserProfile profile = accountService.getSessions(userId.toString());
+
+            if (profile != null) {
+
+                String name = profile.getLogin();
+                pageVariables.put("loginStatus", "Hi, " + name + ", you are logged in.");
+            } else {
+                pageVariables.put("loginStatus", "Profile not found");
+            }
+            htmlToRender = "authstatus.html";
         }
 
-        response.getWriter().println(PageGenerator.getPage("login.html", pageVariables));
-        response.setStatus(HttpServletResponse.SC_OK);
+        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
     }
 
     @Override
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name");
+    public void doPost(@NotNull HttpServletRequest request,
+                       @NotNull HttpServletResponse response) throws ServletException, IOException {
+        String email = request.getParameter("email");
         String password = request.getParameter("password");
 
+        email = email != null ? email : "";
+        password = password != null ? password : "";
+
+        HttpSession session = request.getSession();
         Map<String, Object> pageVariables = new HashMap<>();
 
-        // Check auth
-        HttpSession session = request.getSession();
-        String sessionId = session.getId();
+        Long userId = (Long) session.getAttribute("userId");
+        String htmlToRender = "auth.html";
 
-        UserProfile profile = accountService.getSessions(sessionId);
+        if (userId == null ) {
+            UserProfile profile = accountService.getUser(email);
+            if (profile != null && profile.getPassword().equals(password)) {
 
-        if (profile != null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println();
+                userId = (long) (Math.random() * 1000);
+                session.setAttribute("userId", userId);
+                accountService.addSessions(userId.toString(), profile);
 
-            return;
-        }
-
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        profile = accountService.getUser(name);
-        if (profile != null && profile.getPassword().equals(password)) {
-            accountService.addSessions(sessionId, profile);
-
-            pageVariables.put("status", "Login passed");
+                pageVariables.put("loginStatus", "Login passed");
+                htmlToRender = "authstatus.html";
+            } else {
+                pageVariables.put("loginStatus", "Wrong login/password");
+            }
         } else {
-            pageVariables.put("status", "Wrong login/password");
+            pageVariables.put("loginStatus", "You are alredy logged in");
         }
 
-
-
-        response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
+        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
     }
 }

@@ -35,7 +35,7 @@ public class LogOutServlet extends HttpServlet {
 
         Map<String, Object> pageVariables = new HashMap<>();
         if (profile != null) {
-            accountService.deleteSession(sessionId);
+//            accountService.deleteSession(sessionId);
             pageVariables.put("status", "Logout done!");
         } else {
             pageVariables.put("status", "Oops, you aren`t login :c");

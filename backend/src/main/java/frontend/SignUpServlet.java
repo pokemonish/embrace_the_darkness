@@ -1,8 +1,9 @@
 package frontend;
 
 import main.AccountService;
+import main.ResponseHandler;
 import main.UserProfile;
-import templater.PageGenerator;
+import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,64 +18,67 @@ import java.util.Map;
  * Created by v.chibrikov on 13.09.2014.
  */
 public class SignUpServlet extends HttpServlet {
+    @NotNull
     private AccountService accountService;
 
-    public SignUpServlet(AccountService accountService) {
+    public SignUpServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
 
     @Override
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
+    public void doGet(@NotNull HttpServletRequest request,
+                      @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         Map<String, Object> pageVariables = new HashMap<>();
-
         HttpSession session = request.getSession();
-        String sessionId = session.getId();
 
-        UserProfile profile = accountService.getSessions(sessionId);
+        Long userId = (Long) session.getAttribute("userId");
+        String htmlToRender = "signup.html";
 
-        if (profile != null) {
-            pageVariables.put("profile", profile.getLogin());
+        if (userId == null) {
+            pageVariables.put("signUpStatus", "");
         } else {
-            pageVariables.put("profile", null);
+
+            UserProfile profile = accountService.getSessions(userId.toString());
+
+            if (profile != null) {
+
+                String name = profile.getLogin();
+
+                pageVariables.put("signUpStatus", "Hi, " + name + ", you are logged in.");
+            } else {
+                pageVariables.put("signUpStatus", "Profile not found");
+            }
+            htmlToRender = "signupstatus.html";
         }
 
-        response.getWriter().println(PageGenerator.getPage("signup.html", pageVariables));
-        response.setStatus(HttpServletResponse.SC_OK);
+        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
     }
 
     @Override
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
-        String name = request.getParameter("name");
+    public void doPost(@NotNull HttpServletRequest request,
+                       @NotNull HttpServletResponse response) throws ServletException, IOException {
+
+        String name = request.getParameter("email");
+        name = name != null ? name : "";
+
         String password = request.getParameter("password");
+        password = password != null ? password : "";
+
+        String htmlToRender = "signup.html";
 
         Map<String, Object> pageVariables = new HashMap<>();
-
-        // Check auth
-        HttpSession session = request.getSession();
-        String sessionId = session.getId();
-
-        UserProfile profile = accountService.getSessions(sessionId);
-
-        if (profile != null) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            response.getWriter().println();
-
-            return;
-        }
-
-        response.setStatus(HttpServletResponse.SC_OK);
-
-        if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-            pageVariables.put("status", "New user created");
+        if (name.isEmpty()) {
+            pageVariables.put("signUpStatus", "login is required");
+        } else if (password.isEmpty()) {
+            pageVariables.put("signUpStatus", "password is required");
+        } else if (accountService.addUser(name, new UserProfile(name, password, ""))) {
+            pageVariables.put("signUpStatus", "New user created");
+            htmlToRender = "signupstatus.html";
         } else {
-            pageVariables.put("status", "User with name: " + name + " already exists");
+            pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
         }
 
-        // Fake JSON
-        response.getWriter().println(PageGenerator.getPage("authresponse.txt", pageVariables));
+        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
     }
-
 }

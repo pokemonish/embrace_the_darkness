@@ -1,6 +1,7 @@
 {
 status: 200,
 body: {
-response: "${status}",
+email: "${email}",
+password: "${password}"
 }
 }
