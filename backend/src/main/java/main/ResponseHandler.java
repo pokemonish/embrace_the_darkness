@@ -1,10 +1,8 @@
 package main;
 
-import org.eclipse.jetty.client.HttpResponse;
 import org.jetbrains.annotations.NotNull;
 import templater.PageGenerator;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,7 +14,7 @@ import java.util.Map;
 public class ResponseHandler {
     public static void drawPage(@NotNull HttpServletResponse response,
                                 @NotNull String pageName,
-                                @NotNull Map<String, Object> pageVariables) throws ServletException, IOException {
+                                @NotNull Map<String, Object> pageVariables) throws IOException {
 
         String pageToShow = PageGenerator.getPage(pageName, pageVariables);
         if (!pageToShow.isEmpty()) {

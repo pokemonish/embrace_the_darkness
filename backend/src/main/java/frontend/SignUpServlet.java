@@ -33,24 +33,18 @@ public class SignUpServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
 
-        Long userId = (Long) session.getAttribute("userId");
+        String sessionId = session.getId();
         String htmlToRender = "signup.html";
 
-        if (userId == null) {
-            pageVariables.put("signUpStatus", "");
-        } else {
+        UserProfile profile = accountService.getSessions(sessionId);
 
-            UserProfile profile = accountService.getSessions(userId.toString());
-
-            if (profile != null) {
-
-                String name = profile.getLogin();
-
-                pageVariables.put("signUpStatus", "Hi, " + name + ", you are logged in.");
-            } else {
-                pageVariables.put("signUpStatus", "Profile not found");
-            }
+        if (profile != null) {
             htmlToRender = "signupstatus.html";
+
+            String name = profile.getLogin();
+            pageVariables.put("signUpStatus", "Hi, " + name + ", you are logged in.");
+        } else {
+            pageVariables.put("signUpStatus", "");
         }
 
         ResponseHandler.drawPage(response, htmlToRender, pageVariables);
@@ -61,20 +55,26 @@ public class SignUpServlet extends HttpServlet {
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         String name = request.getParameter("email");
-        name = name != null ? name : "";
 
         String password = request.getParameter("password");
-        password = password != null ? password : "";
 
         String htmlToRender = "signup.html";
 
         Map<String, Object> pageVariables = new HashMap<>();
-        if (name.isEmpty()) {
+
+        if (name == null) {
             pageVariables.put("signUpStatus", "login is required");
-        } else if (password.isEmpty()) {
+        } else if (password == null) {
             pageVariables.put("signUpStatus", "password is required");
         } else if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-            pageVariables.put("signUpStatus", "New user created");
+
+            pageVariables.put("signUpStatus", "New user created\n");
+
+            //temporary, just for convenience
+            final String SIGN_IN_BUTTON = "<form action=\"/api/v1/auth/signin\">" +
+                    "<input type=\"submit\" value=\"Sign in\">\n" + "</form>";
+            pageVariables.put("signUpStarus", SIGN_IN_BUTTON);
+
             htmlToRender = "signupstatus.html";
         } else {
             pageVariables.put("signUpStatus", "User with name: " + name + " already exists");

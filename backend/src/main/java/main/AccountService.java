@@ -23,25 +23,21 @@ public class AccountService {
         return true;
     }
 
-    public void addSessions(String sessionId, UserProfile userProfile) {
+    public void addSessions(@NotNull String sessionId, @NotNull UserProfile userProfile) {
         sessions.put(sessionId, userProfile);
     }
 
     @Nullable
-    public UserProfile getUser(String userName) {
+    public UserProfile getUser(@Nullable String userName) {
         return users.get(userName);
     }
 
     @Nullable
-    public UserProfile getSessions(String sessionId) {
+    public UserProfile getSessions(@Nullable String sessionId) {
         return sessions.get(sessionId);
     }
 
-    public boolean deleteSessions(@Nullable String sessionId) {
-        if (sessions.get(sessionId) != null) {
-            sessions.remove(sessionId);
-            return true;
-        }
-        return false;
+    public void deleteSessions(@Nullable String sessionId) {
+        sessions.remove(sessionId);
     }
 }

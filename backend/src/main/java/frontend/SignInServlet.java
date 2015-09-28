@@ -31,22 +31,19 @@ public class SignInServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
 
-        Long userId = (Long) session.getAttribute("userId");
+        String sessionId = session.getId();
         String htmlToRender = "auth.html";
 
-        if (userId == null) {
-            pageVariables.put("loginStatus", "");
-        } else {
-            UserProfile profile = accountService.getSessions(userId.toString());
+        UserProfile profile = accountService.getSessions(sessionId);
 
-            if (profile != null) {
+        if (profile != null) {
 
-                String name = profile.getLogin();
-                pageVariables.put("loginStatus", "Hi, " + name + ", you are logged in.");
-            } else {
-                pageVariables.put("loginStatus", "Profile not found");
-            }
             htmlToRender = "authstatus.html";
+
+            String name = profile.getLogin();
+            pageVariables.put("loginStatus", "Hi, " + name + ", you are logged in.");
+        } else {
+            pageVariables.put("loginStatus", "");
         }
 
         ResponseHandler.drawPage(response, htmlToRender, pageVariables);
@@ -55,25 +52,27 @@ public class SignInServlet extends HttpServlet {
     @Override
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-
-        email = email != null ? email : "";
-        password = password != null ? password : "";
 
         HttpSession session = request.getSession();
         Map<String, Object> pageVariables = new HashMap<>();
 
-        Long userId = (Long) session.getAttribute("userId");
+        String sessionId = session.getId();
+
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+
         String htmlToRender = "auth.html";
 
-        if (userId == null ) {
+        if (email == null) {
+            pageVariables.put("authstatus", "login is required");
+        } else if (password == null) {
+            pageVariables.put("authstatus", "password is required");
+        } else if (accountService.getSessions(sessionId) == null) {
             UserProfile profile = accountService.getUser(email);
             if (profile != null && profile.getPassword().equals(password)) {
 
-                userId = (long) (Math.random() * 1000);
-                session.setAttribute("userId", userId);
-                accountService.addSessions(userId.toString(), profile);
+                assert sessionId != null;
+                accountService.addSessions(sessionId, profile);
 
                 pageVariables.put("loginStatus", "Login passed");
                 htmlToRender = "authstatus.html";

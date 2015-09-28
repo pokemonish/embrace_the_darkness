@@ -26,44 +26,16 @@ public class SignOutServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(@NotNull HttpServletRequest request,
-                      @NotNull HttpServletResponse response) throws ServletException, IOException {
-
-        HttpSession session = request.getSession();
-        Map<String, Object> pageVariables = new HashMap<>();
-
-        Long userId = (Long) session.getAttribute("userId");
-        String htmlToRender = "signout.html";
-
-        if (userId != null) {
-
-            UserProfile profile = accountService.getSessions(userId.toString());
-
-            if (profile != null) {
-
-                String name = profile.getLogin();
-                pageVariables.put("signOutStatus", "Leaving already, " + name + '?');
-            } else {
-                pageVariables.put("signOutStatus", "Profile not found");
-                htmlToRender = "signoutstatus.html";
-            }
-        } else {
-            pageVariables.put("signOutStatus", "You are already signed out");
-            htmlToRender = "signoutstatus.html";
-        }
-
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
-    }
-
-    @Override
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Map<String, Object> pageVariables = new HashMap<>();
-        Long userId = (Long) session.getAttribute("userId");
+        String sessionId = session.getId();
 
-        if (userId != null && accountService.deleteSessions(String.valueOf(userId))) {
-            session.removeAttribute("userId");
+        UserProfile profile = accountService.getSessions(sessionId);
+
+        if (profile != null) {
+            accountService.deleteSessions(sessionId);
             pageVariables.put("signOutStatus", "Signed out successfully!\nSee you soon!");
         } else {
             pageVariables.put("signOutStatus", "You are alredy signed out");
