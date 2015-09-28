@@ -53,6 +53,7 @@ public class Main {
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
 
+        assert port != null;
         Server server = new Server(port);
         server.setHandler(handlers);
 
