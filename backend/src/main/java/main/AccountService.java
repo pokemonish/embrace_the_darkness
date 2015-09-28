@@ -27,6 +27,14 @@ public class AccountService {
         sessions.put(sessionId, userProfile);
     }
 
+    public int getUsersQuantity() {
+        return users.size();
+    }
+
+    public int getSessionsQuantity() {
+        return sessions.size();
+    }
+
     @Nullable
     public UserProfile getUser(@Nullable String userName) {
         return users.get(userName);
