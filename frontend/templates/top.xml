@@ -1,0 +1,6 @@
+<fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
+    <p>Лучшие</p>
+    <p><a href="#">MENU</a></p>
+    
+</fest:template>
+

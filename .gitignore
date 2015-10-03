@@ -1,12 +1,21 @@
 node_modules
-backend/public_html
+
+backend/public_html/
 backend/classes/
 backend/javax/
-public_html
-server_tml
+frontend/templates/bin/
+
+public_html/
+server_tml/
 .sass-cache
 logs/
 config/
+
+frontend/typescript/bin.js
+
+
+.tscache
+\tscommand*
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm

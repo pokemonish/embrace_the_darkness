@@ -18,7 +18,8 @@ module.exports = function(grunt) {
                 files: ['frontend/templates/**/*.xml'],
                 tasks: ['fest'],
                 options: {
-                    atBegin: false,
+                    interrupt: true,
+                    livereload: true,
                 }
             },
             server: {
@@ -38,7 +39,7 @@ module.exports = function(grunt) {
                 tasks: ['copy:server_tml'],
                 options: {
                     interrupt: true,
-                    livereload: true,
+                    livereload: false,
                 }
             },
             public_html: {
@@ -46,6 +47,16 @@ module.exports = function(grunt) {
                     'public_html/**/*'
                 ],
                 tasks: ['copy:public_html'],
+                options: {
+                    interrupt: true,
+                    livereload: false,
+                }
+            },
+            ts: {
+                files: [
+                    'frontend/typescript/**/*'
+                ],
+                tasks: ['ts', 'concat:ts'],
                 options: {
                     interrupt: true,
                     livereload: true,
@@ -59,7 +70,7 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: 'frontend/templates',
                     src: '**/*.xml',
-                    dest: 'public_html/js/tmpl'
+                    dest: 'frontend/templates/bin'
                 }],
                 options: {
                     template: function (data) { /* задаем формат функции-шаблона */
@@ -73,14 +84,14 @@ module.exports = function(grunt) {
         },
 
         copy: {
-            main: {
+            server_tml: {
                 expand: true,
                 cwd: 'backend/server_tml/',
                 src: '**',
                 dest: 'server_tml/',
                 flatten: false,
             },
-            server_tml: {
+            main: {
                 expand: true,
                 cwd: 'frontend/static/',
                 src: '**',
@@ -103,6 +114,26 @@ module.exports = function(grunt) {
             },
         },
 
+        concat: {
+            options: {
+                separator: ';\n',
+            },
+            ts: {
+                src: ['frontend/typescript/js/**/*.js', 'frontend/templates/bin/**/*.js', 'frontend/typescript/bin.js'],
+                dest: 'public_html/main.js',
+            },
+        },
+
+        ts: {
+            default : {
+                src: ['frontend/typescript/main.ts'],
+                out: 'frontend/typescript/bin.js',
+                options: {
+                    inlineSourceMap: true,
+                },
+            }
+        },
+
     });
 
 
@@ -118,8 +149,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-ts');
 
-    grunt.registerTask('default', ['fest', 'copy']);
+    grunt.registerTask('default', ['fest', 'copy', 'ts', 'concat']);
     grunt.registerTask('watcher', ['default', 'watch']);
     grunt.registerTask('test', ['default', 'concurrent']);
 

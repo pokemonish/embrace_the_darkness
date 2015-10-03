@@ -1,5 +1,8 @@
 body {
-    color: blue;
+	margin: 0px;
+   	padding: 0px;
+   	overflow: hidden;
+   	background-color: black;
 }
 
 .menu__buttons {

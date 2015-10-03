@@ -2,20 +2,25 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="/css/main.css"/>
-    <script type="text/javascript" src="/js/lib/jquery.js"></script>
+    <title>Mega super game</title>
+    <meta name="viewport" content="initial-scale=1 maximum-scale=1 user-scalable=0 minimal-ui" />
 </head>
 <body>
-    <div id="page"></div>
-    
-    
-    <script src="/js/tmpl/main.js"></script>
-    <script src="/js/tmpl/login.js"></script>
-    <script src="/js/tmpl/scoreboard.js"></script>
-    <script src="/js/tmpl/game.js"></script>
-    <script type="text/javascript" src="/js/index.js"></script> 
-
-    <!-- Livereload -->
     <script src="//localhost:35729/livereload.js"></script>
+
+    <div id="game"></div>
+    <div id="gui"></div>
+    
+    <link rel="stylesheet" href="/css/preload.css"/>
+    <div id="preload">
+        <div id="preload_inner">
+            LOADING&nbsp;...
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel='stylesheet' href="/css/lib/basic.css" />
+
+    <script src="main.js"></script>
 </body>
 </html>
