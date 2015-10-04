@@ -55,16 +55,18 @@ public class SignUpServlet extends HttpServlet {
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         String name = request.getParameter("email");
+        name = name != null ? name: "";
 
         String password = request.getParameter("password");
+        password = password != null ? password: "";
 
         String htmlToRender = "signup.html";
 
         Map<String, Object> pageVariables = new HashMap<>();
 
-        if (name == null) {
+        if (name.isEmpty()) {
             pageVariables.put("signUpStatus", "login is required");
-        } else if (password == null) {
+        } else if (password.isEmpty()) {
             pageVariables.put("signUpStatus", "password is required");
         } else if (accountService.addUser(name, new UserProfile(name, password, ""))) {
 

@@ -59,13 +59,16 @@ public class SignInServlet extends HttpServlet {
         String sessionId = session.getId();
 
         String email = request.getParameter("email");
+        email = email != null ? email: "";
+
         String password = request.getParameter("password");
+        password = password != null ? password: "";
 
         String htmlToRender = "auth.html";
 
-        if (email == null) {
+        if (email.isEmpty()) {
             pageVariables.put("loginStatus", "login is required");
-        } else if (password == null) {
+        } else if (password.isEmpty()) {
             pageVariables.put("loginStatus", "password is required");
         } else if (accountService.getSessions(sessionId) == null) {
             UserProfile profile = accountService.getUser(email);
