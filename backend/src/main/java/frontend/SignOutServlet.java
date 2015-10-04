@@ -2,7 +2,6 @@ package frontend;
 
 import main.AccountService;
 import main.ResponseHandler;
-import main.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
@@ -30,12 +29,10 @@ public class SignOutServlet extends HttpServlet {
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         Map<String, Object> pageVariables = new HashMap<>();
-        String sessionId = session.getId();
+        Long userId = (Long) session.getAttribute("userId");
 
-        UserProfile profile = accountService.getSessions(sessionId);
-
-        if (profile != null) {
-            accountService.deleteSessions(sessionId);
+        if (userId != null && accountService.deleteSessions(String.valueOf(userId))) {
+            session.removeAttribute("userId");
             pageVariables.put("signOutStatus", "Signed out successfully!\nSee you soon!");
         } else {
             pageVariables.put("signOutStatus", "You are alredy signed out");

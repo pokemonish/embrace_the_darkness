@@ -16,6 +16,13 @@ public class AccountService {
     @NotNull
     private Map<String, UserProfile> sessions = new HashMap<>();
 
+    private long id = 1;
+
+    //temporary
+    public long getAndIncrementID() {
+        return id++;
+    }
+
     public boolean addUser(String userName, UserProfile userProfile) {
         if (users.containsKey(userName))
             return false;
@@ -45,7 +52,11 @@ public class AccountService {
         return sessions.get(sessionId);
     }
 
-    public void deleteSessions(@Nullable String sessionId) {
-        sessions.remove(sessionId);
+    public boolean deleteSessions(@Nullable String sessionId) {
+        if (sessions.get(sessionId) != null) {
+            sessions.remove(sessionId);
+            return true;
+        }
+        return false;
     }
 }

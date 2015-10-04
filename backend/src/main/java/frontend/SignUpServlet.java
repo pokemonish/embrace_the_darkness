@@ -33,10 +33,10 @@ public class SignUpServlet extends HttpServlet {
         Map<String, Object> pageVariables = new HashMap<>();
         HttpSession session = request.getSession();
 
-        String sessionId = session.getId();
+        Long userId = (Long) session.getAttribute("userId");
         String htmlToRender = "signup.html";
 
-        UserProfile profile = accountService.getSessions(sessionId);
+        UserProfile profile = accountService.getSessions(String.valueOf(userId));
 
         if (profile != null) {
             htmlToRender = "signupstatus.html";
