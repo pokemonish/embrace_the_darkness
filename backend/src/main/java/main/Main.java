@@ -18,6 +18,7 @@ import javax.servlet.Servlet;
  * @author v.chibrikov
  */
 public class Main {
+    @SuppressWarnings("OverlyBroadThrowsClause")
     public static void main(@NotNull String[] args) throws Exception {
 
         if (args.length != 1) {

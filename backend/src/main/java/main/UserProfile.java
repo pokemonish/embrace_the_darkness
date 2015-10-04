@@ -30,6 +30,7 @@ public class UserProfile {
         return password;
     }
 
+    @SuppressWarnings("unused")
     @NotNull
     public String getEmail() {
         return email;

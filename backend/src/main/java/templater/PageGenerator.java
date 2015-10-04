@@ -4,7 +4,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,10 +24,12 @@ public class PageGenerator {
         Writer stream = new StringWriter();
         try {
             Template template = CONFIGURATION.getTemplate(HTML_DIR + File.separator + filename);
+            assert template != null;
             template.process(data, stream);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
+
         return String.valueOf(stream);
     }
 }
