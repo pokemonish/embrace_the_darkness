@@ -54,7 +54,8 @@ module.exports = function(grunt) {
             },
             ts: {
                 files: [
-                    'frontend/typescript/**/*'
+                    'frontend/typescript/**/*.ts',
+                    'frontend/templates/bin/**/*.js',
                 ],
                 tasks: ['ts', 'concat:ts'],
                 options: {

@@ -1,13 +1,63 @@
 <fest:template xmlns:fest="http://fest.mail.ru" context_name="json">
-    <form class="login_form" method="POST" action="/api/v1/auth/signin">
-        <p><input type="text"     name="email"    /></p>
-        <p><input type="password" name="password" /></p>
-        <p>
-            <input type="submit" value="GO"/>
-            <a href="#reg">REGISTER</a>
-        </p>
-    </form>
+<div class="form">
+    <ul class="tab-group">
+        <li class="tab active"><a href="#signup">Sign Up</a></li>
+        <li class="tab"><a href="#login">Log In</a></li>
+    </ul>
+      
+    <div class="tab-content">
+        <div id="signup">   
+            <form id="signup_form" action="/api/v1/auth/signup" method="post">
+                <div class="field-wrap">
+                    <label>
+                        Nickname<span class="req">*</span>
+                    </label>
+                    <input type="text" name="nickname" required="" autocomplete="off"/>
+                </div>
+
+                <div class="field-wrap">
+                    <label>
+                        Email Address<span class="req">*</span>
+                    </label>
+                    <input type="email" name="email" required="" autocomplete="off"/>
+                </div>
+                  
+                <div class="field-wrap">
+                    <label>
+                        Set A Password<span class="req">*</span>
+                    </label>
+                    <input type="password" name="password" required="" autocomplete="off"/>
+                </div>
+                  
+                <button type="submit" class="button button-block" >Get Started</button>      
+            </form>
+        </div>
+        
+        <div id="login">
+            <form id="login_form" action="/api/v1/auth/signin" method="post">
+                <div class="field-wrap">
+                    <label>
+                        Email Address<span class="req">*</span>
+                    </label>
+                    <input type="email" name="email" required="" autocomplete="off"/>
+                </div>
+                  
+                <div class="field-wrap">
+                    <label>
+                        Password<span class="req">*</span>
+                    </label>
+                    <input type="password" name="password" required="" autocomplete="off"/>
+                </div>
+              
+                <button type="submit" class="button button-block" >Log In</button>
+            </form>
+
+        </div>
+        
+    </div><!-- tab-content -->
+
+</div> <!-- /form -->
     
-    <p><a href="#">MENU</a></p>
+<p><a href="#">MENU</a></p>
 </fest:template>
 
