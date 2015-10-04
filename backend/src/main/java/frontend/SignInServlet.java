@@ -64,9 +64,9 @@ public class SignInServlet extends HttpServlet {
         String htmlToRender = "auth.html";
 
         if (email == null) {
-            pageVariables.put("authstatus", "login is required");
+            pageVariables.put("loginStatus", "login is required");
         } else if (password == null) {
-            pageVariables.put("authstatus", "password is required");
+            pageVariables.put("loginStatus", "password is required");
         } else if (accountService.getSessions(sessionId) == null) {
             UserProfile profile = accountService.getUser(email);
             if (profile != null && profile.getPassword().equals(password)) {

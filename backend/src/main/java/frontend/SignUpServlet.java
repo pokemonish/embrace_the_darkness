@@ -68,12 +68,12 @@ public class SignUpServlet extends HttpServlet {
             pageVariables.put("signUpStatus", "password is required");
         } else if (accountService.addUser(name, new UserProfile(name, password, ""))) {
 
-            pageVariables.put("signUpStatus", "New user created\n");
+            //pageVariables.put("signUpStatus", "New user created\n");
 
             //temporary, just for convenience
             final String SIGN_IN_BUTTON = "<form action=\"/api/v1/auth/signin\">" +
                     "<input type=\"submit\" value=\"Sign in\">\n" + "</form>";
-            pageVariables.put("signUpStarus", SIGN_IN_BUTTON);
+            pageVariables.put("signUpStatus", "New user created\n" + SIGN_IN_BUTTON);
 
             htmlToRender = "signupstatus.html";
         } else {
