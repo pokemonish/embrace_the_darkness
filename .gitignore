@@ -1,5 +1,4 @@
-node_modules
-server_tml
+node_modules/
 
 backend/public_html/
 backend/classes/
@@ -7,6 +6,7 @@ backend/javax/
 frontend/templates/bin/
 
 public_html/
+server_tml/
 .sass-cache
 logs/
 config/
