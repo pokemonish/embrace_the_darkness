@@ -2,7 +2,7 @@
 
 class LoginForm {
     constructor() {
-        $('.form').find('input, textarea').on('keyup blur focus', function (e) {
+        $('.login-form').find('input, textarea').on('keyup blur focus', function (e) {
     
         var $this = $(this),
             label = $this.prev('label');
@@ -36,7 +36,7 @@ class LoginForm {
           
             var target = $(this).attr('href');
 
-            $('.tab-content > div').not(target).hide();
+            $('.login-form__tab-content > div').not(target).hide();
           
             $(target).fadeIn(600);
         });

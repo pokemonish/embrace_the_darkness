@@ -151,6 +151,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-ts');
+    grunt.loadNpmTasks('grunt-contrib-less');
 
     grunt.registerTask('default', ['fest', 'copy', 'ts', 'concat']);
     grunt.registerTask('watcher', ['default', 'watch']);

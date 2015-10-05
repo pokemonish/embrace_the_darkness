@@ -4,12 +4,3 @@ body {
    	overflow: hidden;
    	background-color: black;
 }
-
-.menu__buttons {
-
-}
-
-.menu__button {
-    display:block;
-    margin: 5px;
-}

@@ -33,7 +33,7 @@ class Game {
 
             cursors = game.input.keyboard.createCursorKeys();
 
-            $('#preload').hide();
+            $('.preload').hide();
         }
 
         function update() {

@@ -17,7 +17,7 @@ a:hover {
   color: #179b77;
 }
 
-.form {
+.login-form {
   background: rgba(19, 35, 47, 0.9);
   padding: 40px;
   max-width: 600px;
@@ -26,17 +26,17 @@ a:hover {
   box-shadow: 0 4px 10px 4px rgba(19, 35, 47, 0.3);
 }
 
-.tab-group {
+.login-form__tab-group {
   list-style: none;
   padding: 0;
   margin: 0 0 40px 0;
 }
-.tab-group:after {
+.login-form__tab-group:after {
   content: "";
   display: table;
   clear: both;
 }
-.tab-group li a {
+.login-form__tab-group li a {
   display: block;
   text-decoration: none;
   padding: 15px;
@@ -50,16 +50,16 @@ a:hover {
   -webkit-transition: .5s ease;
           transition: .5s ease;
 }
-.tab-group li a:hover {
+.login-form__tab-group li a:hover {
   background: #179b77;
   color: #ffffff;
 }
-.tab-group .active a {
+.login-form__tab-group .active a {
   background: #1ab188;
   color: #ffffff;
 }
 
-.tab-content > div:last-child {
+.login-form__tab-content > div:last-child {
   display: none;
 }
 
@@ -83,7 +83,7 @@ label {
   pointer-events: none;
   font-size: 22px;
 }
-label .req {
+label .login-form__req {
   margin: 2px;
   color: #1ab188;
 }
@@ -95,7 +95,7 @@ label.active {
   left: 2px;
   font-size: 14px;
 }
-label.active .req {
+label.active .login-form__req {
   opacity: 0;
 }
 
@@ -122,31 +122,12 @@ input:focus, textarea:focus {
   border-color: #1ab188;
 }
 
-textarea {
-  border: 2px solid #a0b3b0;
-  resize: vertical;
-}
-
-.field-wrap {
+.login-form__field-wrap {
   position: relative;
   margin-bottom: 40px;
 }
 
-.top-row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-.top-row > div {
-  float: left;
-  width: 48%;
-  margin-right: 4%;
-}
-.top-row > div:last-child {
-  margin: 0;
-}
-
-.button {
+.login-form__button {
   border: 0;
   outline: none;
   border-radius: 0;
@@ -161,16 +142,16 @@ textarea {
           transition: all 0.5s ease;
   -webkit-appearance: none;
 }
-.button:hover, .button:focus {
+.login-form__button:hover, .login-form__button:focus {
   background: #179b77;
 }
 
-.button-block {
+.login-form__button_block {
   display: block;
   width: 100%;
 }
 
-.forgot {
+.login-form__forgot {
   margin-top: -20px;
   text-align: right;
 }
