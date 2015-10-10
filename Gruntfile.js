@@ -124,17 +124,7 @@ module.exports = function(grunt) {
                 dest: 'public_html/main.js',
             },
         },
-
-        ts: {
-            default : {
-                src: ['frontend/typescript/main.ts'],
-                out: 'frontend/typescript/bin.js',
-                options: {
-                    inlineSourceMap: true,
-                },
-            }
-        },
-
+        
     });
 
 

@@ -1,6 +1,12 @@
 body {
-    margin: 0px;
-   	padding: 0px;
-   	overflow: hidden;
-   	background-color: black;
+    color: blue;
+}
+
+.menu__buttons {
+
+}
+
+.menu__button {
+    display:block;
+    margin: 5px;
 }

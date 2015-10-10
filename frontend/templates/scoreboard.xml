@@ -1,0 +1,15 @@
+<fest:template xmlns:fest="http://fest.mail.ru"
+    context_name="json">
+    <div>
+        <h1>Scoreboard</h1>
+        <fest:for iterate="json.users" index="i">
+            <p>
+                <fest:value>json.users.models[i].attributes.name</fest:value> -
+                <fest:value>json.users.models[i].attributes.score</fest:value>
+            </p>
+        </fest:for>
+    </div>
+    <button class="main-button">Menu</button>
+    
+</fest:template>
+
