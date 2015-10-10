@@ -11,11 +11,6 @@ server_tml/
 logs/
 config/
 
-frontend/typescript/bin.js
-
-
-.tscache
-\tscommand*
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
