@@ -11,5 +11,7 @@ define([
         },
     });
 
+    urlRoot: '/api/v1/auth/signin'
+
     return Model;
 });

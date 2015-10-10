@@ -1,17 +1,18 @@
 <fest:template xmlns:fest="http://fest.mail.ru"
     context_name="json">
     <div>
-        <h1>Login</h1>
+        <h1>Login LOL</h1>
     </div>
     <div class="input__data">
-        <form method="post" action="/api/v1/auth/signin/">
-            <input name="username" />
+        <form>
+            <input name="email" />
             <input name="password" />
-            <button type="submit">GO!</button>
+            <button type="submit" id="login">GO!</button>
         </form>
     </div>
     
     <button class="main-button">Menu</button>
+    
     
 </fest:template>
 

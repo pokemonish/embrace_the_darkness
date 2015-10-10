@@ -92,6 +92,13 @@ module.exports = function(grunt) {
                 dest: 'server_tml/',
                 flatten: false,
             },
+            // frontend_bin: {
+            //     expand: true,
+            //     cwd: 'frontend/templates/bin',
+            //     src: '**',
+            //     dest: 'frontend/static/js/tmpl',
+            //     flatten: false,
+            // },
             main: {
                 expand: true,
                 cwd: 'frontend/static/',
@@ -99,6 +106,7 @@ module.exports = function(grunt) {
                 dest: 'public_html/',
                 flatten: false,
             },
+
             public_html: {
                 expand: true,
                 cwd: 'public_html/',
@@ -144,6 +152,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
 
     grunt.registerTask('default', ['fest', 'copy', 'concat']);
+    grunt.registerTask('smart', ['fest', 'copy', 'concat', 'shell']);
     grunt.registerTask('watcher', ['default', 'watch']);
     grunt.registerTask('test', ['default', 'concurrent']);
 
