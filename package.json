@@ -36,8 +36,6 @@
     "grunt-run": "^0.5.0",
     "grunt-sass": "^1.0.0",
     "grunt-shell-spawn": "^0.3.9",
-    "grunt-ts": "^4.2.0",
-    "grunt-typescript": "^0.7.0",
     "typescript": "^1.6.2"
   }
 }
