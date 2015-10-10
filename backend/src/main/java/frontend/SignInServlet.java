@@ -55,6 +55,7 @@ public class SignInServlet extends HttpServlet {
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
+
         HttpSession session = request.getSession();
         Map<String, Object> pageVariables = new HashMap<>();
 
@@ -84,6 +85,8 @@ public class SignInServlet extends HttpServlet {
         } else {
             pageVariables.put("loginStatus", "You are alredy logged in");
         }
+
+//        htmlToRender = "response.json";
 
         ResponseHandler.drawPage(response, htmlToRender, pageVariables);
     }

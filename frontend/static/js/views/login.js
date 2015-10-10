@@ -30,8 +30,22 @@ define([
         },
         login: function() {
             // Validate here
-            console.log("DONE");
-            this.model.save({email: 1, password: 1}, {type: 'POST'});
+
+            var userDetails = {
+                email: 'admin',
+                password: 'admin'
+            };
+          
+            this.model.save(userDetails, {
+                success: function(user) {
+                    console.log(user);
+                },
+                error: function(msg) {
+                    console.log(msg);
+                }
+            })
+
+            return false;
         }
 
     });

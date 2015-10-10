@@ -46,11 +46,6 @@ public class AccountService {
         return sessions.get(sessionId);
     }
 
-<<<<<<< HEAD
-    public void deleteSessions(@Nullable String sessionId) {
-        sessions.remove(sessionId);
-=======
-
 
     public boolean deleteSessions(@Nullable String sessionId) {
         if (sessions.get(sessionId) != null) {
@@ -58,6 +53,5 @@ public class AccountService {
             return true;
         }
         return false;
->>>>>>> 451b95920309ab6c2e417529433929b905fcbbf9
     }
 }
