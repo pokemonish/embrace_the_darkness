@@ -124,7 +124,7 @@ module.exports = function(grunt) {
                 dest: 'public_html/main.js',
             },
         },
-        
+
     });
 
 
@@ -143,7 +143,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-ts');
     grunt.loadNpmTasks('grunt-contrib-less');
 
-    grunt.registerTask('default', ['fest', 'copy', 'ts', 'concat']);
+    grunt.registerTask('default', ['fest', 'copy', 'concat']);
     grunt.registerTask('watcher', ['default', 'watch']);
     grunt.registerTask('test', ['default', 'concurrent']);
 
