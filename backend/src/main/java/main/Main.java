@@ -1,16 +1,20 @@
 package main;
 
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.jetbrains.annotations.NotNull;
+
+
 import admin.AdminPageServlet;
 import frontend.SignInServlet;
 import frontend.SignUpServlet;
 import frontend.SignOutServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.jetbrains.annotations.NotNull;
+
 
 import javax.servlet.Servlet;
 
@@ -18,6 +22,7 @@ import javax.servlet.Servlet;
  * @author v.chibrikov
  */
 public class Main {
+
     public static void main(@NotNull String[] args) throws Exception {
 
         if (args.length != 1) {

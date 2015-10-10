@@ -18,6 +18,7 @@ import java.util.Map;
  * @author v.chibrikov
  */
 public class SignInServlet extends HttpServlet {
+
     @NotNull
     private AccountService accountService;
 
@@ -26,6 +27,7 @@ public class SignInServlet extends HttpServlet {
     }
 
     @Override
+
     public void doGet(@NotNull HttpServletRequest request,
                       @NotNull HttpServletResponse response) throws ServletException, IOException {
         Map<String, Object> pageVariables = new HashMap<>();

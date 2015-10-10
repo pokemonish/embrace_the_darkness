@@ -11,6 +11,7 @@ import java.util.Map;
  * Created by v.chibrikov on 13.09.2014.
  */
 public class AccountService {
+
     @NotNull
     private Map<String, UserProfile> users = new HashMap<>();
     @NotNull
@@ -45,7 +46,18 @@ public class AccountService {
         return sessions.get(sessionId);
     }
 
+<<<<<<< HEAD
     public void deleteSessions(@Nullable String sessionId) {
         sessions.remove(sessionId);
+=======
+
+
+    public boolean deleteSessions(@Nullable String sessionId) {
+        if (sessions.get(sessionId) != null) {
+            sessions.remove(sessionId);
+            return true;
+        }
+        return false;
+>>>>>>> 451b95920309ab6c2e417529433929b905fcbbf9
     }
 }

@@ -3,6 +3,7 @@ package templater;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -17,6 +18,7 @@ import java.util.Map;
  */
 public class PageGenerator {
     private static final String HTML_DIR = "server_tml";
+
     @NotNull
     private static final Configuration CONFIGURATION = new Configuration();
 
@@ -29,6 +31,7 @@ public class PageGenerator {
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
+
         return String.valueOf(stream);
     }
 }
