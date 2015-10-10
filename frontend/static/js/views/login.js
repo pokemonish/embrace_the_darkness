@@ -15,8 +15,11 @@ define([
         el: $('#page'),
 
         events: {
-            'click .main-button': 'backToMain',
-            'click #login': 'login'
+            'click .main__btn': 'backToMain',
+            'click #login':  function (e) {
+                e.preventDefault();
+                this.login();
+            }
         },
 
         initialize: function () {
@@ -30,12 +33,15 @@ define([
         },
         login: function() {
             // Validate here
+            // validate("login__form")
+            
+            console.log("LOL");
 
             var userDetails = {
                 email: 'admin',
                 password: 'admin'
             };
-          
+            
             this.model.save(userDetails, {
                 success: function(user) {
                     console.log(user);
@@ -46,9 +52,11 @@ define([
             })
 
             return false;
-        }
+            
+        },
 
     });
+
 
     return new View();
 });

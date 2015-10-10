@@ -1,9 +1,9 @@
 <fest:template xmlns:fest="http://fest.mail.ru"
     context_name="json">
-    <div>
-        <h1>Game</h1>
-    </div>
+    <div class="title title_center">Let's Play</div>
         
-    <button class="main-button">Menu</button>
+    <div class="field field__btn">
+        <button class="btn btn-primary main__btn">Menu</button>
+    </div>
     
 </fest:template>

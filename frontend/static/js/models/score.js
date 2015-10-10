@@ -10,7 +10,8 @@ define([
             'score': 0
         },
 
-        urlRoot: '/api/v1/auth/signin'
+        urlRoot: '/api/v1/auth/signin',
+
     });
 
     return Model;

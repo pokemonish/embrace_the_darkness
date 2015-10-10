@@ -12,7 +12,7 @@ define([
         el: $('#page'),
 
         events: {
-            'click .main-button': 'backToMain',
+            'click .main__btn': 'backToMain',
         },
         
         initialize: function () {
