@@ -4,11 +4,11 @@
     <div class="title title_center">Login</div>
 
     <div class="login__input_data">
-        <form class="login__form">
+        <form class="login__form" id="login__form">
             <!-- field -->
             <div class="field">
                 <div class="field__in email-field__in">
-                    <input class="input" name="email" type="text" placeholder="Email" required="" />
+                    <input class="input" name="email" type="email" placeholder="Email" required="" />
                 </div>
                 <div class="field__error email-field__error">
                 </div>

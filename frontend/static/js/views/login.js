@@ -16,7 +16,7 @@ define([
 
         events: {
             'click .main__btn': 'backToMain',
-            'click #login':  function (e) {
+            'submit #login__form':  function (e) {
                 e.preventDefault();
                 this.login();
             }
