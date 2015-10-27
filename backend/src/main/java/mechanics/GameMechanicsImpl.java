@@ -65,7 +65,7 @@ public class GameMechanicsImpl implements GameMechanics {
 
     public void deleteIfWaiter(String user) {
         for (int i = 0; i < waiters.length; ++i) {
-            if (waiters[i].equals(user)) {
+            if (waiters[i] != null && waiters[i].equals(user)) {
                 waiters[i] = null;
             }
         }
