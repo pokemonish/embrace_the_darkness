@@ -1,14 +1,16 @@
 package main;
 
+import base.AuthService;
+import base.GameMechanics;
+import base.WebSocketService;
+import frontend.*;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.jetbrains.annotations.NotNull;
 
 
+import mechanics.GameMechanicsImpl;
 import admin.AdminPageServlet;
-import frontend.SignInServlet;
-import frontend.SignUpServlet;
-import frontend.SignOutServlet;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -39,10 +41,15 @@ public class Main {
         System.out.append(startMessage);
 
         AccountService accountService = new AccountService();
+        AuthService authService = new AuthServiceImpl();
+
+        WebSocketService webSocketService = new WebSocketServiceImpl();
+        GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService);
 
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet signOut = new SignOutServlet(accountService);
+        Servlet postName = new PostNameServlet(authService);
         Servlet admin = new AdminPageServlet(accountService);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -50,6 +57,10 @@ public class Main {
         context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
         context.addServlet(new ServletHolder(signOut), "/api/v1/auth/signout");
         context.addServlet(new ServletHolder(admin), "/admin");
+        context.addServlet(new ServletHolder(postName), "/postName");
+        context.addServlet(new ServletHolder(new WebSocketGameServlet(authService, gameMechanics, webSocketService)), "/gameplay");
+        context.addServlet(new ServletHolder(new GameServlet(gameMechanics, authService)), "/game");
+
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
@@ -64,5 +75,7 @@ public class Main {
 
         server.start();
         server.join();
+
+        //gameMechanics.run();
     }
 }

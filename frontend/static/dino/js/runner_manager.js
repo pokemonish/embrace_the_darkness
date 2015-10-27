@@ -5,6 +5,17 @@ function RunnerManager(elem) {
 
     this.seed = 123;
 
+    $.ajax({
+        url : "game/",
+        type : "POST",
+        success : function(json) {
+            console.log(json);
+            console.log("success");
+            }
+        },
+    });
+    this.socket = new Websocket('ws://localhost:8080');
+
     this.reset(this.seed);
 }
 

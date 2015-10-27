@@ -1,6 +1,7 @@
 package main;
 
 
+import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -2,7 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.ResponseHandler;
-import main.UserProfile;
+import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
