@@ -134,5 +134,6 @@ public class GameWebSocket {
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
         System.out.append("On close\n");
+        gameMechanics.deleteIfWaiter(myName);
     }
 }

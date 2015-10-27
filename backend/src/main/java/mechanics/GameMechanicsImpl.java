@@ -63,6 +63,14 @@ public class GameMechanicsImpl implements GameMechanics {
         return waitersNumber;
     }
 
+    public void deleteIfWaiter(String user) {
+        for (int i = 0; i < waiters.length; ++i) {
+            if (waiters[i].equals(user)) {
+                waiters[i] = null;
+            }
+        }
+    }
+
     public void incrementScore(String userName) {
         GameSession myGameSession = nameToGame.get(userName);
         GameUser myUser = myGameSession.getSelf(userName);
