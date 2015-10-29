@@ -1,6 +1,7 @@
 package main;
 
 
+import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,6 +12,7 @@ import java.util.Map;
  * Created by v.chibrikov on 13.09.2014.
  */
 public class AccountService {
+
     @NotNull
     private Map<String, UserProfile> users = new HashMap<>();
     @NotNull
@@ -51,6 +53,7 @@ public class AccountService {
     public UserProfile getSessions(@Nullable String sessionId) {
         return sessions.get(sessionId);
     }
+
 
     public boolean deleteSessions(@Nullable String sessionId) {
         if (sessions.get(sessionId) != null) {

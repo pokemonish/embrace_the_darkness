@@ -16,6 +16,9 @@ public class ResponseHandler {
                                 @NotNull String pageName,
                                 @NotNull Map<String, Object> pageVariables) throws IOException {
 
+//        System.out.println(pageName);
+//        System.out.println(pageVariables);
+
         String pageToShow = PageGenerator.getPage(pageName, pageVariables);
         if (!pageToShow.isEmpty()) {
             try (PrintWriter writer = response.getWriter()) {

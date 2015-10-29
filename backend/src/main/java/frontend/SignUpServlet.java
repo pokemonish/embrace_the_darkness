@@ -2,7 +2,7 @@ package frontend;
 
 import main.AccountService;
 import main.ResponseHandler;
-import main.UserProfile;
+import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
@@ -18,7 +18,6 @@ import java.util.Map;
  * Created by v.chibrikov on 13.09.2014.
  */
 public class SignUpServlet extends HttpServlet {
-
     @NotNull
     private AccountService accountService;
 

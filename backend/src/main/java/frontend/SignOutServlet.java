@@ -24,6 +24,8 @@ public class SignOutServlet extends HttpServlet {
         this.accountService = accountService;
     }
 
+
+
     @Override
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {

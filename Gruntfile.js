@@ -18,7 +18,8 @@ module.exports = function(grunt) {
                 files: ['frontend/templates/**/*.xml'],
                 tasks: ['fest'],
                 options: {
-                    atBegin: false,
+                    interrupt: true,
+                    livereload: true,
                 }
             },
             server: {
@@ -37,8 +38,8 @@ module.exports = function(grunt) {
                 ],
                 tasks: ['copy:server_tml'],
                 options: {
-                    interrupt: true,
-                    livereload: true,
+                    interrupt: false,
+                    livereload: false,
                 }
             },
             public_html: {
@@ -47,8 +48,8 @@ module.exports = function(grunt) {
                 ],
                 tasks: ['copy:public_html'],
                 options: {
-                    interrupt: true,
-                    livereload: true,
+                    interrupt: false,
+                    livereload: false,
                 }
             },
         },
@@ -62,9 +63,9 @@ module.exports = function(grunt) {
                     dest: 'public_html/js/tmpl'
                 }],
                 options: {
-                    template: function (data) { /* задаем формат функции-шаблона */
+                    template: function (data) {
                         return grunt.template.process(
-                            'var <%= name %>Tmpl = <%= contents %> ;', /* присваиваем функцию-шаблон переменной */
+                            'define(function () {return <%= contents %> ; });',
                             {data: data}
                         );
                     }
@@ -73,20 +74,28 @@ module.exports = function(grunt) {
         },
 
         copy: {
-            main: {
+            server_tml: {
                 expand: true,
                 cwd: 'backend/server_tml/',
                 src: '**',
                 dest: 'server_tml/',
                 flatten: false,
             },
-            server_tml: {
+            // frontend_bin: {
+            //     expand: true,
+            //     cwd: 'frontend/templates/bin',
+            //     src: '**',
+            //     dest: 'frontend/static/js/tmpl',
+            //     flatten: false,
+            // },
+            main: {
                 expand: true,
                 cwd: 'frontend/static/',
                 src: '**',
                 dest: 'public_html/',
                 flatten: false,
             },
+
             public_html: {
                 expand: true,
                 cwd: 'public_html/',
@@ -98,6 +107,7 @@ module.exports = function(grunt) {
 
         concurrent: {
             target: ['watch', 'shell:runServer'],
+            // target: ['watch'],
             options: {
                 logConcurrentOutput: true
             },
@@ -119,8 +129,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-    grunt.registerTask('default', ['fest', 'copy']);
+
+    grunt.registerTask('generate', ['copy', 'fest'])
+    grunt.registerTask('default', ['generate', 'concurrent']);
     grunt.registerTask('watcher', ['default', 'watch']);
-    grunt.registerTask('test', ['default', 'concurrent']);
 
 }
