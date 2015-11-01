@@ -67,6 +67,8 @@ RunnerManager.prototype = {
                     case "action":
                         if (data.action == "dead") {
                             this.runners[data.activePlayer].die();
+                        } else if (data.action == "unduck") {
+                            this.runners[data.activePlayer].doAction("duck", false);
                         } else {
                             this.runners[data.activePlayer].doAction(data.action, true);
                         }
