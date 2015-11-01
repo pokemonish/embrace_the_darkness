@@ -3,6 +3,7 @@ package mechanics;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
+import org.json.simple.JSONObject;
 import utils.TimeHelper;
 
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public class GameMechanicsImpl implements GameMechanics {
         this.webSocketService = webSocketService;
     }
 
+    @Override
     public void addUser(String user) {
 
         System.out.print(countWaiters());
@@ -63,6 +65,7 @@ public class GameMechanicsImpl implements GameMechanics {
         return waitersNumber;
     }
 
+    @Override
     public void deleteIfWaiter(String user) {
         for (int i = 0; i < waiters.length; ++i) {
             if (waiters[i] != null && waiters[i].equals(user)) {
@@ -71,6 +74,7 @@ public class GameMechanicsImpl implements GameMechanics {
         }
     }
 
+    @Override
     public void incrementScore(String userName) {
         GameSession myGameSession = nameToGame.get(userName);
         GameUser myUser = myGameSession.getSelf(userName);
@@ -108,6 +112,22 @@ public class GameMechanicsImpl implements GameMechanics {
         }
     }
 
+    @Override
+    public void processGameLogicData(String playerName, JSONObject data) {
+
+        String action = data.get("data").toString();
+        System.out.print(data.toJSONString());
+        System.out.print(action);
+
+        JSONObject response = new JSONObject();
+        response.put("activePlayer", playerName);
+        response.put("action", action);
+
+        if (action != null) {
+            sendOtherPlayers(playerName, response);
+        }
+    }
+
     private void startGame() {
 
         /*if (countWaiters() != PLAYERS_NUMBER) {
@@ -124,7 +144,7 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     @Override
-    public void sendOtherPlayers(String playerName, String data) {
+    public void sendOtherPlayers(String playerName, JSONObject data) {
         GameSession gameSession = nameToGame.get(playerName);
         Map<String, GameUser> users = gameSession.getUsers();
 

@@ -76,6 +76,6 @@ public class Main {
         server.start();
         server.join();
 
-        //gameMechanics.run();
+        gameMechanics.run();
     }
 }

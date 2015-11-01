@@ -27,6 +27,8 @@ public class PostNameServlet extends HttpServlet {
 
         HttpSession session = request.getSession();
 
+        System.out.append(request.getParameter("username") + '\n');
+
         String sessionId = session.getId();
         this.authService.saveUserName(sessionId, request.getParameter("username"));
     }

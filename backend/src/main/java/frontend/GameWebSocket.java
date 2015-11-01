@@ -10,6 +10,9 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
+
+import java.util.Map;
 
 @WebSocket
 public class GameWebSocket {
@@ -63,11 +66,14 @@ public class GameWebSocket {
     @OnWebSocketMessage
     public void onMessage(String data) {
         System.out.append("Got message\n");
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("activePlayer", myName);
-        jsonStart.put("action", data);
-        gameMechanics.sendOtherPlayers(myName, jsonStart.toJSONString());
-        System.out.append(data + '\n');
+
+        JSONObject parsedData = (JSONObject)JSONValue.parse(data);
+
+        System.out.append(parsedData.toString() + '\n');
+
+        if (parsedData.get("type").toString().equals("game logic")) {
+            gameMechanics.processGameLogicData(myName, parsedData);
+        }
     }
 
     @OnWebSocketConnect
@@ -111,13 +117,13 @@ public class GameWebSocket {
         }
     }
 
-    public void sendEnemyAction(GameUser user, String data) {
+    public void sendEnemyAction(GameUser user, JSONObject data) {
         JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", "increment");
-        jsonStart.put("name", user.getEnemyNames());
-        jsonStart.put("score", user.getEnemyScore());
+        jsonStart.put("status", "action");
+        jsonStart.put("activePlayer", data.get("activePlayer"));
+        jsonStart.put("action", data.get("action"));
         try {
-            session.getRemote().sendString(data);
+            session.getRemote().sendString(jsonStart.toJSONString());
         } catch (Exception e) {
             System.out.print(e.toString());
         }

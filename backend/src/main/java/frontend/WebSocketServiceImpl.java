@@ -2,6 +2,7 @@ package frontend;
 
 import base.GameUser;
 import base.WebSocketService;
+import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
-    public void notifyEnemyAction(GameUser user, String data) {
+    public void notifyEnemyAction(GameUser user, JSONObject data) {
         userSockets.get(user.getMyName()).sendEnemyAction(user, data);
     }
 
