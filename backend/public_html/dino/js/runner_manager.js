@@ -28,7 +28,7 @@ function RunnerManager(elem) {
     var self = this;
 
     setTimeout(function() {
-        self.socket = new WebSocket(URL_LOCALHOST);
+        self.socket = new WebSocket(URL_TP_JAVA);
         self.socket.onmessage = function(event) {
             self.parseMessage(event);
         };
