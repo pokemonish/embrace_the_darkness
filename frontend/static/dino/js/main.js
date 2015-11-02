@@ -28,20 +28,3 @@ var p2 = manager.addRunner('2');
 
 // Начинаем игру 
 manager.start();
-
-//Прыгаем другого игрока
-setTimeout(function() {
-    p1.doAction('jump', true);
-}, 5000);
-//Нагинаем другого игрока
-setTimeout(function() {
-    p1.doAction('duck', true);
-}, 7000);
-//Отгинаем другого игрока
-setTimeout(function() {
-    p1.doAction('duck', false);
-}, 10000);
-//Убиваем бота (будем таки верить игрокам на слово, что здохли или ждать таймаута)
-setTimeout(function() {
-    p1.die();
-}, 14000);
