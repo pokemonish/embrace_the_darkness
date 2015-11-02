@@ -19,7 +19,7 @@ function RunnerManager(elem) {
         }
     });
 
-    var URL_TP_JAVA = 'http://g13.javaprojects.tp-dev.ru/gameplay';
+    var URL_TP_JAVA = 'ws://g13.javaprojects.tp-dev.ru/gameplay';
     var URL_LOCALHOST = 'ws://localhost:8080/gameplay';
     var URL_TP_LAN = 'ws://10.20.3.6:8080/gameplay';
 
