@@ -72,7 +72,7 @@ public class SignUpServlet extends HttpServlet {
             //temporary, just for convenience
             final String SIGN_IN_BUTTON = "<form action=\"/api/v1/auth/signin\">" +
                     "<input type=\"submit\" value=\"Sign in\">\n" + "</form>";
-            pageVariables.put("signUpStarus", SIGN_IN_BUTTON);
+            pageVariables.put("signUpStatus", SIGN_IN_BUTTON);
 
             htmlToRender = "signupstatus.html";
         } else {

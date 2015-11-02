@@ -12,6 +12,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
+import java.io.IOException;
 import java.util.Map;
 
 @WebSocket
@@ -69,7 +70,7 @@ public class GameWebSocket {
 
         JSONObject parsedData = (JSONObject)JSONValue.parse(data);
 
-        System.out.append(parsedData.toString() + '\n');
+        System.out.append(parsedData.toString()).append('\n');
 
         if (parsedData.get("type").toString().equals("game logic")) {
             gameMechanics.processGameLogicData(myName, parsedData);
@@ -124,7 +125,8 @@ public class GameWebSocket {
         jsonStart.put("action", data.get("action"));
         try {
             session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
             System.out.print(e.toString());
         }
     }

@@ -130,11 +130,6 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private void startGame() {
 
-        /*if (countWaiters() != PLAYERS_NUMBER) {
-            System.out.print("Not enough players to start the game!");
-            throw new Exception("Not enough players to start the game!");
-        }*/
-
         GameSession gameSession = new GameSession(waiters);
         allSessions.add(gameSession);
         for (int i = 0; i < waiters.length; ++i) {
