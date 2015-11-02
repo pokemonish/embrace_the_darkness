@@ -3,8 +3,7 @@ var manager = new RunnerManager('#games');
 var btn = document.getElementById('details-button');
 btn.onclick = function() {
     detailsButtonClick(); toggleHelpBox();
-}
-
+};
 
 /*
  * Код ниже для примера.
@@ -16,11 +15,34 @@ btn.onclick = function() {
 
 //Смерть нашего игрока (лучше так не перезаписывать, а залезть в runner_manager.js)
 manager.onPlayerDied = function() {
-    console.log('our player died');
-}
+    manager.sendEnemies("dead");
+};
+
+document.onkeydown = function(event) {
+    console.log(event);
+};
+
+document.addEventListener('keydown', function(event) {
+    switch (event.keyCode) {
+        case 38:
+        case 32:
+            manager.sendEnemies('jump');
+            break;
+        case 40:
+            manager.sendEnemies('duck');
+            break;
+    }
+});
+
+document.addEventListener('keyup', function(event) {
+    if (event.keyCode == 40) {
+        manager.sendEnemies('unduck');
+    }
+});
 
 //Обнуляем менеджер и задаем сид
-manager.reset(458); 
+manager.reset(458);
+/*
 
 //Добавляем игроков на экран
 var p1 = manager.addRunner('1'); 
@@ -45,3 +67,4 @@ setTimeout(function() {
 setTimeout(function() {
     p1.die();
 }, 14000);
+*/
