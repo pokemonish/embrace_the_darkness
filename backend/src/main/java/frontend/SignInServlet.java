@@ -4,15 +4,19 @@ import main.AccountService;
 import main.ResponseHandler;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
+
+import utils.JsonRequestParser;
 
 /**
  * @author v.chibrikov
@@ -25,51 +29,30 @@ public class SignInServlet extends HttpServlet {
     public SignInServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
-
-    @Override
-
-    public void doGet(@NotNull HttpServletRequest request,
-                      @NotNull HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
-        HttpSession session = request.getSession();
-
-        String sessionId = session.getId();
-        String htmlToRender = "auth.html";
-
-        UserProfile profile = accountService.getSessions(sessionId);
-
-        if (profile != null) {
-
-            htmlToRender = "authstatus.html";
-
-            String name = profile.getLogin();
-            pageVariables.put("loginStatus", "Hi, " + name + ", you are logged in.");
-        } else {
-            pageVariables.put("loginStatus", "");
-        }
-
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
-    }
+    
 
     @Override
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
+        System.out.append("begin");
 
         HttpSession session = request.getSession();
-        Map<String, Object> pageVariables = new HashMap<>();
+        JSONObject jsonResponse = new JSONObject();
 
         String sessionId = session.getId();
 
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        JSONObject jsonObject = JsonRequestParser.parse(request);
 
-        String htmlToRender = "auth.html";
+        String email = jsonObject.get("email").toString();
+        String password = jsonObject.get("password").toString();
+
+        System.out.append(email).append('\n').append(password);
 
         if (email == null) {
-            pageVariables.put("loginStatus", "login is required");
+            jsonResponse.put("Status", "login is required");
         } else if (password == null) {
-            pageVariables.put("loginStatus", "password is required");
+            jsonResponse.put("Status", "password is required");
         } else if (accountService.getSessions(sessionId) == null) {
             UserProfile profile = accountService.getUser(email);
             if (profile != null && profile.getPassword().equals(password)) {
@@ -77,17 +60,16 @@ public class SignInServlet extends HttpServlet {
                 assert sessionId != null;
                 accountService.addSessions(sessionId, profile);
 
-                pageVariables.put("loginStatus", "Login passed");
-                htmlToRender = "authstatus.html";
+                jsonResponse.put("Status", "Login passed");
             } else {
-                pageVariables.put("loginStatus", "Wrong login/password");
+                jsonResponse.put("Status", "Wrong login/password");
             }
         } else {
-            pageVariables.put("loginStatus", "You are alredy logged in");
+            jsonResponse.put("Status", "You are alredy logged in");
         }
 
-//        htmlToRender = "response.json";
+        ResponseHandler.drawPage(response, jsonResponse);
 
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
+        System.out.append("end");
     }
 }

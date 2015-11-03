@@ -4,6 +4,7 @@ import main.AccountService;
 import main.ResponseHandler;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,18 +32,18 @@ public class SignOutServlet extends HttpServlet {
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Map<String, Object> pageVariables = new HashMap<>();
+        JSONObject jsonResponse = new JSONObject();
         String sessionId = session.getId();
 
         UserProfile profile = accountService.getSessions(sessionId);
 
         if (profile != null) {
             accountService.deleteSessions(sessionId);
-            pageVariables.put("signOutStatus", "Signed out successfully!\nSee you soon!");
+            jsonResponse.put("signOutStatus", "Signed out successfully!\nSee you soon!");
         } else {
-            pageVariables.put("signOutStatus", "You are alredy signed out");
+            jsonResponse.put("signOutStatus", "You are alredy signed out");
         }
 
-        ResponseHandler.drawPage(response, "signoutstatus.html", pageVariables);
+        ResponseHandler.drawPage(response, jsonResponse);
     }
 }

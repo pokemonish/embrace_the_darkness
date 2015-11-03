@@ -1,4 +1,5 @@
 package admin;
+import org.json.simple.JSONObject;
 import utils.TimeHelper;
 import main.AccountService;
 import main.ResponseHandler;
@@ -25,9 +26,8 @@ public class AdminPageServlet extends HttpServlet {
     @Override
     public void doGet(@NotNull HttpServletRequest request,
                       @NotNull HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        Map<String, Object> pageVariables = new HashMap<>();
+
+        JSONObject jsonResponse = new JSONObject();
         String timeString = request.getParameter("shutdown");
         if (timeString != null) {
             Integer timeMS = Integer.valueOf(timeString);
@@ -36,9 +36,10 @@ public class AdminPageServlet extends HttpServlet {
             System.out.print("\nShutdown");
             System.exit(0);
         }
-        pageVariables.put("usersTotal", accountService.getUsersQuantity());
-        pageVariables.put("usersSignedIn", accountService.getSessionsQuantity());
-        pageVariables.put("status", "run");
-        ResponseHandler.drawPage(response, "admin.html", pageVariables);
+        jsonResponse.put("usersTotal", accountService.getUsersQuantity());
+        jsonResponse.put("usersSignedIn", accountService.getSessionsQuantity());
+        jsonResponse.put("status", "run");
+
+        ResponseHandler.drawPage(response, jsonResponse);
     }
 }

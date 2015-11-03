@@ -44,16 +44,16 @@ define([
             
             this.model.save(userDetails, {
                 success: function(user) {
-                    console.log(user);
+                    console.log(user.attributes.Status);
                 },
                 error: function(msg) {
                     console.log(msg);
                 }
-            })
+            });
 
             return false;
             
-        },
+        }
 
     });
 

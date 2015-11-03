@@ -4,6 +4,7 @@ import main.AccountService;
 import main.ResponseHandler;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
+import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -26,30 +27,6 @@ public class SignUpServlet extends HttpServlet {
     }
 
     @Override
-    public void doGet(@NotNull HttpServletRequest request,
-                      @NotNull HttpServletResponse response) throws ServletException, IOException {
-
-        Map<String, Object> pageVariables = new HashMap<>();
-        HttpSession session = request.getSession();
-
-        String sessionId = session.getId();
-        String htmlToRender = "signup.html";
-
-        UserProfile profile = accountService.getSessions(sessionId);
-
-        if (profile != null) {
-            htmlToRender = "signupstatus.html";
-
-            String name = profile.getLogin();
-            pageVariables.put("signUpStatus", "Hi, " + name + ", you are logged in.");
-        } else {
-            pageVariables.put("signUpStatus", "");
-        }
-
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
-    }
-
-    @Override
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
@@ -57,28 +34,20 @@ public class SignUpServlet extends HttpServlet {
 
         String password = request.getParameter("password");
 
-        String htmlToRender = "signup.html";
-
-        Map<String, Object> pageVariables = new HashMap<>();
+        JSONObject jsonResponse = new JSONObject();
 
         if (name == null) {
-            pageVariables.put("signUpStatus", "login is required");
+            jsonResponse.put("Status", "login is required");
         } else if (password == null) {
-            pageVariables.put("signUpStatus", "password is required");
+            jsonResponse.put("Status", "password is required");
         } else if (accountService.addUser(name, new UserProfile(name, password, ""))) {
 
-            pageVariables.put("signUpStatus", "New user created\n");
+            jsonResponse.put("Status", "New user created\n");
 
-            //temporary, just for convenience
-            final String SIGN_IN_BUTTON = "<form action=\"/api/v1/auth/signin\">" +
-                    "<input type=\"submit\" value=\"Sign in\">\n" + "</form>";
-            pageVariables.put("signUpStatus", SIGN_IN_BUTTON);
-
-            htmlToRender = "signupstatus.html";
         } else {
-            pageVariables.put("signUpStatus", "User with name: " + name + " already exists");
+            jsonResponse.put("Status", "User with name: " + name + " already exists");
         }
 
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
+        ResponseHandler.drawPage(response, jsonResponse);
     }
 }

@@ -23,6 +23,7 @@ import static org.junit.Assert.*;
  */
 public class GameWebSocketTest extends Mockito {
 
+    public static final int INT = 500;
     private static final String TEST_USER_NAME = "testUser1";
     private final GameUser testUser = mock(GameUser.class);
 
@@ -31,7 +32,9 @@ public class GameWebSocketTest extends Mockito {
     private final GameWebSocket gameWebSocket = new GameWebSocket(TEST_USER_NAME, mockedGameMechanics, mockedWebSocketService);
     private final Session mockedSession = mock(Session.class);
     private final String[] testEnemies = new String[2];
-    private final ArgumentCaptor<String> argumentCaptor = ArgumentCaptor.forClass(String.class);
+    private final ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+    private final ArgumentCaptor<JSONObject> jsonObjectCaptor = ArgumentCaptor.forClass(JSONObject.class);
+    private final ArgumentCaptor<GameWebSocket> gameWebSocketCaptor = ArgumentCaptor.forClass(GameWebSocket.class);
 
     @Before
     public void beforeGameWebSocketTest() {
@@ -56,9 +59,9 @@ public class GameWebSocketTest extends Mockito {
         jsonTest.put("status", "start");
         jsonTest.put("enemyNames", testEnemies);
 
-        //when(mockedSession.getRemote().sendString(argumentCaptor.capture()));
+        //doNothing().when(mockedSession.getRemote().sendString(stringCaptor.capture()));
         verify(mockedSession, times(1)).getRemote();
-        assertEquals(argumentCaptor.getValue(), jsonTest.toString());
+        //assertEquals(stringCaptor.getValue(), jsonTest.toString());
     }
 
     @Test
@@ -69,11 +72,37 @@ public class GameWebSocketTest extends Mockito {
     @Test
     public void testOnMessage() throws Exception {
 
+        JSONObject jsonTest = new JSONObject();
+
+        gameWebSocket.onMessage(jsonTest.toJSONString());
+        verify(mockedGameMechanics, times(0)).processGameLogicData(any(), any());
+
+        jsonTest.put("type", "game logic");
+
+        gameWebSocket.onMessage(jsonTest.toJSONString());
+
+        verify(mockedGameMechanics, times(1)).processGameLogicData(stringCaptor.capture(), jsonObjectCaptor.capture());
+        assertEquals(stringCaptor.getValue(), TEST_USER_NAME);
+        assertEquals(jsonObjectCaptor.getValue(), jsonTest);
+    }
+
+    @Test
+    public void testEmptyStringOnMessage() {
+
+        final String emptyString = "";
+
+        gameWebSocket.onMessage(emptyString);
     }
 
     @Test
     public void testOnOpen() throws Exception {
+        gameWebSocket.onOpen(mockedSession);
 
+        assertEquals(gameWebSocket.getSession(), mockedSession);
+        verify(mockedWebSocketService, times(1)).addUser(gameWebSocketCaptor.capture());
+        assertEquals(gameWebSocketCaptor.getValue(), gameWebSocket);
+        verify(mockedGameMechanics, times(1)).addUser(stringCaptor.capture());
+        assertEquals(stringCaptor.getValue(), TEST_USER_NAME);
     }
 
     @Test
@@ -106,5 +135,10 @@ public class GameWebSocketTest extends Mockito {
     @Test
     public void testOnClose() throws Exception {
 
+        final int CODE = 500;
+
+        gameWebSocket.onClose(CODE, " NOT OK");
+        verify(mockedGameMechanics, times(1)).deleteIfWaiter(stringCaptor.capture());
+        assertEquals(stringCaptor.getValue(), TEST_USER_NAME);
     }
 }

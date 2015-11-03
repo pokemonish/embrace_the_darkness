@@ -68,11 +68,11 @@ public class GameWebSocket {
     public void onMessage(String data) {
         System.out.append("Got message\n");
 
-        JSONObject parsedData = (JSONObject)JSONValue.parse(data);
+        if (data.isEmpty()) return;
 
-        System.out.append(parsedData.toString()).append('\n');
+        JSONObject parsedData = (JSONObject) JSONValue.parse(data);
 
-        if (parsedData.get("type").toString().equals("game logic")) {
+        if (parsedData.get("type") != null && parsedData.get("type").toString().equals("game logic")) {
             gameMechanics.processGameLogicData(myName, parsedData);
         }
     }
@@ -141,7 +141,7 @@ public class GameWebSocket {
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
-        System.out.append("On close\n");
+        System.out.append("On close " + statusCode + ' ' + reason + '\n');
         gameMechanics.deleteIfWaiter(myName);
     }
 }
