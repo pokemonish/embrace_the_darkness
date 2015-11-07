@@ -13,8 +13,8 @@ import java.util.Map;
  * Created by fatman on 26/09/15.
  */
 public class ResponseHandler {
-    public static void drawPage(@NotNull HttpServletResponse response,
-                                @NotNull JSONObject jsonResponse) throws IOException {
+    public static void respondWithJSON(@NotNull HttpServletResponse response,
+                                       @NotNull JSONObject jsonResponse) throws IOException {
 
         response.setContentType("application/json;charset=utf-8");
 
@@ -27,5 +27,24 @@ public class ResponseHandler {
         }
         response.setStatus(HttpServletResponse.SC_OK);
 
+    }
+
+    public static void drawPage(@NotNull HttpServletResponse response,
+                                @NotNull String pageName,
+                                @NotNull Map<String, Object> pageVariables) throws IOException {
+
+        String pageToShow = PageGenerator.getPage(pageName, pageVariables);
+        if (!pageToShow.isEmpty()) {
+            try (PrintWriter writer = response.getWriter()) {
+                if (writer != null) {
+                    writer.println(pageToShow);
+                } else {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                }
+            }
+            response.setStatus(HttpServletResponse.SC_OK);
+        } else {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
     }
 }

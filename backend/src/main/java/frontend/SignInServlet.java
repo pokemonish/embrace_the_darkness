@@ -5,16 +5,13 @@ import main.ResponseHandler;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.Date;
 
 import utils.JsonRequestParser;
 
@@ -35,8 +32,6 @@ public class SignInServlet extends HttpServlet {
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
-        System.out.append("begin");
-
         HttpSession session = request.getSession();
         JSONObject jsonResponse = new JSONObject();
 
@@ -44,17 +39,21 @@ public class SignInServlet extends HttpServlet {
 
         JSONObject jsonObject = JsonRequestParser.parse(request);
 
-        String email = jsonObject.get("email").toString();
-        String password = jsonObject.get("password").toString();
+        Object requestEmail = jsonObject.get("email");
+        Object requestPassword = jsonObject.get("password");
+
+        String email = requestEmail == null ? "" : requestEmail.toString();
+        String password = requestPassword == null ? "" : requestPassword.toString();
 
         System.out.append(email).append('\n').append(password);
 
-        if (email == null) {
+        if (email.isEmpty()) {
             jsonResponse.put("Status", "login is required");
-        } else if (password == null) {
+        } else if (password.isEmpty()) {
             jsonResponse.put("Status", "password is required");
         } else if (accountService.getSessions(sessionId) == null) {
             UserProfile profile = accountService.getUser(email);
+
             if (profile != null && profile.getPassword().equals(password)) {
 
                 assert sessionId != null;
@@ -68,8 +67,6 @@ public class SignInServlet extends HttpServlet {
             jsonResponse.put("Status", "You are alredy logged in");
         }
 
-        ResponseHandler.drawPage(response, jsonResponse);
-
-        System.out.append("end");
+        ResponseHandler.respondWithJSON(response, jsonResponse);
     }
 }

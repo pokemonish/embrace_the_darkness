@@ -4,17 +4,14 @@ import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
 import mechanics.GameMechanicsImpl;
-import org.eclipse.jetty.server.session.JDBCSessionManager;
 import org.eclipse.jetty.websocket.api.Session;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.rmi.Remote;
 
 import static org.junit.Assert.*;
 
@@ -23,24 +20,31 @@ import static org.junit.Assert.*;
  */
 public class GameWebSocketTest extends Mockito {
 
-    public static final int INT = 500;
     private static final String TEST_USER_NAME = "testUser1";
+    private static final String TEST_USER_ACTION = "jump";
     private final GameUser testUser = mock(GameUser.class);
 
     private final GameMechanics mockedGameMechanics = mock(GameMechanicsImpl.class);
     private final WebSocketService mockedWebSocketService = mock(WebSocketServiceImpl.class);
-    private final GameWebSocket gameWebSocket = new GameWebSocket(TEST_USER_NAME, mockedGameMechanics, mockedWebSocketService);
-    private final Session mockedSession = mock(Session.class);
-    private final String[] testEnemies = new String[2];
-    private final ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
-    private final ArgumentCaptor<JSONObject> jsonObjectCaptor = ArgumentCaptor.forClass(JSONObject.class);
-    private final ArgumentCaptor<GameWebSocket> gameWebSocketCaptor = ArgumentCaptor.forClass(GameWebSocket.class);
+    private final GameWebSocket gameWebSocket =
+            new GameWebSocket(TEST_USER_NAME,
+                                mockedGameMechanics,
+                                mockedWebSocketService);
+    private final Session mockedSession = mock(Session.class, RETURNS_DEEP_STUBS);
+    private final JSONArray testEnemies = new JSONArray();
 
     @Before
     public void beforeGameWebSocketTest() {
-        testEnemies[0] = "testEnemy1";
-        testEnemies[1] = "testEnemy2";
-        when(testUser.getEnemyNames()).thenReturn(testEnemies);
+        String[] enemyNames = new String[2];
+        enemyNames[0] = "testEnemy1";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "testEnemy1");
+        testEnemies.add(0, jsonObject);
+        enemyNames[1] = "testEnemy2";
+        jsonObject = new JSONObject();
+        jsonObject.put("name", "testEnemy2");
+        testEnemies.add(1, jsonObject);
+        when(testUser.getEnemyNames()).thenReturn(enemyNames);
     }
 
     @Test
@@ -59,9 +63,17 @@ public class GameWebSocketTest extends Mockito {
         jsonTest.put("status", "start");
         jsonTest.put("enemyNames", testEnemies);
 
-        //doNothing().when(mockedSession.getRemote().sendString(stringCaptor.capture()));
-        verify(mockedSession, times(1)).getRemote();
-        //assertEquals(stringCaptor.getValue(), jsonTest.toString());
+        System.out.append(jsonTest.toJSONString());
+        verify(mockedSession.getRemote(), times(1))
+                .sendString(eq(jsonTest.toJSONString()));
+    }
+
+    @Test
+    public void testStartGameNoCrush() throws IOException {
+        gameWebSocket.setSession(mockedSession);
+        //doThrow(new Exception()).when(mockedSession.getRemote()).sendString(any());
+        gameWebSocket.startGame(testUser);
+
     }
 
     @Test
@@ -75,15 +87,15 @@ public class GameWebSocketTest extends Mockito {
         JSONObject jsonTest = new JSONObject();
 
         gameWebSocket.onMessage(jsonTest.toJSONString());
-        verify(mockedGameMechanics, times(0)).processGameLogicData(any(), any());
+        verify(mockedGameMechanics, times(0))
+                .processGameLogicData(any(), any());
 
         jsonTest.put("type", "game logic");
 
         gameWebSocket.onMessage(jsonTest.toJSONString());
 
-        verify(mockedGameMechanics, times(1)).processGameLogicData(stringCaptor.capture(), jsonObjectCaptor.capture());
-        assertEquals(stringCaptor.getValue(), TEST_USER_NAME);
-        assertEquals(jsonObjectCaptor.getValue(), jsonTest);
+        verify(mockedGameMechanics, times(1))
+                .processGameLogicData(eq(TEST_USER_NAME), eq(jsonTest));
     }
 
     @Test
@@ -99,10 +111,8 @@ public class GameWebSocketTest extends Mockito {
         gameWebSocket.onOpen(mockedSession);
 
         assertEquals(gameWebSocket.getSession(), mockedSession);
-        verify(mockedWebSocketService, times(1)).addUser(gameWebSocketCaptor.capture());
-        assertEquals(gameWebSocketCaptor.getValue(), gameWebSocket);
-        verify(mockedGameMechanics, times(1)).addUser(stringCaptor.capture());
-        assertEquals(stringCaptor.getValue(), TEST_USER_NAME);
+        verify(mockedWebSocketService, times(1)).addUser(eq(gameWebSocket));
+        verify(mockedGameMechanics, times(1)).addUser(eq(TEST_USER_NAME));
     }
 
     @Test
@@ -111,18 +121,21 @@ public class GameWebSocketTest extends Mockito {
     }
 
     @Test
-    public void testSetEnemyScore() throws Exception {
+    public void testSendEnemyAction() throws IOException {
+        gameWebSocket.setSession(mockedSession);
 
-    }
+        JSONObject jsonTest = new JSONObject();
 
-    @Test
-    public void testSendEnemyAction() throws Exception {
+        jsonTest.put("activePlayer", TEST_USER_NAME);
+        jsonTest.put("action", TEST_USER_ACTION);
 
-    }
+        gameWebSocket.sendEnemyAction(jsonTest);
 
-    @Test
-    public void testGetSession() throws Exception {
-
+        verify(mockedSession.getRemote(), times(1))
+                .sendString(matches("(.*" + TEST_USER_NAME + ".*"
+                                    + TEST_USER_ACTION + ".*)|(.*"
+                                    + TEST_USER_ACTION + ".*"
+                                    + TEST_USER_NAME + ".*)"));
     }
 
     @Test
@@ -138,7 +151,6 @@ public class GameWebSocketTest extends Mockito {
         final int CODE = 500;
 
         gameWebSocket.onClose(CODE, " NOT OK");
-        verify(mockedGameMechanics, times(1)).deleteIfWaiter(stringCaptor.capture());
-        assertEquals(stringCaptor.getValue(), TEST_USER_NAME);
+        verify(mockedGameMechanics, times(1)).deleteIfWaiter(eq(TEST_USER_NAME));
     }
 }

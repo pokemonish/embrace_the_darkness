@@ -1,6 +1,7 @@
 node_modules/
 
 backend/classes/
+backend/src/main/java/annotations
 backend/javax/
 frontend/templates/bin/
 

@@ -1,6 +1,5 @@
 package utils;
 
-import org.eclipse.jetty.client.HttpRequest;
 import org.jetbrains.annotations.NotNull;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -17,20 +16,19 @@ public class JsonRequestParser {
         StringBuilder jb = new StringBuilder();
         try {
             BufferedReader reader = request.getReader();
-            String line = null;
+            String line;
             while ((line = reader.readLine()) != null)
                 jb.append(line);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        JSONObject jsonObject = null;
+        JSONObject jsonObject;
 
         try {
             jsonObject = (JSONObject) JSONValue.parse(jb.toString());
 
         } catch (RuntimeException e) {
-            // crash and burn
             throw new IOException("Error parsing JSON request string");
         }
 

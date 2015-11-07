@@ -7,8 +7,6 @@ public class GameUser {
     private String myName;
     private String[] enemyNames = new String[2];
     private int myScore = 0;
-    private int enemyScore = 0;
-
     public GameUser(String myName) {
         this.myName = myName;
     }
@@ -25,16 +23,8 @@ public class GameUser {
         return myScore;
     }
 
-    public int getEnemyScore() {
-        return enemyScore;
-    }
-
     public void incrementMyScore() {
         myScore++;
-    }
-
-    public void incrementEnemyScore() {
-        enemyScore++;
     }
 
     public void setEnemyNames(String[] enemyNames) {

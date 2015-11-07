@@ -15,7 +15,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.jetbrains.annotations.NotNull;
+
 
 
 import javax.servlet.Servlet;
@@ -59,7 +59,7 @@ public class Main {
         context.addServlet(new ServletHolder(admin), "/admin");
         context.addServlet(new ServletHolder(postName), "/postName");
         context.addServlet(new ServletHolder(new WebSocketGameServlet(authService, gameMechanics, webSocketService)), "/gameplay");
-        context.addServlet(new ServletHolder(new GameServlet(gameMechanics, authService)), "/game");
+        //context.addServlet(new ServletHolder(new GameServlet(gameMechanics, authService)), "/game");
 
 
         ResourceHandler resource_handler = new ResourceHandler();
@@ -69,7 +69,6 @@ public class Main {
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
 
-        assert port != null;
         Server server = new Server(port);
         server.setHandler(handlers);
 

@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by fatman on 20/09/15.
@@ -39,11 +37,11 @@ public class SignOutServlet extends HttpServlet {
 
         if (profile != null) {
             accountService.deleteSessions(sessionId);
-            jsonResponse.put("signOutStatus", "Signed out successfully!\nSee you soon!");
+            jsonResponse.put("Status", "Signed out successfully!\nSee you soon!");
         } else {
-            jsonResponse.put("signOutStatus", "You are alredy signed out");
+            jsonResponse.put("Status", "You are alredy signed out");
         }
 
-        ResponseHandler.drawPage(response, jsonResponse);
+        ResponseHandler.respondWithJSON(response, jsonResponse);
     }
 }

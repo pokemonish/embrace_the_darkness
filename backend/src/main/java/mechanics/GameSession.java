@@ -1,7 +1,6 @@
 package mechanics;
 
 import base.GameUser;
-import com.sun.xml.internal.ws.util.QNameMap;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +16,7 @@ public class GameSession {
     private GameUser winner;
 
 
-    public GameSession(String players[]) {
+    public GameSession(String[] players) {
         startTime = new Date().getTime();
 
         for (int i = 0; i < players.length; ++i) {
@@ -37,11 +36,6 @@ public class GameSession {
 
     }
 
-    public GameUser getEnemy(String user) {
-        String[] enemyNames = users.get(user).getEnemyNames();
-        return users.get(enemyNames[0]);
-    }
-
     public GameUser getSelf(String user) {
         return users.get(user);
     }
@@ -57,10 +51,6 @@ public class GameSession {
                 winner = user;
             }
         }
-        return winner;
-    }
-
-    public GameUser getWinner() {
         return winner;
     }
 

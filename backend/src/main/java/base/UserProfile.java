@@ -39,4 +39,20 @@ public class UserProfile {
     public String getEmail() {
         return email;
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null) {
+            return false;
+        }
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+
+        UserProfile profile = (UserProfile)object;
+
+        return (email.equals(profile.email)
+             && login.equals(profile.login)
+            && password.equals(profile.password));
+    }
 }

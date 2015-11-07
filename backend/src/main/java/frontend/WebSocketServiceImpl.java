@@ -24,11 +24,6 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
-    public void notifyEnemyNewScore(GameUser user) {
-        userSockets.get(user.getMyName()).setEnemyScore(user);
-    }
-
-    @Override
     public void notifyStartGame(GameUser user) {
         GameWebSocket gameWebSocket = userSockets.get(user.getMyName());
         gameWebSocket.startGame(user);
@@ -36,7 +31,7 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     @Override
     public void notifyEnemyAction(GameUser user, JSONObject data) {
-        userSockets.get(user.getMyName()).sendEnemyAction(user, data);
+        userSockets.get(user.getMyName()).sendEnemyAction(data);
     }
 
     @Override

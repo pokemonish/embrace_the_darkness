@@ -57,8 +57,8 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private int countWaiters() {
         int waitersNumber = 0;
-        for (int i = 0; i < waiters.length; ++i) {
-            if (waiters[i] != null) {
+        for (String waiter : waiters) {
+            if (waiter != null) {
                 ++waitersNumber;
             }
         }
@@ -79,10 +79,7 @@ public class GameMechanicsImpl implements GameMechanics {
         GameSession myGameSession = nameToGame.get(userName);
         GameUser myUser = myGameSession.getSelf(userName);
         myUser.incrementMyScore();
-        GameUser enemyUser = myGameSession.getEnemy(userName);
-        enemyUser.incrementEnemyScore();
         webSocketService.notifyMyNewScore(myUser);
-        webSocketService.notifyEnemyNewScore(enemyUser);
     }
 
     @Override
@@ -132,9 +129,9 @@ public class GameMechanicsImpl implements GameMechanics {
 
         GameSession gameSession = new GameSession(waiters);
         allSessions.add(gameSession);
-        for (int i = 0; i < waiters.length; ++i) {
-            nameToGame.put(waiters[i], gameSession);
-            webSocketService.notifyStartGame(gameSession.getSelf(waiters[i]));
+        for (String waiter : waiters) {
+            nameToGame.put(waiter, gameSession);
+            webSocketService.notifyStartGame(gameSession.getSelf(waiter));
         }
     }
 

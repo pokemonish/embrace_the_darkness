@@ -13,8 +13,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.io.IOException;
-import java.util.Map;
 
+@SuppressWarnings("unchecked")
 @WebSocket
 public class GameWebSocket {
     private String myName;
@@ -41,14 +41,14 @@ public class GameWebSocket {
             jsonStart.put("status", "start");
             String[] enemies = user.getEnemyNames();
             JSONArray JSONenemies = new JSONArray();
-            for (int i = 0; i < enemies.length; ++i) {
+            for (String nextEnemy : enemies) {
                 JSONObject enemy = new JSONObject();
-                enemy.put("name", enemies[i]);
-                JSONenemies.add(enemy.toJSONString());
+                enemy.put("name", nextEnemy);
+                JSONenemies.add(enemy);
             }
             jsonStart.put("enemyNames", JSONenemies);
             session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.print(e.toString());
         }
     }
@@ -57,9 +57,10 @@ public class GameWebSocket {
         try {
             JSONObject jsonStart = new JSONObject();
             jsonStart.put("status", "finish");
+            jsonStart.put("winner", user.getMyName());
             jsonStart.put("win", win);
             session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.print(e.toString());
         }
     }
@@ -72,15 +73,16 @@ public class GameWebSocket {
 
         JSONObject parsedData = (JSONObject) JSONValue.parse(data);
 
-        if (parsedData.get("type") != null && parsedData.get("type").toString().equals("game logic")) {
+        if (parsedData.get("type") != null &&
+                parsedData.get("type").toString().equals("game logic")) {
             gameMechanics.processGameLogicData(myName, parsedData);
         }
     }
 
     @OnWebSocketConnect
-    public void onOpen(Session session) {
+    public void onOpen(Session sessionOpen) {
         System.out.append("On open started\n");
-        setSession(session);
+        this.session = sessionOpen;
         webSocketService.addUser(this);
         gameMechanics.addUser(myName);
         System.out.append("On open finised\n");
@@ -93,42 +95,27 @@ public class GameWebSocket {
         jsonStart.put("score", user.getMyScore());
         try {
             session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
-            System.out.print(e.toString());
-        }
-    }
-
-    public void setEnemyScore(GameUser user) {
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", "increment");
-        String[] enemies = user.getEnemyNames();
-        JSONObject[] JSONenemies = new JSONObject[enemies.length];
-        for (int i = 0; i < enemies.length; ++i) {
-            JSONObject enemy = new JSONObject();
-            enemy.put("name", enemies[i]);
-            JSONenemies[i] = enemy;
-        }
-        jsonStart.put("name", JSONenemies);
-
-        jsonStart.put("score", user.getEnemyScore());
-        try {
-            session.getRemote().sendString(jsonStart.toJSONString());
-        } catch (Exception e) {
-            System.out.print(e.toString());
-        }
-    }
-
-    public void sendEnemyAction(GameUser user, JSONObject data) {
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", "action");
-        jsonStart.put("activePlayer", data.get("activePlayer"));
-        jsonStart.put("action", data.get("action"));
-        try {
-            session.getRemote().sendString(jsonStart.toJSONString());
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.print(e.toString());
         }
+    }
+
+    public void sendEnemyAction(JSONObject data) {
+        if (isValidFieldInData(data, "activePlayer") &&
+                isValidFieldInData(data, "action")) {
+            data.put("status", "action");
+
+            try {
+                session.getRemote().sendString(data.toJSONString());
+            } catch (IOException e) {
+                System.out.print(e.toString());
+            }
+        }
+    }
+
+    private boolean isValidFieldInData(JSONObject data, String fieldName) {
+        return data.get(fieldName) != null &&
+            !data.get(fieldName).toString().isEmpty();
     }
 
     public Session getSession() {
@@ -141,7 +128,33 @@ public class GameWebSocket {
 
     @OnWebSocketClose
     public void onClose(int statusCode, String reason) {
-        System.out.append("On close " + statusCode + ' ' + reason + '\n');
+        System.out.append("On close ").append(String
+                .valueOf(statusCode)).append(' ').append(reason).append('\n');
         gameMechanics.deleteIfWaiter(myName);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+
+        if (obj == null) return false;
+
+        if (obj.getClass() != getClass()) {
+            return false;
+        }
+
+        GameWebSocket gameWebSocket = (GameWebSocket)obj;
+        System.out.append(myName).append(' ').append(gameWebSocket.myName);
+        return (gameWebSocket.myName.equals(myName) &&
+                gameWebSocket.gameMechanics.equals(gameMechanics) &&
+                gameWebSocket.webSocketService.equals(webSocketService));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = myName != null ? myName.hashCode() : 0;
+        result = 31 * result + (session != null ? session.hashCode() : 0);
+        result = 31 * result + (gameMechanics != null ? gameMechanics.hashCode() : 0);
+        result = 31 * result + (webSocketService != null ? webSocketService.hashCode() : 0);
+        return result;
     }
 }

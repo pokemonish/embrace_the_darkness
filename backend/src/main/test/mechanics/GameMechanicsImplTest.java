@@ -12,9 +12,11 @@ import org.mockito.Mockito;
  */
 public class GameMechanicsImplTest extends Mockito {
 
-    private final WebSocketService mockedWebSocketService = mock(WebSocketServiceImpl.class);
+    private final WebSocketService mockedWebSocketService =
+            mock(WebSocketServiceImpl.class);
 
-    private final GameMechanics gameMechanics = new GameMechanicsImpl(mockedWebSocketService);
+    private final GameMechanics gameMechanics =
+            new GameMechanicsImpl(mockedWebSocketService);
 
     private static final int USERS_NUMBER = 3;
     private static final int TEST_USERS_NUMBER = 15;
@@ -23,7 +25,8 @@ public class GameMechanicsImplTest extends Mockito {
     @Test
     public void testAddUser() throws Exception {
         for (int i = 0; i < TEST_USERS_NUMBER; ++i) {
-            verify(mockedWebSocketService, times((i / USERS_NUMBER) * USERS_NUMBER)).notifyStartGame(any());
+            verify(mockedWebSocketService, times((i / USERS_NUMBER) * USERS_NUMBER))
+                                                            .notifyStartGame(any());
             gameMechanics.addUser(USER + i);
         }
 
