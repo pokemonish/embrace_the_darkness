@@ -9,7 +9,7 @@ module.exports = function(grunt) {
                 stderr: true,
             },
             runServer: {
-                command: 'java -cp server.jar main.Main 8080'
+                command: 'java -cp server.jar main.Main'
             }
         },
 

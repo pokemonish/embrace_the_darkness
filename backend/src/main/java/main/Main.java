@@ -15,7 +15,7 @@ import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-
+import resources.Config;
 
 
 import javax.servlet.Servlet;
@@ -27,17 +27,15 @@ public class Main {
 
     public static void main(@NotNull String[] args) throws Exception {
 
-        if (args.length != 1) {
-            System.out.append("Use port as the first argument");
-            System.exit(1);
-        }
+        Config config = new Config();
 
-        String portString = args[0];
+        int port = Integer.valueOf(config.getParameter("port"));
 
-        assert portString != null;
-        Integer port = Integer.valueOf(portString);
+        String startMessage = "Starting at port: " + port + '\n' +
+                "Currently running on " + System.getProperty("os.name") +
+                ' ' + System.getProperty("os.version") + ' ' +
+                System.getProperty("os.arch") + '\n';
 
-        String startMessage = "Starting at port: " + String.valueOf(port) + '\n';
         System.out.append(startMessage);
 
         AccountService accountService = new AccountService();
@@ -53,18 +51,16 @@ public class Main {
         Servlet admin = new AdminPageServlet(accountService);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(signin), "/api/v1/auth/signin");
-        context.addServlet(new ServletHolder(signUp), "/api/v1/auth/signup");
-        context.addServlet(new ServletHolder(signOut), "/api/v1/auth/signout");
-        context.addServlet(new ServletHolder(admin), "/admin");
-        context.addServlet(new ServletHolder(postName), "/postName");
+        context.addServlet(new ServletHolder(signin), config.getParameter("sign_in_url"));
+        context.addServlet(new ServletHolder(signUp), config.getParameter("sign_up_url"));
+        context.addServlet(new ServletHolder(signOut), config.getParameter("sign_out_url"));
+        context.addServlet(new ServletHolder(admin), config.getParameter("admin_url"));
+        context.addServlet(new ServletHolder(postName), config.getParameter("post_name_url"));
         context.addServlet(new ServletHolder(new WebSocketGameServlet(authService, gameMechanics, webSocketService)), "/gameplay");
-        //context.addServlet(new ServletHolder(new GameServlet(gameMechanics, authService)), "/game");
-
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase("public_html");
+        resource_handler.setResourceBase(config.getParameter("resource_base"));
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
