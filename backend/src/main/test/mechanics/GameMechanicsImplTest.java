@@ -4,6 +4,7 @@ import base.GameMechanics;
 import base.WebSocketService;
 import frontend.WebSocketServiceImpl;
 import org.json.simple.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -18,12 +19,19 @@ public class GameMechanicsImplTest extends Mockito {
     private final MechanicsParameters mechanicsParametersMock =
             mock(MechanicsParameters.class);
 
-    private final GameMechanics gameMechanics =
-            new GameMechanicsImpl(mockedWebSocketService, mechanicsParametersMock);
+    private GameMechanics gameMechanics;
 
     private static final int USERS_NUMBER = 3;
     private static final int TEST_USERS_NUMBER = 15;
     private static final String USER = "user";
+
+    @Before
+    public void setUp() {
+        when(mechanicsParametersMock.getGameTime()).thenReturn(1000);
+        when(mechanicsParametersMock.getPlayersNumber()).thenReturn(USERS_NUMBER);
+        when(mechanicsParametersMock.getStepTime()).thenReturn(100);
+        gameMechanics = new GameMechanicsImpl(mockedWebSocketService, mechanicsParametersMock);
+    }
 
     @Test
     public void testAddUser() throws Exception {
