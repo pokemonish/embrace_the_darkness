@@ -9,11 +9,13 @@ import org.jetbrains.annotations.NotNull;
 public class UserProfile {
 
     @NotNull
-    private final String login;
+    private String login = "";
     @NotNull
-    private final String password;
+    private String password = "";
     @NotNull
-    private final String email;
+    private String email = "";
+
+    public UserProfile() {}
 
     public UserProfile(@NotNull String login,
                        @NotNull String password, @NotNull String email) {

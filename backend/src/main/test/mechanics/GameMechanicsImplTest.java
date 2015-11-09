@@ -16,8 +16,6 @@ public class GameMechanicsImplTest extends Mockito {
 
     private final WebSocketService mockedWebSocketService =
             mock(WebSocketServiceImpl.class);
-    private final MechanicsParameters mechanicsParametersMock =
-            mock(MechanicsParameters.class);
 
     private GameMechanics gameMechanics;
 
@@ -27,10 +25,7 @@ public class GameMechanicsImplTest extends Mockito {
 
     @Before
     public void setUp() {
-        when(mechanicsParametersMock.getGameTime()).thenReturn(1000);
-        when(mechanicsParametersMock.getPlayersNumber()).thenReturn(USERS_NUMBER);
-        when(mechanicsParametersMock.getStepTime()).thenReturn(100);
-        gameMechanics = new GameMechanicsImpl(mockedWebSocketService, mechanicsParametersMock);
+        gameMechanics = new GameMechanicsImpl(mockedWebSocketService);
     }
 
     @Test

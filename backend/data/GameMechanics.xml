@@ -1,5 +1,5 @@
 <class type='mechanics.GameMechanicsImpl'>
-    <PLAYERS_NUMBER>3</PLAYERS_NUMBER>
-    <STEP_TIME>45</STEP_TIME>
-    <GAME_TIME>15000</GAME_TIME>
+    <playersNumber>3</playersNumber>
+    <stepTime>45</stepTime>
+    <gameTime>15000</gameTime>
 </class>

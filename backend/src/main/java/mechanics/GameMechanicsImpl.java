@@ -3,7 +3,6 @@ package mechanics;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
-import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
 import utils.TimeHelper;
 
@@ -18,7 +17,7 @@ import java.util.Set;
 @SuppressWarnings({"unchecked", "InfiniteLoopStatement"})
 public class GameMechanicsImpl implements GameMechanics {
 
-    private int playersNumber = 4;
+    private int playersNumber = 3;
 
     private static final int STEP_TIME_DEFAULT = 300;
     private int stepTime = STEP_TIME_DEFAULT;
@@ -34,13 +33,8 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private String[] waiters;
 
-    public GameMechanicsImpl(WebSocketService webSocketService, @Nullable MechanicsParameters parameters) {
+    public GameMechanicsImpl(WebSocketService webSocketService) {
         this.webSocketService = webSocketService;
-        if (parameters != null) {
-            playersNumber = parameters.getPlayersNumber();
-            stepTime = parameters.getStepTime();
-            gameTime = parameters.getGameTime();
-        }
         waiters = new String[playersNumber];
     }
 

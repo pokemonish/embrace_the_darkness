@@ -4,7 +4,6 @@ import base.AuthService;
 import base.GameMechanics;
 import base.WebSocketService;
 import frontend.*;
-import mechanics.MechanicsParameters;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.jetbrains.annotations.NotNull;
@@ -49,8 +48,12 @@ public class Main {
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
-        MechanicsParameters mechanicsParameters = (MechanicsParameters)ReadXMLFileSAX.readXML("data/MechanicsParameters.xml");
-        GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService, mechanicsParameters);
+        //GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService);
+        GameMechanics gameMechanics =
+                (GameMechanics)ReadXMLFileSAX.readXML("data/GameMechanics.xml",
+                        GameMechanicsImpl.class.getName(), webSocketService);
+        assert(gameMechanics != null);
+
 
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
