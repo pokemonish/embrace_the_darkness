@@ -14,9 +14,11 @@ public class GameMechanicsImplTest extends Mockito {
 
     private final WebSocketService mockedWebSocketService =
             mock(WebSocketServiceImpl.class);
+    private final MechanicsParameters mechanicsParametersMock =
+            mock(MechanicsParameters.class);
 
     private final GameMechanics gameMechanics =
-            new GameMechanicsImpl(mockedWebSocketService);
+            new GameMechanicsImpl(mockedWebSocketService, mechanicsParametersMock);
 
     private static final int USERS_NUMBER = 3;
     private static final int TEST_USERS_NUMBER = 15;

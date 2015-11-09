@@ -28,7 +28,7 @@ function RunnerManager(elem) {
     var self = this;
 
     setTimeout(function() {
-        self.socket = new WebSocket(URL_TP_JAVA);
+        self.socket = new WebSocket(URL_LOCALHOST);
         self.socket.onmessage = function(event) {
             self.parseMessage(event);
         };
@@ -61,7 +61,7 @@ RunnerManager.prototype = {
                         var enemyNames = data.enemyNames;
                         for (var i = 0; i < enemyNames.length; ++i) {
                             console.log(enemyNames[i]);
-                            this.addRunner(JSON.parse(enemyNames[i]).name);
+                            this.addRunner(enemyNames[i].name);
                         }
                         this.start();
                         break;

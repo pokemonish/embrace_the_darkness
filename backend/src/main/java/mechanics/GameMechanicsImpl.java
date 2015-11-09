@@ -15,11 +15,14 @@ import java.util.Set;
  * @author v.chibrikov
  */
 public class GameMechanicsImpl implements GameMechanics {
-    private static final int PLAYERS_NUMBER = 3;
 
-    private static final int STEP_TIME = 100;
+    private int playersNumber = 4;
 
-    private static final int GAME_TIME = 15 * 1000;
+    private static final int STEP_TIME_DEFAULT = 300;
+    private int stepTime = STEP_TIME_DEFAULT;
+
+    private static final int GAME_TIME_DEFAULT = 65;
+    private int gameTime = GAME_TIME_DEFAULT * 1000;
 
     private WebSocketService webSocketService;
 
@@ -27,10 +30,14 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private Set<GameSession> allSessions = new HashSet<>();
 
-    private String[] waiters = new String[PLAYERS_NUMBER];
+    private String[] waiters;
 
-    public GameMechanicsImpl(WebSocketService webSocketService) {
+    public GameMechanicsImpl(WebSocketService webSocketService, MechanicsParameters parameters) {
         this.webSocketService = webSocketService;
+        playersNumber = parameters.getPlayersNumber();
+        stepTime = parameters.getStepTime();
+        gameTime = parameters.getGameTime();
+        waiters = new String[playersNumber];
     }
 
     @Override
@@ -40,16 +47,16 @@ public class GameMechanicsImpl implements GameMechanics {
 
         int waitersNumber = countWaiters();
 
-        System.out.print(PLAYERS_NUMBER - 1);
-        System.out.print(waitersNumber == PLAYERS_NUMBER - 1);
+        System.out.print(playersNumber - 1);
+        System.out.print(waitersNumber == playersNumber - 1);
         System.out.print(" User is " + user + ' ');
 
-        if (waitersNumber == PLAYERS_NUMBER - 1) {
+        if (waitersNumber == playersNumber - 1) {
             waiters[waitersNumber] = user;
 
             startGame();
 
-            waiters = new String[PLAYERS_NUMBER];
+            waiters = new String[playersNumber];
         } else {
             waiters[waitersNumber] = user;
         }
@@ -86,27 +93,26 @@ public class GameMechanicsImpl implements GameMechanics {
     public void run() {
         while (true) {
             gmStep();
-            TimeHelper.sleep(STEP_TIME);
+            TimeHelper.sleep(stepTime);
         }
     }
 
     private void gmStep() {
-        for (GameSession session : allSessions) {
-            if (session.getSessionTime() > GAME_TIME) {
+        allSessions.stream().filter(session ->
+                session.getSessionTime() > gameTime).forEach(session -> {
 
-                GameUser winner = session.determineWinner();
-                Map<String, GameUser> users = session.getUsers();
+            GameUser winner = session.determineWinner();
+            Map<String, GameUser> users = session.getUsers();
 
-                for(Map.Entry<String, GameUser> entry : users.entrySet()) {
-                    GameUser user = entry.getValue();
-                    String name = entry.getKey();
+            for (Map.Entry<String, GameUser> entry : users.entrySet()) {
+                GameUser user = entry.getValue();
+                String name = entry.getKey();
 
-                    boolean isWinner = winner.getMyName().equals(name);
+                boolean isWinner = winner.getMyName().equals(name);
 
-                    webSocketService.notifyGameOver(user, isWinner);
-                }
+                webSocketService.notifyGameOver(user, isWinner);
             }
-        }
+        });
     }
 
     @Override
