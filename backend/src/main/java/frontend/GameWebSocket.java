@@ -17,10 +17,10 @@ import java.io.IOException;
 @SuppressWarnings("unchecked")
 @WebSocket
 public class GameWebSocket {
-    private String myName;
+    private final String myName;
     private Session session;
-    private GameMechanics gameMechanics;
-    private WebSocketService webSocketService;
+    private final GameMechanics gameMechanics;
+    private final WebSocketService webSocketService;
 
     public GameWebSocket(String myName, GameMechanics gameMechanics,
                          WebSocketService webSocketService) {

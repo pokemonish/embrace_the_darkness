@@ -1,6 +1,5 @@
 package frontend;
 
-import main.AccountService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,8 +7,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by fatman on 05/11/15.

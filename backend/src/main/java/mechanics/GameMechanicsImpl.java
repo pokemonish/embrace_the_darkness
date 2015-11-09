@@ -3,6 +3,7 @@ package mechanics;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
+import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONObject;
 import utils.TimeHelper;
 
@@ -14,6 +15,7 @@ import java.util.Set;
 /**
  * @author v.chibrikov
  */
+@SuppressWarnings({"unchecked", "InfiniteLoopStatement"})
 public class GameMechanicsImpl implements GameMechanics {
 
     private int playersNumber = 4;
@@ -24,19 +26,21 @@ public class GameMechanicsImpl implements GameMechanics {
     private static final int GAME_TIME_DEFAULT = 65;
     private int gameTime = GAME_TIME_DEFAULT * 1000;
 
-    private WebSocketService webSocketService;
+    private final WebSocketService webSocketService;
 
-    private Map<String, GameSession> nameToGame = new HashMap<>();
+    private final Map<String, GameSession> nameToGame = new HashMap<>();
 
-    private Set<GameSession> allSessions = new HashSet<>();
+    private final Set<GameSession> allSessions = new HashSet<>();
 
     private String[] waiters;
 
-    public GameMechanicsImpl(WebSocketService webSocketService, MechanicsParameters parameters) {
+    public GameMechanicsImpl(WebSocketService webSocketService, @Nullable MechanicsParameters parameters) {
         this.webSocketService = webSocketService;
-        playersNumber = parameters.getPlayersNumber();
-        stepTime = parameters.getStepTime();
-        gameTime = parameters.getGameTime();
+        if (parameters != null) {
+            playersNumber = parameters.getPlayersNumber();
+            stepTime = parameters.getStepTime();
+            gameTime = parameters.getGameTime();
+        }
         waiters = new String[playersNumber];
     }
 

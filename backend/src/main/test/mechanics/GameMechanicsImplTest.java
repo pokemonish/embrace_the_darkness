@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 /**
  * Created by fatman on 02/11/15.
  */
+@SuppressWarnings("unchecked")
 public class GameMechanicsImplTest extends Mockito {
 
     private final WebSocketService mockedWebSocketService =

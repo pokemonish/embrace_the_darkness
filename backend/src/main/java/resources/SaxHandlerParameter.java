@@ -9,8 +9,8 @@ import utils.ReflectionHelper;
  */
 public class SaxHandlerParameter extends SaxHandler {
 
-    private Object parameterForConstructor;
-    private String classToPassParameterTo;
+    private final Object parameterForConstructor;
+    private final String classToPassParameterTo;
 
     SaxHandlerParameter(String clazz, Object parameter) {
         parameterForConstructor = parameter;

@@ -9,11 +9,11 @@ import org.jetbrains.annotations.NotNull;
 public class UserProfile {
 
     @NotNull
-    private String login;
+    private final String login;
     @NotNull
-    private String password;
+    private final String password;
     @NotNull
-    private String email;
+    private final String email;
 
     public UserProfile(@NotNull String login,
                        @NotNull String password, @NotNull String email) {
@@ -54,5 +54,13 @@ public class UserProfile {
         return (email.equals(profile.email)
              && login.equals(profile.login)
             && password.equals(profile.password));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = login.hashCode();
+        result = 31 * result + password.hashCode();
+        result = 31 * result + email.hashCode();
+        return result;
     }
 }

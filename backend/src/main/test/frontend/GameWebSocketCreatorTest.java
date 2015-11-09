@@ -5,7 +5,6 @@ import base.GameMechanics;
 import base.WebSocketService;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 

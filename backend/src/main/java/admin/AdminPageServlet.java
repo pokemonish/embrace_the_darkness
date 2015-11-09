@@ -15,7 +15,7 @@ import java.util.Map;
 public class AdminPageServlet extends HttpServlet {
 
     @NotNull
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public AdminPageServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;

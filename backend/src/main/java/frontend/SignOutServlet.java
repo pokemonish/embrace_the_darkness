@@ -16,9 +16,10 @@ import java.io.IOException;
 /**
  * Created by fatman on 20/09/15.
  */
+@SuppressWarnings("unchecked")
 public class SignOutServlet extends HttpServlet {
     @NotNull
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public SignOutServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;

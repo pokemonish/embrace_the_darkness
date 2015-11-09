@@ -12,7 +12,7 @@ import java.util.Map;
 public class GameSession {
     private final long startTime;
 
-    private Map<String, GameUser> users = new HashMap<>();
+    private final Map<String, GameUser> users = new HashMap<>();
     private GameUser winner;
 
 

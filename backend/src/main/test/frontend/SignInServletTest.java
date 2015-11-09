@@ -5,12 +5,12 @@ import org.junit.Test;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
  * Created by fatman on 04/11/15.
  */
+@SuppressWarnings("unchecked")
 public class SignInServletTest extends AuthBasicTest {
 
     SignInServlet signInServlet = new SignInServlet(mockedAccountService);

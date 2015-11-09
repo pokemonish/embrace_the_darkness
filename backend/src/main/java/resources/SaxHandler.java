@@ -6,7 +6,6 @@ import org.xml.sax.helpers.DefaultHandler;
 import utils.ReflectionHelper;
 
 public class SaxHandler extends DefaultHandler {
-    @SuppressWarnings("FieldCanBeLocal")
     protected static final String CLASS = "class";
     protected String element = null;
     protected Object object = null;

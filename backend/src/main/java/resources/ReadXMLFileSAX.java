@@ -8,6 +8,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 
+@SuppressWarnings({"StaticVariableNamingConvention", "unused"})
 public class ReadXMLFileSAX {
 
     private static SaxHandler handler;
@@ -24,6 +25,7 @@ public class ReadXMLFileSAX {
         return parseXML(xmlFile);
     }
 
+    @Nullable
     private static Object parseXML(String xmlFile) {
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();

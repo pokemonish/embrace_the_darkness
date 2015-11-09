@@ -1,20 +1,17 @@
 package frontend;
 
-import main.AccountService;
-import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
  * Created by fatman on 02/11/15.
  */
+@SuppressWarnings("unchecked")
 public class SignUpServletTest extends AuthBasicTest {
 
     SignUpServlet signUpServlet = new SignUpServlet(mockedAccountService);

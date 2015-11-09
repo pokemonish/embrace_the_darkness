@@ -3,7 +3,6 @@ package frontend;
 import base.AuthService;
 import base.GameMechanics;
 import base.WebSocketService;
-import main.AccountService;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
@@ -12,9 +11,9 @@ import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
  * @author v.chibrikov
  */
 public class GameWebSocketCreator implements WebSocketCreator {
-    private AuthService authService;
-    private GameMechanics gameMechanics;
-    private WebSocketService webSocketService;
+    private final AuthService authService;
+    private final GameMechanics gameMechanics;
+    private final WebSocketService webSocketService;
 
     public GameWebSocketCreator(AuthService authService,
                                 GameMechanics gameMechanics,

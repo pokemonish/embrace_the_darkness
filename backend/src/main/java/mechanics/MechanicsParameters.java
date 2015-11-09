@@ -3,6 +3,7 @@ package mechanics;
 /**
  * Created by fatman on 09/11/15.
  */
+@SuppressWarnings("unused")
 public class MechanicsParameters {
     private int playersNumber;
     private int stepTime;

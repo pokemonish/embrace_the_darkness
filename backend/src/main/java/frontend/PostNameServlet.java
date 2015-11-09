@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class PostNameServlet extends HttpServlet {
 
-    private AuthService authService;
+    private final AuthService authService;
 
     public PostNameServlet(@NotNull AuthService authService) { this.authService = authService; }
 
@@ -26,8 +26,6 @@ public class PostNameServlet extends HttpServlet {
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-
-        System.out.append(request.getParameter("username") + '\n');
 
         String sessionId = session.getId();
         this.authService.saveUserName(sessionId, request.getParameter("username"));

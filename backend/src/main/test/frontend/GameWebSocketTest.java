@@ -18,6 +18,7 @@ import static org.junit.Assert.*;
 /**
  * Created by fatman on 02/11/15.
  */
+@SuppressWarnings("unchecked")
 public class GameWebSocketTest extends Mockito {
 
     private static final String TEST_USER_NAME = "testUser1";

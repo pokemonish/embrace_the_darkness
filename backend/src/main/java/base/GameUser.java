@@ -4,7 +4,7 @@ package base;
  * @author v.chibrikov
  */
 public class GameUser {
-    private String myName;
+    private final String myName;
     private String[] enemyNames = new String[2];
     private int myScore = 0;
     public GameUser(String myName) {

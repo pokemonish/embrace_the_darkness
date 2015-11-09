@@ -22,7 +22,7 @@ public class Config {
 
     private final Properties properties = new Properties();
 
-    public Config() throws Exception {
+    public Config() {
 
         try (final FileInputStream fis = new FileInputStream(CONFIG_FILE_PATH)) {
 

@@ -18,10 +18,11 @@ import utils.JsonRequestParser;
 /**
  * @author v.chibrikov
  */
+@SuppressWarnings("unchecked")
 public class SignInServlet extends HttpServlet {
 
     @NotNull
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public SignInServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;

@@ -11,7 +11,7 @@ import java.util.Map;
  * @author v.chibrikov
  */
 public class WebSocketServiceImpl implements WebSocketService {
-    private Map<String, GameWebSocket> userSockets = new HashMap<>();
+    private final Map<String, GameWebSocket> userSockets = new HashMap<>();
 
     @Override
     public void addUser(GameWebSocket user) {

@@ -5,17 +5,18 @@ import org.json.simple.JSONObject;
 /**
  * @author v.chibrikov
  */
+@SuppressWarnings("unused")
 public interface GameMechanics {
 
-    public void addUser(String user);
+    void addUser(String user);
 
-    public void incrementScore(String userName);
+    void incrementScore(String userName);
 
-    public void run();
+    void run();
 
-    public void sendOtherPlayers(String player, JSONObject data);
+    void sendOtherPlayers(String player, JSONObject data);
 
-    public void deleteIfWaiter(String player);
+    void deleteIfWaiter(String player);
 
-    public void processGameLogicData(String playerName, JSONObject data);
+    void processGameLogicData(String playerName, JSONObject data);
 }

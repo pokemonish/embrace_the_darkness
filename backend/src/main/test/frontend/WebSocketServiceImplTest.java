@@ -5,8 +5,6 @@ import org.json.simple.JSONObject;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.*;
-
 /**
  * Created by fatman on 05/11/15.
  */
