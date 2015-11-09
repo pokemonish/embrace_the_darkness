@@ -8,20 +8,20 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 
-@SuppressWarnings({"StaticVariableNamingConvention", "unused"})
+@SuppressWarnings({"unused"})
 public class ReadXMLFileSAX {
 
-    private static SaxHandler handler;
+    private static SaxHandler s_handler;
 
     @Nullable
     public static Object readXML(String xmlFile) {
-        handler = new SaxHandler();
+        s_handler = new SaxHandler();
         return parseXML(xmlFile);
     }
 
     @Nullable
     public static Object readXML(String xmlFile, String className, Object parameter) {
-        handler = new SaxHandlerParameter(className, parameter);
+        s_handler = new SaxHandlerParameter(className, parameter);
         return parseXML(xmlFile);
     }
 
@@ -31,9 +31,9 @@ public class ReadXMLFileSAX {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser saxParser = factory.newSAXParser();
 
-            saxParser.parse(xmlFile, handler);
+            saxParser.parse(xmlFile, s_handler);
 
-            return handler.getObject();
+            return s_handler.getObject();
 
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
