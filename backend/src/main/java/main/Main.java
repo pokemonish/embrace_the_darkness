@@ -39,7 +39,8 @@ public class Main {
         String startMessage = "Starting at port: " + port + '\n' +
                 "Currently running on " + System.getProperty("os.name") +
                 ' ' + System.getProperty("os.version") + ' ' +
-                System.getProperty("os.arch") + '\n';
+                System.getProperty("os.arch") + '\n' + "Virtual processors(threads) available: " +
+                Runtime.getRuntime().availableProcessors()  +'\n';
 
         Logger.getAnonymousLogger().log(new LogRecord(Level.INFO, startMessage));
 

@@ -1,4 +1,4 @@
-<class type='mechanics.GameMechanicsImpl'>
+<class type='mechanics.GameMechanicsImpl' params="1">
     <playersNumber>3</playersNumber>
     <stepTime>45</stepTime>
     <gameTime>15000</gameTime>
