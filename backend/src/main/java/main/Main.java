@@ -35,7 +35,7 @@ public class Main {
 
         Config config = new Config();
 
-        int port = Integer.valueOf(config.getParameter(Config.PORT));
+        int port = config.getPort();
 
         String startMessage = "Starting at port: " + port + '\n' +
                 "Currently running on " + System.getProperty("os.name") +
@@ -49,7 +49,8 @@ public class Main {
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
-        MechanicsParameters mechanicsParameters = (MechanicsParameters)ReadXMLFileSAX.readXML("data/MechanicsParameters.xml");
+        MechanicsParameters mechanicsParameters = (MechanicsParameters)ReadXMLFileSAX.readXML
+                ("data/MechanicsParameters.xml");
         GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService, mechanicsParameters);
 
         Servlet signin = new SignInServlet(accountService);
@@ -59,17 +60,17 @@ public class Main {
         Servlet admin = new AdminPageServlet(accountService);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(signin), config.getParameter(Config.SIGN_IN_URL));
-        context.addServlet(new ServletHolder(signUp), config.getParameter(Config.SIGN_UP_URL));
-        context.addServlet(new ServletHolder(signOut), config.getParameter(Config.SIGN_OUT_URL));
-        context.addServlet(new ServletHolder(admin), config.getParameter(Config.ADMIN_URL));
-        context.addServlet(new ServletHolder(postName), config.getParameter(Config.POST_NAME_URL));
+        context.addServlet(new ServletHolder(signin), config.getSignInUrl());
+        context.addServlet(new ServletHolder(signUp), config.getSignUpUrl());
+        context.addServlet(new ServletHolder(signOut), config.getSignOutUrl());
+        context.addServlet(new ServletHolder(admin), config.getAdminUrl());
+        context.addServlet(new ServletHolder(postName), config.getPostNameUrl());
         context.addServlet(new ServletHolder(new WebSocketGameServlet(authService,
-                gameMechanics, webSocketService)), config.getParameter(Config.GAMEPLAY_URL));
+                gameMechanics, webSocketService)), config.getGameplayUrl());
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase(config.getParameter(Config.RESOURCE_BASE));
+        resource_handler.setResourceBase(config.getResourceBase());
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
