@@ -1,7 +1,7 @@
 package frontend;
 
 import base.GameUser;
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -13,7 +13,7 @@ public class WebSocketServiceImplTest extends Mockito {
     private GameWebSocket gameWebSocketMock = mock(GameWebSocket.class);
     private GameUser gameUserMock = mock(GameUser.class);
     private WebSocketServiceImpl webSocketService = new WebSocketServiceImpl();
-    private JSONObject testJsonObject = new JSONObject();
+    private JsonObject testJsonObject = new JsonObject();
 
     @Test
     public void testNotifyMyNewScore() throws Exception {

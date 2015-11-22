@@ -3,10 +3,10 @@ package frontend;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import mechanics.GameMechanicsImpl;
 import org.eclipse.jetty.websocket.api.Session;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 /**
  * Created by fatman on 02/11/15.
  */
-@SuppressWarnings("unchecked")
+
 public class GameWebSocketTest extends Mockito {
 
     private static final String TEST_USER_NAME = "testUser1";
@@ -32,19 +32,19 @@ public class GameWebSocketTest extends Mockito {
                                 mockedGameMechanics,
                                 mockedWebSocketService);
     private final Session mockedSession = mock(Session.class, RETURNS_DEEP_STUBS);
-    private final JSONArray testEnemies = new JSONArray();
+    private final JsonArray testEnemies = new JsonArray();
 
     @Before
     public void beforeGameWebSocketTest() {
         String[] enemyNames = new String[2];
         enemyNames[0] = "testEnemy1";
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("name", "testEnemy1");
-        testEnemies.add(0, jsonObject);
+        JsonObject testEnemy = new JsonObject();
+        testEnemy.addProperty("name", "testEnemy1");
+        testEnemies.add(testEnemy);
         enemyNames[1] = "testEnemy2";
-        jsonObject = new JSONObject();
-        jsonObject.put("name", "testEnemy2");
-        testEnemies.add(1, jsonObject);
+        testEnemy = new JsonObject();
+        testEnemy.addProperty("name", "testEnemy2");
+        testEnemies.add(testEnemy);
         when(testUser.getEnemyNames()).thenReturn(enemyNames);
     }
 
@@ -60,13 +60,13 @@ public class GameWebSocketTest extends Mockito {
         gameWebSocket.setSession(mockedSession);
         gameWebSocket.startGame(testUser);
 
-        JSONObject jsonTest = new JSONObject();
-        jsonTest.put("status", "start");
-        jsonTest.put("enemyNames", testEnemies);
+        JsonObject jsonTest = new JsonObject();
+        jsonTest.addProperty("status", "start");
+        jsonTest.add("enemyNames", testEnemies);
 
-        System.out.append(jsonTest.toJSONString());
+        System.out.append(jsonTest.toString());
         verify(mockedSession.getRemote(), times(1))
-                .sendString(eq(jsonTest.toJSONString()));
+                .sendString(eq(jsonTest.toString()));
     }
 
     @Test
@@ -85,15 +85,15 @@ public class GameWebSocketTest extends Mockito {
     @Test
     public void testOnMessage() throws Exception {
 
-        JSONObject jsonTest = new JSONObject();
+        JsonObject jsonTest = new JsonObject();
 
-        gameWebSocket.onMessage(jsonTest.toJSONString());
+        gameWebSocket.onMessage(jsonTest.toString());
         verify(mockedGameMechanics, times(0))
                 .processGameLogicData(any(), any());
 
-        jsonTest.put("type", "game logic");
+        jsonTest.addProperty("type", "game logic");
 
-        gameWebSocket.onMessage(jsonTest.toJSONString());
+        gameWebSocket.onMessage(jsonTest.toString());
 
         verify(mockedGameMechanics, times(1))
                 .processGameLogicData(eq(TEST_USER_NAME), eq(jsonTest));
@@ -125,10 +125,10 @@ public class GameWebSocketTest extends Mockito {
     public void testSendEnemyAction() throws IOException {
         gameWebSocket.setSession(mockedSession);
 
-        JSONObject jsonTest = new JSONObject();
+        JsonObject jsonTest = new JsonObject();
 
-        jsonTest.put("activePlayer", TEST_USER_NAME);
-        jsonTest.put("action", TEST_USER_ACTION);
+        jsonTest.addProperty("activePlayer", TEST_USER_NAME);
+        jsonTest.addProperty("action", TEST_USER_ACTION);
 
         gameWebSocket.sendEnemyAction(jsonTest);
 

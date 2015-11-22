@@ -1,9 +1,9 @@
 package frontend;
 
 import base.UserProfile;
+import com.google.gson.JsonObject;
 import main.AccountService;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
@@ -31,7 +31,7 @@ public class AuthBasicTest extends Mockito {
     @NotNull
     protected HttpServletRequest mockedRequest = mock(HttpServletRequest.class);
 
-    protected ArgumentCaptor<JSONObject> jsonObjectCaptor = ArgumentCaptor.forClass(JSONObject.class);
+    protected ArgumentCaptor<JsonObject> jsonObjectCaptor = ArgumentCaptor.forClass(JsonObject.class);
     protected ArgumentCaptor<Integer> integerCaptor = ArgumentCaptor.forClass(Integer.class);
 
     protected static final String EMAIL_TEST = "testEmail";
@@ -47,17 +47,17 @@ public class AuthBasicTest extends Mockito {
     protected final HttpSession mockedSession = mock(HttpSession.class);
     protected static final String TEST_SESSION_ID = "TEST_SESSION_ID";
 
-    protected JSONObject parametersJson = new JSONObject();
+    protected JsonObject parametersJson = new JsonObject();
 
     public void testDoPostAfter(String message, long expectedStatus, int timesNumber)
             throws ServletException, IOException {
 
         verify(mockedWriter, times(timesNumber)).println(jsonObjectCaptor.capture());
-        JSONObject generatedJson = jsonObjectCaptor.getValue();
+        JsonObject generatedJson = jsonObjectCaptor.getValue();
 
         assertNotNull(generatedJson.get("Status"));
 
-        assertEquals(generatedJson.get("Status"), message);
+        assertEquals(message, generatedJson.get("Status").getAsString());
 
         verify(mockedResponse, times(timesNumber)).setStatus(integerCaptor.capture());
         long status = integerCaptor.getValue();

@@ -64,7 +64,7 @@ public class Config {
 
     private final Properties properties = new Properties();
 
-    public Config() throws Exception, NumberFormatException {
+    public Config() throws MissingParametersException, NumberFormatException {
 
         setUp();
 
@@ -78,7 +78,7 @@ public class Config {
         postNameUrl = getParameter(POST_NAME_URL);
     }
 
-    public Config(String newfilePath) throws Exception, NumberFormatException {
+    public Config(String newfilePath) throws MissingParametersException, NumberFormatException {
         s_filePath = newfilePath;
         setUp();
 
@@ -103,10 +103,16 @@ public class Config {
         }
     }
 
-    private String getParameter(String key) throws Exception {
+    private String getParameter(String key) throws MissingParametersException {
         String parameter = properties.getProperty(key);
-        if (parameter == null) throw new Exception("File " +
+        if (parameter == null) throw new MissingParametersException("File " +
                 CONFIG_FILE_PATH_DEFAULT + " is missing required property: " + key);
         return parameter;
+    }
+
+    private static final class MissingParametersException extends Exception {
+        private MissingParametersException(String message) {
+            super(message);
+        }
     }
 }

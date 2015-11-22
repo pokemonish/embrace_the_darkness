@@ -2,8 +2,8 @@ package mechanics;
 
 import base.GameMechanics;
 import base.WebSocketService;
+import com.google.gson.JsonObject;
 import frontend.WebSocketServiceImpl;
-import org.json.simple.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -11,7 +11,7 @@ import org.mockito.Mockito;
 /**
  * Created by fatman on 02/11/15.
  */
-@SuppressWarnings("unchecked")
+
 public class GameMechanicsImplTest extends Mockito {
 
     private final WebSocketService mockedWebSocketService =
@@ -75,8 +75,8 @@ public class GameMechanicsImplTest extends Mockito {
             gameMechanics.addUser(USER + i);
         }
 
-        JSONObject testJsonData = new JSONObject();
-        testJsonData.put("action", "jump");
+        JsonObject testJsonData = new JsonObject();
+        testJsonData.addProperty("action", "jump");
 
         gameMechanics.sendOtherPlayers(USER + 1, testJsonData);
 

@@ -3,18 +3,17 @@ package frontend;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
+import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 
-@SuppressWarnings("unchecked")
 @WebSocket
 public class GameWebSocket {
     private final String myName;
@@ -37,17 +36,17 @@ public class GameWebSocket {
     public void startGame(GameUser user) {
         System.out.append("StartGame started\n");
         try {
-            JSONObject jsonStart = new JSONObject();
-            jsonStart.put("status", "start");
+            JsonObject jsonStart = new JsonObject();
+            jsonStart.addProperty("status", "start");
             String[] enemies = user.getEnemyNames();
-            JSONArray JSONenemies = new JSONArray();
+            JsonArray JSONenemies = new JsonArray();
             for (String nextEnemy : enemies) {
-                JSONObject enemy = new JSONObject();
-                enemy.put("name", nextEnemy);
+                JsonObject enemy = new JsonObject();
+                enemy.addProperty("name", nextEnemy);
                 JSONenemies.add(enemy);
             }
-            jsonStart.put("enemyNames", JSONenemies);
-            session.getRemote().sendString(jsonStart.toJSONString());
+            jsonStart.add("enemyNames", JSONenemies);
+            session.getRemote().sendString(jsonStart.toString());
         } catch (IOException e) {
             System.out.print(e.toString());
         }
@@ -55,11 +54,11 @@ public class GameWebSocket {
 
     public void gameOver(GameUser user, boolean win) {
         try {
-            JSONObject jsonStart = new JSONObject();
-            jsonStart.put("status", "finish");
-            jsonStart.put("winner", user.getMyName());
-            jsonStart.put("win", win);
-            session.getRemote().sendString(jsonStart.toJSONString());
+            JsonObject jsonStart = new JsonObject();
+            jsonStart.addProperty("status", "finish");
+            jsonStart.addProperty("winner", user.getMyName());
+            jsonStart.addProperty("win", win);
+            session.getRemote().sendString(jsonStart.toString());
         } catch (IOException e) {
             System.out.print(e.toString());
         }
@@ -71,10 +70,10 @@ public class GameWebSocket {
 
         if (data.isEmpty()) return;
 
-        JSONObject parsedData = (JSONObject) JSONValue.parse(data);
+        JsonObject parsedData = new Gson().fromJson(data, JsonObject.class);
 
         if (parsedData.get("type") != null &&
-                parsedData.get("type").toString().equals("game logic")) {
+                parsedData.get("type").getAsString().equals("game logic")) {
             gameMechanics.processGameLogicData(myName, parsedData);
         }
     }
@@ -89,31 +88,31 @@ public class GameWebSocket {
     }
 
     public void setMyScore(GameUser user) {
-        JSONObject jsonStart = new JSONObject();
-        jsonStart.put("status", "increment");
-        jsonStart.put("name", myName);
-        jsonStart.put("score", user.getMyScore());
+        JsonObject jsonStart = new JsonObject();
+        jsonStart.addProperty("status", "increment");
+        jsonStart.addProperty("name", myName);
+        jsonStart.addProperty("score", user.getMyScore());
         try {
-            session.getRemote().sendString(jsonStart.toJSONString());
+            session.getRemote().sendString(jsonStart.toString());
         } catch (IOException e) {
             System.out.print(e.toString());
         }
     }
 
-    public void sendEnemyAction(JSONObject data) {
+    public void sendEnemyAction(JsonObject data) {
         if (isValidFieldInData(data, "activePlayer") &&
                 isValidFieldInData(data, "action")) {
-            data.put("status", "action");
+            data.addProperty("status", "action");
 
             try {
-                session.getRemote().sendString(data.toJSONString());
+                session.getRemote().sendString(data.toString());
             } catch (IOException e) {
                 System.out.print(e.toString());
             }
         }
     }
 
-    private boolean isValidFieldInData(JSONObject data, String fieldName) {
+    private boolean isValidFieldInData(JsonObject data, String fieldName) {
         return data.get(fieldName) != null &&
             !data.get(fieldName).toString().isEmpty();
     }

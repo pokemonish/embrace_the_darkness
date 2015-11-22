@@ -10,7 +10,7 @@ import java.io.IOException;
 /**
  * Created by fatman on 04/11/15.
  */
-@SuppressWarnings("unchecked")
+
 public class SignInServletTest extends AuthBasicTest {
 
     SignInServlet signInServlet = new SignInServlet(mockedAccountService);
@@ -40,13 +40,13 @@ public class SignInServletTest extends AuthBasicTest {
 
     @Test
     public void testNoLoginDoPost() throws ServletException, IOException {
-        parametersJson.put("password", PASSWORD_TEST);
+        parametersJson.addProperty("password", PASSWORD_TEST);
         testDoPost("login is required", HttpServletResponse.SC_OK, 1);
     }
 
     @Test
     public void testNoPasswordDoPost() throws ServletException, IOException {
-        parametersJson.put("email", EMAIL_TEST);
+        parametersJson.addProperty("email", EMAIL_TEST);
         testDoPost("password is required", HttpServletResponse.SC_OK, 1);
     }
 
@@ -54,9 +54,9 @@ public class SignInServletTest extends AuthBasicTest {
     public void testWrongPasswordDoPost() throws ServletException, IOException {
         when(mockedAccountService.getUser(eq(EMAIL_TEST))).thenReturn(TEST_USER_PROFILE);
 
-        parametersJson.put("email", EMAIL_TEST);
+        parametersJson.addProperty("email", EMAIL_TEST);
         final String WRONG_PASSWORD = "wrongPassword";
-        parametersJson.put("password", WRONG_PASSWORD);
+        parametersJson.addProperty("password", WRONG_PASSWORD);
 
         testDoPost("Wrong login/password", HttpServletResponse.SC_OK, 1);
     }
@@ -65,8 +65,8 @@ public class SignInServletTest extends AuthBasicTest {
     public void testWrongLoginDoPost() throws ServletException, IOException {
         when(mockedAccountService.getUser(eq(EMAIL_TEST))).thenReturn(null);
 
-        parametersJson.put("email", EMAIL_TEST);
-        parametersJson.put("password", PASSWORD_TEST);
+        parametersJson.addProperty("email", EMAIL_TEST);
+        parametersJson.addProperty("password", PASSWORD_TEST);
 
         testDoPost("Wrong login/password", HttpServletResponse.SC_OK, 1);
     }
@@ -75,8 +75,8 @@ public class SignInServletTest extends AuthBasicTest {
     public void testRightDataDoPost() throws ServletException, IOException {
         when(mockedAccountService.getUser(eq(EMAIL_TEST))).thenReturn(TEST_USER_PROFILE);
 
-        parametersJson.put("email", EMAIL_TEST);
-        parametersJson.put("password", PASSWORD_TEST);
+        parametersJson.addProperty("email", EMAIL_TEST);
+        parametersJson.addProperty("password", PASSWORD_TEST);
 
         testDoPost("Login passed", HttpServletResponse.SC_OK, 1);
 
@@ -87,8 +87,8 @@ public class SignInServletTest extends AuthBasicTest {
     public void testDuplicateDoPost() throws ServletException, IOException {
         when(mockedAccountService.getSessions(TEST_SESSION_ID)).thenReturn(TEST_USER_PROFILE);
 
-        parametersJson.put("email", EMAIL_TEST);
-        parametersJson.put("password", PASSWORD_TEST);
+        parametersJson.addProperty("email", EMAIL_TEST);
+        parametersJson.addProperty("password", PASSWORD_TEST);
 
         testDoPost("You are alredy logged in", HttpServletResponse.SC_OK, 1);
     }

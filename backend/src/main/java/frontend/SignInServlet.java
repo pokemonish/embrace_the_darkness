@@ -1,10 +1,11 @@
 package frontend;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import main.AccountService;
 import main.ResponseHandler;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +19,8 @@ import utils.JsonRequestParser;
 /**
  * @author v.chibrikov
  */
-@SuppressWarnings("unchecked")
+
+
 public class SignInServlet extends HttpServlet {
 
     @NotNull
@@ -34,24 +36,24 @@ public class SignInServlet extends HttpServlet {
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
         HttpSession session = request.getSession();
-        JSONObject jsonResponse = new JSONObject();
+        JsonObject jsonResponse = new JsonObject();
 
         String sessionId = session.getId();
 
-        JSONObject jsonObject = JsonRequestParser.parse(request);
+        JsonObject requestData = JsonRequestParser.parse(request);
 
-        Object requestEmail = jsonObject.get("email");
-        Object requestPassword = jsonObject.get("password");
+        JsonElement requestEmail = requestData.get("email");
+        JsonElement requestPassword = requestData.get("password");
 
-        String email = requestEmail == null ? "" : requestEmail.toString();
-        String password = requestPassword == null ? "" : requestPassword.toString();
+        String email = requestEmail == null ? "" : requestEmail.getAsString();
+        String password = requestPassword == null ? "" : requestPassword.getAsString();
 
         System.out.append(email).append('\n').append(password);
 
         if (email.isEmpty()) {
-            jsonResponse.put("Status", "login is required");
+            jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
-            jsonResponse.put("Status", "password is required");
+            jsonResponse.addProperty("Status", "password is required");
         } else if (accountService.getSessions(sessionId) == null) {
             UserProfile profile = accountService.getUser(email);
 
@@ -60,12 +62,12 @@ public class SignInServlet extends HttpServlet {
                 assert sessionId != null;
                 accountService.addSessions(sessionId, profile);
 
-                jsonResponse.put("Status", "Login passed");
+                jsonResponse.addProperty("Status", "Login passed");
             } else {
-                jsonResponse.put("Status", "Wrong login/password");
+                jsonResponse.addProperty("Status", "Wrong login/password");
             }
         } else {
-            jsonResponse.put("Status", "You are alredy logged in");
+            jsonResponse.addProperty("Status", "You are alredy logged in");
         }
 
         ResponseHandler.respondWithJSON(response, jsonResponse);

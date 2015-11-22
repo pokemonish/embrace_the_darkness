@@ -20,7 +20,7 @@ public class ReadXMLFileSAX {
     }
 
     @Nullable
-    public static Object readXML(String xmlFile, String className, Object... parameters) {
+    public static Object readXMLwithParameters(String xmlFile, String className, Object... parameters) {
         s_handler = new SaxHandlerParameter(className, parameters);
         return parseXML(xmlFile);
     }

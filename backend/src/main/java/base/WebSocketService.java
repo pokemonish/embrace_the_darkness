@@ -1,7 +1,7 @@
 package base;
 
+import com.google.gson.JsonObject;
 import frontend.GameWebSocket;
-import org.json.simple.JSONObject;
 
 /**
  * @author v.chibrikov
@@ -16,5 +16,5 @@ public interface WebSocketService {
 
     void notifyGameOver(GameUser user, boolean win);
 
-    void notifyEnemyAction(GameUser user, JSONObject data);
+    void notifyEnemyAction(GameUser user, JsonObject data);
 }

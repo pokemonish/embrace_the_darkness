@@ -3,8 +3,8 @@ package mechanics;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
+import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
-import org.json.simple.JSONObject;
 import utils.TimeHelper;
 
 import java.util.HashMap;
@@ -15,7 +15,7 @@ import java.util.Set;
 /**
  * @author v.chibrikov
  */
-@SuppressWarnings({"unchecked", "InfiniteLoopStatement"})
+@SuppressWarnings({"InfiniteLoopStatement"})
 public class GameMechanicsImpl implements GameMechanics {
 
     private int playersNumber = 4;
@@ -34,7 +34,8 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private String[] waiters;
 
-    public GameMechanicsImpl(WebSocketService webSocketService, @Nullable MechanicsParameters parameters) {
+    public GameMechanicsImpl(WebSocketService webSocketService,
+                             @Nullable MechanicsParameters parameters) {
         this.webSocketService = webSocketService;
         if (parameters != null) {
             playersNumber = parameters.getPlayersNumber();
@@ -120,15 +121,15 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     @Override
-    public void processGameLogicData(String playerName, JSONObject data) {
+    public void processGameLogicData(String playerName, JsonObject data) {
 
         String action = data.get("data").toString();
-        System.out.print(data.toJSONString());
+        System.out.print(data.toString());
         System.out.print(action);
 
-        JSONObject response = new JSONObject();
-        response.put("activePlayer", playerName);
-        response.put("action", action);
+        JsonObject response = new JsonObject();
+        response.addProperty("activePlayer", playerName);
+        response.addProperty("action", action);
 
         if (action != null) {
             sendOtherPlayers(playerName, response);
@@ -146,7 +147,7 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     @Override
-    public void sendOtherPlayers(String playerName, JSONObject data) {
+    public void sendOtherPlayers(String playerName, JsonObject data) {
         GameSession gameSession = nameToGame.get(playerName);
         Map<String, GameUser> users = gameSession.getUsers();
 

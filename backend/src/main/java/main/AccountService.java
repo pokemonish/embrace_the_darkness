@@ -21,6 +21,7 @@ public class AccountService {
     public boolean addUser(String userName, UserProfile userProfile) {
         if (users.containsKey(userName))
             return false;
+
         users.put(userName, userProfile);
         return true;
     }

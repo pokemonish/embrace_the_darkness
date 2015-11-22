@@ -1,7 +1,7 @@
 package main;
 
+import com.google.gson.JsonObject;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
 import templater.PageGenerator;
 
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class ResponseHandler {
     public static void respondWithJSON(@NotNull HttpServletResponse response,
-                                       @NotNull JSONObject jsonResponse) throws IOException {
+                                       @NotNull JsonObject jsonResponse) throws IOException {
 
         response.setContentType("application/json;charset=utf-8");
 

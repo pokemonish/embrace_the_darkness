@@ -1,22 +1,23 @@
 package base;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
 
 /**
  * @author v.chibrikov
  */
-@SuppressWarnings("unused")
+
 public interface GameMechanics {
 
     void addUser(String user);
 
+    @SuppressWarnings("unused")
     void incrementScore(String userName);
 
     void run();
 
-    void sendOtherPlayers(String player, JSONObject data);
+    void sendOtherPlayers(String player, JsonObject data);
 
     void deleteIfWaiter(String player);
 
-    void processGameLogicData(String playerName, JSONObject data);
+    void processGameLogicData(String playerName, JsonObject data);
 }

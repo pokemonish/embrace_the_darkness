@@ -11,6 +11,7 @@ import java.io.IOException;
 /**
  * Created by fatman on 05/11/15.
  */
+
 public class SignOutServletTest extends AuthBasicTest {
 
     private SignOutServlet signOutServlet = new SignOutServlet(mockedAccountService);

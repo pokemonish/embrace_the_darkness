@@ -1,9 +1,10 @@
 package frontend;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import main.AccountService;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
-import org.json.simple.JSONObject;
 import utils.JsonRequestParser;
 import main.ResponseHandler;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
  * Created by v.chibrikov on 13.09.2014.
  */
 
-@SuppressWarnings("unchecked")
+
 public class SignUpServlet extends HttpServlet {
     @NotNull
     private final AccountService accountService;
@@ -31,26 +32,37 @@ public class SignUpServlet extends HttpServlet {
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
 
-        JSONObject jsonObject = JsonRequestParser.parse(request);
+        JsonObject requestJsonData = JsonRequestParser.parse(request);
 
-        Object requestEmail = jsonObject.get("email");
-        Object requestPassword = jsonObject.get("password");
+        JsonElement requestEmail = requestJsonData.get("email");
+        JsonElement requestPassword = requestJsonData.get("password");
 
-        String  name = requestEmail == null ? "" : requestEmail.toString();
-        String password = requestPassword == null ? "" : requestPassword.toString();
+        String name = requestEmail == null ? "" : requestEmail.getAsString();
+        String password = requestPassword == null ? "" : requestPassword.getAsString();
 
-        JSONObject jsonResponse = new JSONObject();
+        JsonObject jsonResponse = new JsonObject();
 
         if (name.isEmpty()) {
-            jsonResponse.put("Status", "login is required");
+            jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
-            jsonResponse.put("Status", "password is required");
+            jsonResponse.addProperty("Status", "password is required");
         } else if (accountService.addUser(name, new UserProfile(name, password, ""))) {
 
-            jsonResponse.put("Status", "New user created\n");
+            jsonResponse.addProperty("Status", "New user created\n");
 
         } else {
-            jsonResponse.put("Status", "User with name: " + name + " already exists");
+
+            StringBuilder duplicateParametersMessage = new StringBuilder();
+            duplicateParametersMessage
+            .append("User with name: ")
+            .append(name)
+            .append(" already exists");
+
+            System.out.append(duplicateParametersMessage.toString()).append('\n');
+
+            jsonResponse.addProperty("Status", duplicateParametersMessage.toString());
+
+            System.out.append(jsonResponse.get("Status").toString());
         }
 
         ResponseHandler.respondWithJSON(response, jsonResponse);
