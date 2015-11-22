@@ -65,7 +65,7 @@ public class Main {
         context.addServlet(new ServletHolder(admin), config.getParameter(Config.ADMIN_URL));
         context.addServlet(new ServletHolder(postName), config.getParameter(Config.POST_NAME_URL));
         context.addServlet(new ServletHolder(new WebSocketGameServlet(authService,
-                            gameMechanics, webSocketService)), config.getParameter(Config.GAMEPLAY_URL));
+                gameMechanics, webSocketService)), config.getParameter(Config.GAMEPLAY_URL));
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
@@ -77,9 +77,9 @@ public class Main {
         Server server = new Server(port);
         server.setHandler(handlers);
 
+        gameMechanics.run();
+
         server.start();
         server.join();
-
-        gameMechanics.run();
     }
 }
