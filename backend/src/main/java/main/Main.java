@@ -4,6 +4,7 @@ import base.AuthService;
 import base.GameMechanics;
 import base.WebSocketService;
 import frontend.*;
+import mechanics.MechanicsParameters;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.jetbrains.annotations.NotNull;
@@ -39,8 +40,7 @@ public class Main {
         String startMessage = "Starting at port: " + port + '\n' +
                 "Currently running on " + System.getProperty("os.name") +
                 ' ' + System.getProperty("os.version") + ' ' +
-                System.getProperty("os.arch") + '\n' + "Virtual processors(threads) available: " +
-                Runtime.getRuntime().availableProcessors()  +'\n';
+                System.getProperty("os.arch") + '\n';
 
         Logger.getAnonymousLogger().log(new LogRecord(Level.INFO, startMessage));
 
@@ -49,12 +49,8 @@ public class Main {
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
-        //GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService);
-        GameMechanics gameMechanics =
-                (GameMechanics)ReadXMLFileSAX.readXML("data/GameMechanics.xml",
-                        GameMechanicsImpl.class.getName(), webSocketService);
-        assert(gameMechanics != null);
-
+        MechanicsParameters mechanicsParameters = (MechanicsParameters)ReadXMLFileSAX.readXML("data/MechanicsParameters.xml");
+        GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService, mechanicsParameters);
 
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
