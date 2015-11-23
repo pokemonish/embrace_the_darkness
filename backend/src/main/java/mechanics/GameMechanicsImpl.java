@@ -7,18 +7,16 @@ import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
 import utils.TimeHelper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author v.chibrikov
  */
-@SuppressWarnings({"InfiniteLoopStatement"})
+
 public class GameMechanicsImpl implements GameMechanics {
 
-    private int playersNumber = 4;
+    private static final int PLAYERS_NUMBER_DEFAULT = 4;
+    private int playersNumber = PLAYERS_NUMBER_DEFAULT;
 
     private static final int STEP_TIME_DEFAULT = 300;
     private int stepTime = STEP_TIME_DEFAULT;
@@ -28,9 +26,19 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private final WebSocketService webSocketService;
 
-    private final Map<String, GameSession> nameToGame = new HashMap<>();
+    private final Map<String, GameSession> dinoraika = new HashMap<>();
 
     private final Set<GameSession> allSessions = new HashSet<>();
+
+    private boolean isActive = true;
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
 
     private String[] waiters;
 
@@ -88,7 +96,7 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void incrementScore(String userName) {
-        GameSession myGameSession = nameToGame.get(userName);
+        GameSession myGameSession = dinoraika.get(userName);
         GameUser myUser = myGameSession.getSelf(userName);
         myUser.incrementMyScore();
         webSocketService.notifyMyNewScore(myUser);
@@ -96,36 +104,53 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void run() {
-        while (true) {
+        while (isActive) {
+
             gmStep();
             TimeHelper.sleep(stepTime);
         }
     }
 
-    private void gmStep() {
-        allSessions.stream().filter(session ->
-                session.getSessionTime() > gameTime).forEach(session -> {
-
-            GameUser winner = session.determineWinner();
-            Map<String, GameUser> users = session.getUsers();
-
-            for (Map.Entry<String, GameUser> entry : users.entrySet()) {
-                GameUser user = entry.getValue();
-                String name = entry.getKey();
-
-                boolean isWinner = winner.getMyName().equals(name);
-
-                webSocketService.notifyGameOver(user, isWinner);
+    private void checkEverybodyDied() {
+        for(Iterator<GameSession> it = allSessions.iterator(); it.hasNext(); ) {
+            GameSession session = it.next();
+            if(session.getDeadPlayers() == playersNumber) {
+                handleGameOver(session);
+                it.remove();
             }
-        });
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private void checkTimeIsOver() {
+        allSessions.stream().filter(session ->
+            session.getSessionTime() > gameTime).forEach(this::handleGameOver);
+    }
+
+    private void handleGameOver(GameSession session) {
+        GameUser winner = session.getWinner();
+        Map<String, GameUser> users = session.getUsers();
+
+        for (Map.Entry<String, GameUser> entry : users.entrySet()) {
+            GameUser user = entry.getValue();
+            String name = entry.getKey();
+
+            boolean isWinner = winner.getMyName().equals(name);
+
+            webSocketService.notifyGameOver(user, isWinner);
+        }
+    }
+
+    private void gmStep() {
+        checkEverybodyDied();
+        //checkTimeIsOver();
     }
 
     @Override
     public void processGameLogicData(String playerName, JsonObject data) {
 
-        String action = data.get("data").toString();
+        String action = data.get("data").getAsString();
         System.out.print(data.toString());
-        System.out.print(action);
 
         JsonObject response = new JsonObject();
         response.addProperty("activePlayer", playerName);
@@ -133,6 +158,14 @@ public class GameMechanicsImpl implements GameMechanics {
 
         if (action != null) {
             sendOtherPlayers(playerName, response);
+            if (action.equals("dead")) {
+                GameSession gameSession = dinoraika.get(playerName);
+                if (gameSession.getDeadPlayers() == playersNumber - 1) {
+                    gameSession.setWinner(gameSession.getUsers().get(playerName));
+                }
+                gameSession.incrementDeadPlayers();
+                gameSession.getUsers().get(playerName).setIsDead(true);
+            }
         }
     }
 
@@ -141,14 +174,14 @@ public class GameMechanicsImpl implements GameMechanics {
         GameSession gameSession = new GameSession(waiters);
         allSessions.add(gameSession);
         for (String waiter : waiters) {
-            nameToGame.put(waiter, gameSession);
+            dinoraika.put(waiter, gameSession);
             webSocketService.notifyStartGame(gameSession.getSelf(waiter));
         }
     }
 
     @Override
     public void sendOtherPlayers(String playerName, JsonObject data) {
-        GameSession gameSession = nameToGame.get(playerName);
+        GameSession gameSession = dinoraika.get(playerName);
         Map<String, GameUser> users = gameSession.getUsers();
 
         for(Map.Entry<String, GameUser> entry : users.entrySet()) {

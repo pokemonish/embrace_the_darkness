@@ -7,6 +7,17 @@ public class GameUser {
     private final String myName;
     private String[] enemyNames = new String[2];
     private int myScore = 0;
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void setIsDead(boolean isDead) {
+        this.isDead = isDead;
+    }
+
+    private boolean isDead = false;
+
     public GameUser(String myName) {
         this.myName = myName;
     }

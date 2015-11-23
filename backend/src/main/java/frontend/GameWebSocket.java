@@ -55,7 +55,7 @@ public class GameWebSocket {
     public void gameOver(GameUser user, boolean win) {
         try {
             JsonObject jsonStart = new JsonObject();
-            jsonStart.addProperty("status", "finish");
+            jsonStart.addProperty("status", "Game Over!!!");
             jsonStart.addProperty("winner", user.getMyName());
             jsonStart.addProperty("win", win);
             session.getRemote().sendString(jsonStart.toString());
@@ -66,7 +66,7 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        System.out.append("Got message\n");
+        System.out.append("\nGot message\n");
 
         if (data.isEmpty()) return;
 

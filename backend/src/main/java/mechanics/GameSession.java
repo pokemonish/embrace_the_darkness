@@ -15,6 +15,16 @@ public class GameSession {
     private final Map<String, GameUser> users = new HashMap<>();
     private GameUser winner;
 
+    private byte deadPlayers = 0;
+
+    public byte getDeadPlayers() {
+        return deadPlayers;
+    }
+
+    public void incrementDeadPlayers() {
+        ++this.deadPlayers;
+    }
+
 
     public GameSession(String[] players) {
         startTime = new Date().getTime();
@@ -44,6 +54,16 @@ public class GameSession {
         return new Date().getTime() - startTime;
     }
 
+public GameUser getWinner() {
+        return winner;
+    }
+
+    public void setWinner(GameUser winner) {
+        this.winner = winner;
+    }
+
+
+    @SuppressWarnings("unused")
     public GameUser determineWinner() {
         for(Map.Entry<String, GameUser> entry : users.entrySet()) {
             GameUser user = entry.getValue();
