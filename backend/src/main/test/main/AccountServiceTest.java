@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  */
 public class AccountServiceTest {
 
-    @NotNull
+    /*@NotNull
     private final AccountService accountService = new AccountService();
     @NotNull
     private final UserProfile testUser = new UserProfile("testLogin", "testPassword", "test@mail.ru");
@@ -81,6 +81,6 @@ public class AccountServiceTest {
 
         accountService.deleteSessions(sessionId);
         assertNull(accountService.getSessions(sessionId));
-    }
+    }*/
 
 }

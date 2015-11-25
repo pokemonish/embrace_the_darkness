@@ -1,8 +1,10 @@
 package main;
 
 import base.AuthService;
+import base.DBService;
 import base.GameMechanics;
 import base.WebSocketService;
+import db.DBServiceImpl;
 import frontend.*;
 import mechanics.MechanicsParameters;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -19,8 +21,8 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import resources.Config;
 import resources.ReadXMLFileSAX;
 
-
 import javax.servlet.Servlet;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -33,7 +35,13 @@ public class Main {
 
     public static void main(@NotNull String[] args) throws Exception {
 
-        Config config = new Config();
+        Config config = null;
+
+        try {
+            config = new Config();
+        } catch (IOException | NumberFormatException e) {
+            System.exit(1);
+        }
 
         int port = config.getPort();
 
@@ -44,8 +52,15 @@ public class Main {
 
         Logger.getAnonymousLogger().log(new LogRecord(Level.INFO, startMessage));
 
-        AccountService accountService = new AccountService();
+        DBService dBservice = new DBServiceImpl(config);
+
+        AccountService accountService = new AccountService(dBservice);
         AuthService authService = new AuthServiceImpl();
+
+        if (dBservice.getConnection() == null){
+            Logger.getAnonymousLogger().log(new LogRecord(Level.INFO,
+                    "Can't establish connection to database"));
+        }
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
@@ -57,7 +72,7 @@ public class Main {
         Servlet signUp = new SignUpServlet(accountService);
         Servlet signOut = new SignOutServlet(accountService);
         Servlet postName = new PostNameServlet(authService);
-        Servlet admin = new AdminPageServlet(accountService);
+        Servlet admin = new AdminPageServlet(accountService, gameMechanics);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signin), config.getSignInUrl());

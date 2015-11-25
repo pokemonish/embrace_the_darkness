@@ -48,7 +48,7 @@ public class SignUpServlet extends HttpServlet {
             jsonResponse.addProperty("Status", "password is required");
         } else if (accountService.addUser(name, new UserProfile(name, password, ""))) {
 
-            jsonResponse.addProperty("Status", "New user created\n");
+            jsonResponse.addProperty("Status", "New user created");
 
         } else {
 

@@ -20,4 +20,8 @@ public interface GameMechanics {
     void deleteIfWaiter(String player);
 
     void processGameLogicData(String playerName, JsonObject data);
+
+    void setIsActive(boolean value);
+
+    boolean isActive();
 }
