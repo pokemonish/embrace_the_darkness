@@ -16,8 +16,11 @@ public class ResponseHandler {
     public static void respondWithJSON(@NotNull HttpServletResponse response,
                                        @NotNull JsonObject jsonResponse) throws IOException {
 
-        response.setContentType("application/json;charset=utf-8");
+        respondWithJSONAndStatus(response, jsonResponse, HttpServletResponse.SC_OK);
+    }
 
+    public static void respondWithJSONAndStatus(@NotNull HttpServletResponse response,
+                                         @NotNull JsonObject jsonResponse, int status) throws IOException {
         try (PrintWriter writer = response.getWriter()) {
             if (writer != null) {
                 writer.println(jsonResponse);
@@ -25,8 +28,7 @@ public class ResponseHandler {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
         }
-        response.setStatus(HttpServletResponse.SC_OK);
-
+        response.setStatus(status);
     }
 
     public static void drawPage(@NotNull HttpServletResponse response,
