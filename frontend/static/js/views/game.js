@@ -1,10 +1,13 @@
 define([
     'backbone',
-    'tmpl/game'
+    'tmpl/game',
+    'app/dino'
 ], function(
     Backbone,
-    tmpl
+    tmpl,
+    Dino
 ){
+    var dino = new Dino();
 
     var View = Backbone.View.extend({
 
@@ -20,6 +23,9 @@ define([
         },
         render: function () {
             $(this.el).html(this.template);
+            
+            dino.start();
+            
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});

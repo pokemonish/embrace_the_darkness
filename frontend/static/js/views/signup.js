@@ -1,6 +1,6 @@
 define([
     'backbone',
-    'tmpl/login',
+    'tmpl/signup',
     'models/score'
 ], function(
     Backbone,
@@ -16,9 +16,9 @@ define([
 
         events: {
             'click .main__btn': 'backToMain',
-            'click #login':  function (e) {
+            'click #signup':  function (e) {
                 e.preventDefault();
-                this.login();
+                this.signup();
             }
         },
 
@@ -31,22 +31,23 @@ define([
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});
         },
-        login: function() {
+        signup: function() {
             // Validate here
             // validate("login__form")
-            
-            var data = $(".login__form").serialize().split("&");
-            var userDetails={};
-            
-            for(var key in data) {
-                userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
+
+            var userDetails = {
+                email: 'admin',
+                password: 'admin'
             };
-
-            console.log(userDetails)
             
-            this.model.urlRoot = "/api/v1/auth/signin"
-            this.model.fetch({data: userDetails, type: 'POST'})
-
+            this.model.save(userDetails, {
+                success: function(user) {
+                    console.log(user);
+                },
+                error: function(msg) {
+                    console.log(msg);
+                }
+            })
 
             return false;
             
