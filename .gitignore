@@ -1,11 +1,10 @@
 node_modules/
 
-backend/public_html/
 backend/classes/
+backend/src/main/java/annotations
 backend/javax/
 frontend/templates/bin/
 
-public_html/
 server_tml/
 .sass-cache
 logs/

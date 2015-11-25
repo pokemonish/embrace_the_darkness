@@ -1,5 +1,5 @@
 package admin;
-import example.TimeHelper;
+import utils.TimeHelper;
 import main.AccountService;
 import main.ResponseHandler;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +15,7 @@ import java.util.Map;
 public class AdminPageServlet extends HttpServlet {
 
     @NotNull
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public AdminPageServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
@@ -25,9 +25,9 @@ public class AdminPageServlet extends HttpServlet {
     @Override
     public void doGet(@NotNull HttpServletRequest request,
                       @NotNull HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
+
         Map<String, Object> pageVariables = new HashMap<>();
+
         String timeString = request.getParameter("shutdown");
         if (timeString != null) {
             Integer timeMS = Integer.valueOf(timeString);
@@ -39,6 +39,7 @@ public class AdminPageServlet extends HttpServlet {
         pageVariables.put("usersTotal", accountService.getUsersQuantity());
         pageVariables.put("usersSignedIn", accountService.getSessionsQuantity());
         pageVariables.put("status", "run");
+
         ResponseHandler.drawPage(response, "admin.html", pageVariables);
     }
 }

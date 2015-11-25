@@ -1,0 +1,37 @@
+<fest:template xmlns:fest="http://fest.mail.ru"
+    context_name="json">
+    
+    <div class="title title_center">Signup</div>
+
+    <div class="login__input_data">
+        <form class="signup__form">
+            <!-- field -->
+            <div class="field">
+                <div class="field__in email-field__in">
+                    <input class="input" name="email" type="text" placeholder="Email" required="" />
+                </div>
+                <div class="field__error email-field__error">
+                </div>
+            </div>
+            <!-- field -->
+            <div class="field">
+                <div class="field__in password-field__in">
+                    <input class="input" name="password" type="text" placeholder="Password" required="" />
+                </div>
+                <div class="field__error password-field__error">
+                </div>
+            </div>
+            <!-- field -->
+            <div class="field field__btn">
+                <button class="btn login__btn btn-success" id="signup">Signup</button>
+            </div>
+        </form>
+    </div>
+    
+    <div class="field field__btn">
+        <button class="btn btn-primary main__btn">Menu</button>
+    </div>
+    
+    
+</fest:template>
+

@@ -1,0 +1,5 @@
+<class type="mechanics.MechanicsParameters">
+    <playersNumber>3</playersNumber>
+    <stepTime>100</stepTime>
+    <gameTime>15000000</gameTime>
+</class>

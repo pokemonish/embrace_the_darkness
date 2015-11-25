@@ -4,7 +4,8 @@ require.config({
     paths: {
         jquery: "lib/jquery",
         underscore: "lib/underscore",
-        backbone: "lib/backbone"
+        backbone: "lib/backbone",
+        app: "app"
     },
     shim: {
         'backbone': {
@@ -13,16 +14,20 @@ require.config({
         },
         'underscore': {
             exports: '_'
-        }
+        },
     }
 });
 
+// requirejs(['app/helloworld']);
+
 define([
     'backbone',
-    'router'
+    'router',
+    'app/dino'
 ], function(
     Backbone,
-    router
+    router,
+    Dino
 ){
-    Backbone.history.start();
+    Backbone.history.start({root: ""})
 });

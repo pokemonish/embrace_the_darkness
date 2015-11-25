@@ -1,8 +1,10 @@
 package frontend;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import main.AccountService;
 import main.ResponseHandler;
-import main.UserProfile;
+import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
@@ -11,83 +13,63 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
+import utils.JsonRequestParser;
 
 /**
  * @author v.chibrikov
  */
+
+
 public class SignInServlet extends HttpServlet {
 
     @NotNull
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public SignInServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
-
-    @Override
-
-    public void doGet(@NotNull HttpServletRequest request,
-                      @NotNull HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
-        HttpSession session = request.getSession();
-
-        String sessionId = session.getId();
-        String htmlToRender = "auth.html";
-
-        UserProfile profile = accountService.getSessions(sessionId);
-
-        if (profile != null) {
-
-            htmlToRender = "authstatus.html";
-
-            String name = profile.getLogin();
-            pageVariables.put("loginStatus", "Hi, " + name + ", you are logged in.");
-        } else {
-            pageVariables.put("loginStatus", "");
-        }
-
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
-    }
+    
 
     @Override
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
-
         HttpSession session = request.getSession();
-        Map<String, Object> pageVariables = new HashMap<>();
+        JsonObject jsonResponse = new JsonObject();
 
         String sessionId = session.getId();
 
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
+        JsonObject requestData = JsonRequestParser.parse(request);
 
-        String htmlToRender = "auth.html";
+        JsonElement requestEmail = requestData.get("email");
+        JsonElement requestPassword = requestData.get("password");
 
-        if (email == null) {
-            pageVariables.put("authstatus", "login is required");
-        } else if (password == null) {
-            pageVariables.put("authstatus", "password is required");
+        String email = requestEmail == null ? "" : requestEmail.getAsString();
+        String password = requestPassword == null ? "" : requestPassword.getAsString();
+
+        System.out.append(email).append('\n').append(password);
+
+        if (email.isEmpty()) {
+            jsonResponse.addProperty("Status", "login is required");
+        } else if (password.isEmpty()) {
+            jsonResponse.addProperty("Status", "password is required");
         } else if (accountService.getSessions(sessionId) == null) {
             UserProfile profile = accountService.getUser(email);
+
             if (profile != null && profile.getPassword().equals(password)) {
 
                 assert sessionId != null;
                 accountService.addSessions(sessionId, profile);
 
-                pageVariables.put("loginStatus", "Login passed");
-                htmlToRender = "authstatus.html";
+                jsonResponse.addProperty("Status", "Login passed");
             } else {
-                pageVariables.put("loginStatus", "Wrong login/password");
+                jsonResponse.addProperty("Status", "Wrong login/password");
             }
         } else {
-            pageVariables.put("loginStatus", "You are alredy logged in");
+            jsonResponse.addProperty("Status", "You are alredy logged in");
         }
 
-//        htmlToRender = "response.json";
-
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
+        ResponseHandler.respondWithJSON(response, jsonResponse);
     }
 }

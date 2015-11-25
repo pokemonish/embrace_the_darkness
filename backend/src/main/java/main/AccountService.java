@@ -1,6 +1,7 @@
 package main;
 
 
+import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,13 +14,14 @@ import java.util.Map;
 public class AccountService {
 
     @NotNull
-    private Map<String, UserProfile> users = new HashMap<>();
+    private final Map<String, UserProfile> users = new HashMap<>();
     @NotNull
-    private Map<String, UserProfile> sessions = new HashMap<>();
+    private final Map<String, UserProfile> sessions = new HashMap<>();
 
     public boolean addUser(String userName, UserProfile userProfile) {
         if (users.containsKey(userName))
             return false;
+
         users.put(userName, userProfile);
         return true;
     }
