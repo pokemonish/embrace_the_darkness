@@ -40,7 +40,16 @@ public class SignInServlet extends HttpServlet {
 
         String sessionId = session.getId();
 
-        JsonObject requestData = JsonRequestParser.parse(request);
+        JsonObject requestData;
+
+        try {
+            requestData = JsonRequestParser.parse(request);
+        } catch (IOException e) {
+            jsonResponse.addProperty("Status", "Request is invalid. Can't parse json.");
+            ResponseHandler.respondWithJSONAndStatus(response, jsonResponse,
+                    HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
         JsonElement requestEmail = requestData.get("email");
         JsonElement requestPassword = requestData.get("password");

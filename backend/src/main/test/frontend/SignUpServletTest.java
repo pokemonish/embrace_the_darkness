@@ -34,6 +34,17 @@ public class SignUpServletTest extends AuthBasicTest {
     }
 
     @Test
+    public void testInvalidJson() throws IOException, ServletException {
+        String invalidJsonString = "This string is not Json at all!!!111";
+
+        when(mockedReader.readLine()).thenReturn(invalidJsonString).thenReturn(null);
+
+        signUpServlet.doPost(mockedRequest, mockedResponse);
+        testDoPostAfter("Request is invalid. Can't parse json.",
+                HttpServletResponse.SC_BAD_REQUEST, 1);
+    }
+
+    @Test
     public void testNoDataDoPost() throws ServletException, IOException {
         testDoPost("login is required", HttpServletResponse.SC_OK, 1);
     }
