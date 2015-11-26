@@ -8,7 +8,7 @@
             <!-- field -->
             <div class="field">
                 <div class="field__in email-field__in">
-                    <input class="input" name="email" type="email" placeholder="Email" required="" />
+                    <input class="input" name="email" type="text" placeholder="Email" required="" />
                 </div>
                 <div class="field__error email-field__error">
                 </div>

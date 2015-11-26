@@ -40,18 +40,11 @@ define([
                 userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
             };
             
-            this.model.urlRoot = "/api/v1/auth/signup"
-            this.model.save(userDetails, {
-                success: function(user) {
-                    console.log("success");
-                    console.log(user);
-                },
-                error: function(msg) {
-                    console.log("error");
-                    console.log(msg);
-                }
-            })
-
+            var response = this.model.send("/api/v1/auth/signup", 'POST', userDetails);
+            
+            response.success(function (data) {
+              alert(data.Status);
+            });
 
             return false;
             

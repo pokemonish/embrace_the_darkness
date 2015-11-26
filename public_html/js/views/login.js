@@ -42,14 +42,13 @@ define([
                 userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
             };
 
-            console.log(userDetails)
+            var response = this.model.send("/api/v1/auth/signin", 'POST', userDetails);
             
-            this.model.urlRoot = "/api/v1/auth/signin"
-            this.model.fetch({data: userDetails, type: 'POST'})
-
+            response.success(function (data) {
+              alert(data.Status);
+            });
 
             return false;
-            
         },
 
     });
