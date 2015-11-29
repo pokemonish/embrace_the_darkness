@@ -17,8 +17,8 @@ define([
         events: {
             'click .menu-btn': 'backToMain',
             'click #signup':  function (e) {
-                e.preventDefault();
-                this.signup();
+                // e.preventDefault();
+                return this.signup();
             }
         },
 
@@ -33,23 +33,25 @@ define([
         },
         signup: function() {
             // Validate here
-            // validate("login__form")
+            // validate("signup__form")
 
-            var userDetails = {
-                email: 'admin',
-                password: 'admin'
-            };
+            var data = $(".signup__form").serialize().split("&");
+            var userDetails={};
             
-            this.model.save(userDetails, {
-                success: function(user) {
-                    console.log(user);
-                },
-                error: function(msg) {
-                    console.log(msg);
-                }
-            })
+            for(var key in data) {
+                userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
+            };
 
-            return false;
+            if (userDetails['email'] && userDetails['password']) {
+               var response = this.model.send("/api/v1/auth/signup", 'POST', userDetails);
+            
+                response.success(function (data) {
+                  alert(data.Status);
+                }); 
+                return false;
+            }
+
+            return true;
             
         },
 

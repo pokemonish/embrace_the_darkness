@@ -16,7 +16,7 @@
             <!-- field -->
             <div class="field">
                 <div class="field__in password-field">
-                    <input class="input" name="password" type="text" placeholder="Password" required="" />
+                    <input class="input" name="password" type="password" placeholder="Password" required="" />
                 </div>
                 <div class="field__error password-field__error">
                 </div>

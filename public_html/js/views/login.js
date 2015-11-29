@@ -16,9 +16,9 @@ define([
 
         events: {
             'click .menu-btn': 'backToMain',
-            'submit #login__form':  function (e) {
-                e.preventDefault();
-                this.login();
+            'click #login':  function (e) {
+                // e.preventDefault();
+                return this.login();
             }
         },
 
@@ -35,26 +35,24 @@ define([
             // Validate here
             // validate("login__form")
             
-            console.log("LOL");
-
-            var userDetails = {
-                email: 'admin',
-                password: 'admin'
+            var data = $(".login__form").serialize().split("&");
+            var userDetails={};
+            
+            for(var key in data) {
+                userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
             };
-            
-            this.model.save(userDetails, {
-                success: function(user) {
-                    console.log(user);
-                },
-                error: function(msg) {
-                    console.log(msg);
-                }
-            })
 
-            return false;
+            if (userDetails['email'] && userDetails['password']) {
+               var response = this.model.send("/api/v1/auth/signin", 'POST', userDetails);
             
+                response.success(function (data) {
+                  alert(data.Status);
+                }); 
+                return false;
+            }
+
+            return true;
         },
-
     });
 
 
