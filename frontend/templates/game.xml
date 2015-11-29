@@ -2,8 +2,8 @@
     context_name="json">
     <div class="title title_center">Let's Play</div>
 
-    <div class="field field_btn">
-        <button class="btn btn-primary main__btn">Menu</button>
+    <div class="field">
+        <button class="btn btn-primary field__button menu-btn">Menu</button>
     </div>
 
 

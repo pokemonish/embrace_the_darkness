@@ -15,8 +15,8 @@ define([
         el: $('#page'),
 
         events: {
-            'click .main__btn': 'backToMain',
-            'click #login':  function (e) {
+            'click .menu-btn': 'backToMain',
+            'submit #login__form':  function (e) {
                 e.preventDefault();
                 this.login();
             }
@@ -35,21 +35,26 @@ define([
             // Validate here
             // validate("login__form")
             
-            var data = $(".login__form").serialize().split("&");
-            var userDetails={};
-            
-            for(var key in data) {
-                userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
-            };
+            console.log("LOL");
 
-            var response = this.model.send("/api/v1/auth/signin", 'POST', userDetails);
+            var userDetails = {
+                email: 'admin',
+                password: 'admin'
+            };
             
-            response.success(function (data) {
-              alert(data.Status);
-            });
+            this.model.save(userDetails, {
+                success: function(user) {
+                    console.log(user);
+                },
+                error: function(msg) {
+                    console.log(msg);
+                }
+            })
 
             return false;
+            
         },
+
     });
 
 

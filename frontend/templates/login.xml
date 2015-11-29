@@ -3,11 +3,11 @@
     
     <div class="title title_center">Login</div>
 
-    <div class="login__input_data">
+    <div class="login input-data">
         <form class="login__form" id="login__form">
             <!-- field -->
             <div class="field">
-                <div class="field__in email-field__in">
+                <div class="field__in email-field">
                     <input class="input" name="email" type="text" placeholder="Email" required="" />
                 </div>
                 <div class="field__error email-field__error">
@@ -15,21 +15,21 @@
             </div>
             <!-- field -->
             <div class="field">
-                <div class="field__in password-field__in">
+                <div class="field__in password-field">
                     <input class="input" name="password" type="text" placeholder="Password" required="" />
                 </div>
                 <div class="field__error password-field__error">
                 </div>
             </div>
             <!-- field -->
-            <div class="field field__btn">
-                <button class="btn login__btn btn-success" id="login">Login</button>
+            <div class="field">
+                <button class="btn login__btn btn-success field__btn" id="login">Login</button>
             </div>
         </form>
     </div>
     
-    <div class="field field__btn">
-        <button class="btn btn-primary main__btn">Menu</button>
+    <div class="field">
+        <button class="btn btn-primary menu-btn field__btn">Menu</button>
     </div>
     
     

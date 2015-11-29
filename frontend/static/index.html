@@ -9,8 +9,17 @@
     <link rel="stylesheet" href="css/bootstrap-3.3.5-dist/css/bootstrap.css"/>
 
     <script type="text/javascript" src="js/lib/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script>
+
 </head>
 <body>
+    <script>
+        var pattern = Trianglify({
+            width: window.innerWidth,
+            height: window.innerHeight
+        });
+        document.body.appendChild(pattern.canvas())
+    </script>
 	<!-- Livereload -->
     <script src="//localhost:35729/livereload.js"></script>
 
@@ -19,13 +28,6 @@
         <div id="page"></div>
       </div>
     </div>
-
-   <!--  // <script src="/dino/js/runner.js"></script>
-    // <script src="/dino/js/runner_manager.js"></script>
-    // <script src="/dino/js/main.js"></script>
-    // <script src="/dino/js/pika1.js"></script>
-    // <script src="/dino/js/pika2.js"></script>
-    // <script src="/dino/js/pika2.js"></script> -->
 
     <script data-main="js/main" src="js/lib/require.js"></script>
 </body>
