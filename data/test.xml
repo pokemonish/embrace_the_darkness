@@ -1,0 +1,5 @@
+<class type="base.UserProfile">
+    <login>testLogin</login>
+    <password>testPassword</password>
+    <email>testEmail</email>
+</class>

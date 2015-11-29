@@ -31,16 +31,24 @@ public class SignUpServlet extends HttpServlet {
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
+        JsonObject jsonResponse = new JsonObject();
 
-        JsonObject requestJsonData = JsonRequestParser.parse(request);
+        JsonObject requestJsonData;
+
+        try {
+            requestJsonData = JsonRequestParser.parse(request);
+        } catch (IOException e) {
+            jsonResponse.addProperty("Status", "Request is invalid. Can't parse json.");
+            ResponseHandler.respondWithJSONAndStatus(response, jsonResponse,
+                    HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
 
         JsonElement requestEmail = requestJsonData.get("email");
         JsonElement requestPassword = requestJsonData.get("password");
 
         String name = requestEmail == null ? "" : requestEmail.getAsString();
         String password = requestPassword == null ? "" : requestPassword.getAsString();
-
-        JsonObject jsonResponse = new JsonObject();
 
         if (name.isEmpty()) {
             jsonResponse.addProperty("Status", "login is required");
