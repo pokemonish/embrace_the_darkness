@@ -9,12 +9,14 @@ import java.util.Map;
  * @author v.chibrikov
  */
 public class AuthServiceImpl implements AuthService {
-    private Map<String, String> userSessions = new HashMap<>();
+    private final Map<String, String> userSessions = new HashMap<>();
 
+    @Override
     public String getUserName(String sessionId) {
         return userSessions.get(sessionId);
     }
 
+    @Override
     public void saveUserName(String sessionId, String name) {
         userSessions.put(sessionId, name);
     }

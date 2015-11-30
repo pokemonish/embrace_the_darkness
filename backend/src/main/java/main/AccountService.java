@@ -1,10 +1,11 @@
 package main;
 
-
+import base.DBService;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,10 +14,14 @@ import java.util.Map;
  */
 public class AccountService {
 
+    private DBService dbService;
+
+    public AccountService(DBService dbService) {
+        this.dbService = dbService;
+    }
+
     @NotNull
-    private Map<String, UserProfile> users = new HashMap<>();
-    @NotNull
-    private Map<String, UserProfile> sessions = new HashMap<>();
+    private final Map<String, UserProfile> sessions = new HashMap<>();
 
     private long id = 1;
 
@@ -26,9 +31,13 @@ public class AccountService {
     }
 
     public boolean addUser(String userName, UserProfile userProfile) {
-        if (users.containsKey(userName))
+
+        try {
+            dbService.addUser(userProfile);
+        } catch (SQLException e) {
             return false;
-        users.put(userName, userProfile);
+        }
+
         return true;
     }
 
@@ -36,8 +45,12 @@ public class AccountService {
         sessions.put(sessionId, userProfile);
     }
 
-    public int getUsersQuantity() {
-        return users.size();
+    public int getUsersQuantity() throws RuntimeException{
+        try {
+            return dbService.countUsers();
+        } catch (SQLException e) {
+            throw new RuntimeException("Can't count users.");
+        }
     }
 
     public int getSessionsQuantity() {
@@ -46,7 +59,12 @@ public class AccountService {
 
     @Nullable
     public UserProfile getUser(@Nullable String userName) {
-        return users.get(userName);
+        if (userName == null) return null;
+        try {
+            return dbService.getUserByName(userName);
+        } catch (SQLException e) {
+            return null;
+        }
     }
 
     @Nullable

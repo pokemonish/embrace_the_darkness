@@ -3,51 +3,76 @@ package mechanics;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
+import com.google.gson.JsonObject;
+import org.jetbrains.annotations.Nullable;
 import utils.TimeHelper;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author v.chibrikov
  */
+
 public class GameMechanicsImpl implements GameMechanics {
-    private static final int PLAYERS_NUMBER = 3;
 
-    private static final int STEP_TIME = 100;
+    private static final int PLAYERS_NUMBER_DEFAULT = 4;
+    private int playersNumber = PLAYERS_NUMBER_DEFAULT;
 
-    private static final int GAME_TIME = 15 * 1000;
+    private static final int STEP_TIME_DEFAULT = 300;
+    private int stepTime = STEP_TIME_DEFAULT;
 
-    private WebSocketService webSocketService;
+    private static final int GAME_TIME_DEFAULT = 65;
+    private int gameTime = GAME_TIME_DEFAULT * 1000;
 
-    private Map<String, GameSession> nameToGame = new HashMap<>();
+    private final WebSocketService webSocketService;
 
-    private Set<GameSession> allSessions = new HashSet<>();
+    private final Map<String, GameSession> dinoraika = new HashMap<>();
 
-    private String[] waiters = new String[PLAYERS_NUMBER];
+    private final Set<GameSession> allSessions = new HashSet<>();
 
-    public GameMechanicsImpl(WebSocketService webSocketService) {
-        this.webSocketService = webSocketService;
+    private boolean isActive = true;
+
+    @Override
+    public boolean isActive() {
+        return isActive;
     }
 
+
+    @Override
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
+    }
+
+    private String[] waiters;
+
+    public GameMechanicsImpl(WebSocketService webSocketService,
+                             @Nullable MechanicsParameters parameters) {
+        this.webSocketService = webSocketService;
+        if (parameters != null) {
+            playersNumber = parameters.getPlayersNumber();
+            stepTime = parameters.getStepTime();
+            gameTime = parameters.getGameTime();
+        }
+        waiters = new String[playersNumber];
+    }
+
+    @Override
     public void addUser(String user) {
 
         System.out.print(countWaiters());
 
         int waitersNumber = countWaiters();
 
-        System.out.print(PLAYERS_NUMBER - 1);
-        System.out.print(waitersNumber == PLAYERS_NUMBER - 1);
+        System.out.print(playersNumber - 1);
+        System.out.print(waitersNumber == playersNumber - 1);
         System.out.print(" User is " + user + ' ');
 
-        if (waitersNumber == PLAYERS_NUMBER - 1) {
+        if (waitersNumber == playersNumber - 1) {
             waiters[waitersNumber] = user;
 
             startGame();
 
-            waiters = new String[PLAYERS_NUMBER];
+            waiters = new String[playersNumber];
         } else {
             waiters[waitersNumber] = user;
         }
@@ -55,14 +80,15 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private int countWaiters() {
         int waitersNumber = 0;
-        for (int i = 0; i < waiters.length; ++i) {
-            if (waiters[i] != null) {
+        for (String waiter : waiters) {
+            if (waiter != null) {
                 ++waitersNumber;
             }
         }
         return waitersNumber;
     }
 
+    @Override
     public void deleteIfWaiter(String user) {
         for (int i = 0; i < waiters.length; ++i) {
             if (waiters[i] != null && waiters[i].equals(user)) {
@@ -71,61 +97,94 @@ public class GameMechanicsImpl implements GameMechanics {
         }
     }
 
+    @Override
     public void incrementScore(String userName) {
-        GameSession myGameSession = nameToGame.get(userName);
+        GameSession myGameSession = dinoraika.get(userName);
         GameUser myUser = myGameSession.getSelf(userName);
         myUser.incrementMyScore();
-        GameUser enemyUser = myGameSession.getEnemy(userName);
-        enemyUser.incrementEnemyScore();
         webSocketService.notifyMyNewScore(myUser);
-        webSocketService.notifyEnemyNewScore(enemyUser);
     }
 
     @Override
     public void run() {
-        while (true) {
+        while (isActive) {
+
             gmStep();
-            TimeHelper.sleep(STEP_TIME);
+            TimeHelper.sleep(stepTime);
+        }
+    }
+
+    private void checkEverybodyDied() {
+        for(Iterator<GameSession> it = allSessions.iterator(); it.hasNext(); ) {
+            GameSession session = it.next();
+            if(session.getDeadPlayers() == playersNumber) {
+                handleGameOver(session);
+                it.remove();
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    private void checkTimeIsOver() {
+        allSessions.stream().filter(session ->
+            session.getSessionTime() > gameTime).forEach(this::handleGameOver);
+    }
+
+    private void handleGameOver(GameSession session) {
+        GameUser winner = session.getWinner();
+        Map<String, GameUser> users = session.getUsers();
+
+        for (Map.Entry<String, GameUser> entry : users.entrySet()) {
+            GameUser user = entry.getValue();
+            String name = entry.getKey();
+
+            boolean isWinner = winner.getMyName().equals(name);
+
+            webSocketService.notifyGameOver(user, isWinner);
         }
     }
 
     private void gmStep() {
-        for (GameSession session : allSessions) {
-            if (session.getSessionTime() > GAME_TIME) {
+        checkEverybodyDied();
+        //checkTimeIsOver();
+    }
 
-                GameUser winner = session.determineWinner();
-                Map<String, GameUser> users = session.getUsers();
+    @Override
+    public void processGameLogicData(String playerName, JsonObject data) {
 
-                for(Map.Entry<String, GameUser> entry : users.entrySet()) {
-                    GameUser user = entry.getValue();
-                    String name = entry.getKey();
+        String action = data.get("data").getAsString();
+        System.out.print(data.toString());
 
-                    boolean isWinner = winner.getMyName().equals(name);
+        JsonObject response = new JsonObject();
+        response.addProperty("activePlayer", playerName);
+        response.addProperty("action", action);
 
-                    webSocketService.notifyGameOver(user, isWinner);
+        if (action != null) {
+            sendOtherPlayers(playerName, response);
+            if (action.equals("dead")) {
+                GameSession gameSession = dinoraika.get(playerName);
+                if (gameSession.getDeadPlayers() == playersNumber - 1) {
+                    gameSession.setWinner(gameSession.getUsers().get(playerName));
                 }
+                gameSession.incrementDeadPlayers();
+                gameSession.getUsers().get(playerName).setIsDead(true);
             }
         }
     }
 
     private void startGame() {
 
-        /*if (countWaiters() != PLAYERS_NUMBER) {
-            System.out.print("Not enough players to start the game!");
-            throw new Exception("Not enough players to start the game!");
-        }*/
-
         GameSession gameSession = new GameSession(waiters);
         allSessions.add(gameSession);
-        for (int i = 0; i < waiters.length; ++i) {
-            nameToGame.put(waiters[i], gameSession);
-            webSocketService.notifyStartGame(gameSession.getSelf(waiters[i]));
+        for (String waiter : waiters) {
+            dinoraika.put(waiter, gameSession);
+            webSocketService.notifyStartGame(gameSession.getSelf(waiter));
         }
     }
 
     @Override
-    public void sendOtherPlayers(String playerName, String data) {
-        GameSession gameSession = nameToGame.get(playerName);
+    public void sendOtherPlayers(String playerName, JsonObject data) {
+        GameSession gameSession = dinoraika.get(playerName);
         Map<String, GameUser> users = gameSession.getUsers();
 
         for(Map.Entry<String, GameUser> entry : users.entrySet()) {

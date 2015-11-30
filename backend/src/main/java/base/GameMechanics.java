@@ -1,17 +1,27 @@
 package base;
 
+import com.google.gson.JsonObject;
+
 /**
  * @author v.chibrikov
  */
+
 public interface GameMechanics {
 
-    public void addUser(String user);
+    void addUser(String user);
 
-    public void incrementScore(String userName);
+    @SuppressWarnings("unused")
+    void incrementScore(String userName);
 
-    public void run();
+    void run();
 
-    public void sendOtherPlayers(String player, String data);
+    void sendOtherPlayers(String player, JsonObject data);
 
-    public void deleteIfWaiter(String player);
+    void deleteIfWaiter(String player);
+
+    void processGameLogicData(String playerName, JsonObject data);
+
+    void setIsActive(boolean value);
+
+    boolean isActive();
 }

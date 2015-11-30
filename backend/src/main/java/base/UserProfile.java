@@ -9,11 +9,13 @@ import org.jetbrains.annotations.NotNull;
 public class UserProfile {
 
     @NotNull
-    private String login;
+    private String login = "";
     @NotNull
-    private String password;
+    private String password = "";
     @NotNull
-    private String email;
+    private String email = "";
+
+    public UserProfile() {}
 
     public UserProfile(@NotNull String login,
                        @NotNull String password, @NotNull String email) {
@@ -38,5 +40,29 @@ public class UserProfile {
     @NotNull
     public String getEmail() {
         return email;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object == null) {
+            return false;
+        }
+        if (getClass() != object.getClass()) {
+            return false;
+        }
+
+        UserProfile profile = (UserProfile)object;
+
+        return (email.equals(profile.email)
+             && login.equals(profile.login)
+            && password.equals(profile.password));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = login.hashCode();
+        result = 31 * result + password.hashCode();
+        result = 31 * result + email.hashCode();
+        return result;
     }
 }

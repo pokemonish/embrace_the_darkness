@@ -1,5 +1,7 @@
 package frontend;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import main.AccountService;
 import main.ResponseHandler;
 import base.UserProfile;
@@ -11,76 +13,57 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+
+import utils.JsonRequestParser;
 
 /**
  * @author v.chibrikov
  */
+
+
 public class SignInServlet extends HttpServlet {
 
     @NotNull
-    private AccountService accountService;
+    private final AccountService accountService;
 
     public SignInServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
-
-    @Override
-
-    public void doGet(@NotNull HttpServletRequest request,
-                      @NotNull HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
-        HttpSession session = request.getSession();
-
-        Long userId = (Long) session.getAttribute("userId");
-        String htmlToRender = "auth.html";
-
-        if (userId == null) {
-            pageVariables.put("loginStatus", "");
-        } else {
-            UserProfile profile = accountService.getSessions(String.valueOf(userId));
-
-            if (profile != null) {
-
-                htmlToRender = "authstatus.html";
-
-                String name = profile.getLogin();
-                pageVariables.put("loginStatus", "Hi, " + name + ", you are logged in.");
-            } else {
-                pageVariables.put("loginStatus", "");
-            }
-        }
-
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
-    }
+    
 
     @Override
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
 
-
         HttpSession session = request.getSession();
-        Map<String, Object> pageVariables = new HashMap<>();
+        JsonObject jsonResponse = new JsonObject();
 
-        String email = request.getParameter("email");
-        email = email != null ? email: "";
-
-        String password = request.getParameter("password");
-        password = password != null ? password: "";
-
-        String htmlToRender = "auth.html";
         Long userId = (Long) session.getAttribute("userId");
 
+        JsonObject requestData;
+
+        try {
+            requestData = JsonRequestParser.parse(request);
+        } catch (IOException e) {
+            jsonResponse.addProperty("Status", "Request is invalid. Can't parse json.");
+            ResponseHandler.respondWithJSONAndStatus(response, jsonResponse,
+                    HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        JsonElement requestEmail = requestData.get("email");
+        JsonElement requestPassword = requestData.get("password");
+
+        String email = requestEmail == null ? "" : requestEmail.getAsString();
+        String password = requestPassword == null ? "" : requestPassword.getAsString();
+
+        System.out.append(email).append('\n').append(password);
+
         if (email.isEmpty()) {
-
-            pageVariables.put("loginStatus", "login is required");
-
+            jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
-
-            pageVariables.put("loginStatus", "password is required");
-
-        } else if (userId == null) {
+            jsonResponse.addProperty("Status", "password is required");
+        } else if (accountService.getSessions(String.valueOf(userId)) == null) {
 
             UserProfile profile = accountService.getUser(email);
 
@@ -93,17 +76,14 @@ public class SignInServlet extends HttpServlet {
                 session.setAttribute("userId", userId);
                 accountService.addSessions(key, profile);
 
-                pageVariables.put("loginStatus", "Login passed");
-                htmlToRender = "authstatus.html";
+                jsonResponse.addProperty("Status", "Login passed");
             } else {
-                pageVariables.put("loginStatus", "Wrong login/password");
+                jsonResponse.addProperty("Status", "Wrong login/password");
             }
         } else {
-            pageVariables.put("loginStatus", "You are alredy logged in");
+            jsonResponse.addProperty("Status", "You are alredy logged in");
         }
 
-//        htmlToRender = "response.json";
-
-        ResponseHandler.drawPage(response, htmlToRender, pageVariables);
+        ResponseHandler.respondWithJSON(response, jsonResponse);
     }
 }

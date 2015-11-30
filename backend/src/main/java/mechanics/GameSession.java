@@ -1,7 +1,6 @@
 package mechanics;
 
 import base.GameUser;
-import com.sun.xml.internal.ws.util.QNameMap;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -13,11 +12,21 @@ import java.util.Map;
 public class GameSession {
     private final long startTime;
 
-    private Map<String, GameUser> users = new HashMap<>();
+    private final Map<String, GameUser> users = new HashMap<>();
     private GameUser winner;
 
+    private byte deadPlayers = 0;
 
-    public GameSession(String players[]) {
+    public byte getDeadPlayers() {
+        return deadPlayers;
+    }
+
+    public void incrementDeadPlayers() {
+        ++this.deadPlayers;
+    }
+
+
+    public GameSession(String[] players) {
         startTime = new Date().getTime();
 
         for (int i = 0; i < players.length; ++i) {
@@ -37,11 +46,6 @@ public class GameSession {
 
     }
 
-    public GameUser getEnemy(String user) {
-        String[] enemyNames = users.get(user).getEnemyNames();
-        return users.get(enemyNames[0]);
-    }
-
     public GameUser getSelf(String user) {
         return users.get(user);
     }
@@ -50,6 +54,16 @@ public class GameSession {
         return new Date().getTime() - startTime;
     }
 
+public GameUser getWinner() {
+        return winner;
+    }
+
+    public void setWinner(GameUser winner) {
+        this.winner = winner;
+    }
+
+
+    @SuppressWarnings("unused")
     public GameUser determineWinner() {
         for(Map.Entry<String, GameUser> entry : users.entrySet()) {
             GameUser user = entry.getValue();
@@ -57,10 +71,6 @@ public class GameSession {
                 winner = user;
             }
         }
-        return winner;
-    }
-
-    public GameUser getWinner() {
         return winner;
     }
 

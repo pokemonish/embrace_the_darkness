@@ -9,7 +9,7 @@ module.exports = function(grunt) {
                 stderr: true,
             },
             runServer: {
-                command: 'java -cp server.jar main.Main 8080'
+                command: 'java -cp server.jar main.Main'
             }
         },
 
@@ -17,16 +17,6 @@ module.exports = function(grunt) {
             fest: {
                 files: ['frontend/templates/**/*.xml'],
                 tasks: ['fest'],
-                options: {
-                    interrupt: true,
-                    livereload: true,
-                }
-            },
-            server: {
-                files: [
-                    'frontend/static/**/*'
-                ],
-                tasks: ['copy:main'],
                 options: {
                     interrupt: true,
                     livereload: true,
@@ -46,12 +36,11 @@ module.exports = function(grunt) {
                 files: [
                     'public_html/**/*'
                 ],
-                tasks: ['copy:public_html'],
                 options: {
-                    interrupt: false,
-                    livereload: false,
+                    interrupt: true,
+                    livereload: true,
                 }
-            },
+            }
         },
 
         fest: {
@@ -79,28 +68,6 @@ module.exports = function(grunt) {
                 cwd: 'backend/server_tml/',
                 src: '**',
                 dest: 'server_tml/',
-                flatten: false,
-            },
-            // frontend_bin: {
-            //     expand: true,
-            //     cwd: 'frontend/templates/bin',
-            //     src: '**',
-            //     dest: 'frontend/static/js/tmpl',
-            //     flatten: false,
-            // },
-            main: {
-                expand: true,
-                cwd: 'frontend/static/',
-                src: '**',
-                dest: 'public_html/',
-                flatten: false,
-            },
-
-            public_html: {
-                expand: true,
-                cwd: 'public_html/',
-                src: '**',
-                dest: 'backend/public_html/',
                 flatten: false,
             }
         },

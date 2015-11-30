@@ -2,6 +2,7 @@ package frontend;
 
 import base.GameUser;
 import base.WebSocketService;
+import com.google.gson.JsonObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,7 @@ import java.util.Map;
  * @author v.chibrikov
  */
 public class WebSocketServiceImpl implements WebSocketService {
-    private Map<String, GameWebSocket> userSockets = new HashMap<>();
+    private final Map<String, GameWebSocket> userSockets = new HashMap<>();
 
     @Override
     public void addUser(GameWebSocket user) {
@@ -23,19 +24,14 @@ public class WebSocketServiceImpl implements WebSocketService {
     }
 
     @Override
-    public void notifyEnemyNewScore(GameUser user) {
-        userSockets.get(user.getMyName()).setEnemyScore(user);
-    }
-
-    @Override
     public void notifyStartGame(GameUser user) {
         GameWebSocket gameWebSocket = userSockets.get(user.getMyName());
         gameWebSocket.startGame(user);
     }
 
     @Override
-    public void notifyEnemyAction(GameUser user, String data) {
-        userSockets.get(user.getMyName()).sendEnemyAction(user, data);
+    public void notifyEnemyAction(GameUser user, JsonObject data) {
+        userSockets.get(user.getMyName()).sendEnemyAction(data);
     }
 
     @Override

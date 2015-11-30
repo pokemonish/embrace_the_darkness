@@ -17,7 +17,7 @@ import java.io.IOException;
 
 public class PostNameServlet extends HttpServlet {
 
-    private AuthService authService;
+    private final AuthService authService;
 
     public PostNameServlet(@NotNull AuthService authService) { this.authService = authService; }
 

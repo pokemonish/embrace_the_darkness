@@ -1,0 +1,45 @@
+body {
+    color: blue;
+}
+
+.menu__buttons {
+
+}
+
+.menu__button {
+    display:block;
+    margin: 5px;
+}
+
+.login__input_data {
+    display: block;
+}
+
+ 
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+    font-size: 32px;
+}
+
+.title_center {
+    margin: 10px;
+    text-align: center;
+}
+
+.field {
+    margin: 10px;
+}
+
+.login__btn {
+    width: 100%;
+}
+
+.main__btn {
+    width: 50%;
+    height: 50%;
+}

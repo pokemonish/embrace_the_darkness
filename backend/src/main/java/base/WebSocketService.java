@@ -1,5 +1,6 @@
 package base;
 
+import com.google.gson.JsonObject;
 import frontend.GameWebSocket;
 
 /**
@@ -11,11 +12,9 @@ public interface WebSocketService {
 
     void notifyMyNewScore(GameUser user);
 
-    void notifyEnemyNewScore(GameUser user);
-
     void notifyStartGame(GameUser user);
 
     void notifyGameOver(GameUser user, boolean win);
 
-    void notifyEnemyAction(GameUser user, String data);
+    void notifyEnemyAction(GameUser user, JsonObject data);
 }
