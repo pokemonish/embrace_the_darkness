@@ -3,17 +3,12 @@
 <head>
     <meta charset="utf-8" />
     <title>EGE</title>
-    <link rel="stylesheet" href="css/main.css"/>
-<!--     <link rel="stylesheet" type="text/css" href="/dino/css/1.css">
-    <link rel="stylesheet" type="text/css" href="/dino/css/2.css"> -->
-    <link rel="stylesheet" href="css/bootstrap-3.3.5-dist/css/bootstrap.css"/>
+    <link rel="stylesheet" href="/css/main.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-3.3.5-dist/css/bootstrap.css"/>
 
-    <script type="text/javascript" src="js/lib/jquery.js"></script>
-    <script src="js/lib/trianglify.min.js"></script>
+    <script type="text/javascript" src="/js/lib/jquery.js"></script>
 </head>
 <body>
-    <canvas id="background" style="display: none;"></canvas>
-
     <!-- Livereload -->
     <script src="//localhost:35729/livereload.js"></script>
 
@@ -22,17 +17,6 @@
         <div id="page"></div>
       </div>
     </div>
-    <script>
-        var pattern = Trianglify({
-            width: window.innerWidth,
-            height: window.innerHeight
-        });
-
-        var canvas = document.getElementById('background');
-        pattern.canvas(background);
-
-        document.body.style.backgroundImage = "url(" + canvas.toDataURL("image/png")+ ")";
-    </script>
 
     <script data-main="js/main" src="js/lib/require.js"></script>
 </body>
