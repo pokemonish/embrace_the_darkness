@@ -14,7 +14,7 @@
     </div>
     
     <div class="field">
-        <button class="btn btn-primary menu-btn field__btn">Menu</button>
+        <button class="btn btn-primary menu-btn field__btn">Назад</button>
     </div>
     
 </fest:template>
