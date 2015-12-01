@@ -1,6 +1,6 @@
 <fest:template xmlns:fest="http://fest.mail.ru"
     context_name="json">
-    <div class="title title_center">Scoreboard</div>
+    <div class="title title_center">Наша гордость</div>
     <div>
         
     </div>
