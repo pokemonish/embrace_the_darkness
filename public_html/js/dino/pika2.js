@@ -6,10 +6,11 @@ function toggleHelpBox() {
   var helpBoxOuter = document.getElementById('details');
   helpBoxOuter.classList.toggle('hidden');
   var detailsButton = document.getElementById('details-button');
-  if (helpBoxOuter.classList.contains('hidden'))
-    detailsButton.innerText = detailsButton.detailsText;
-  else
-    detailsButton.innerText = detailsButton.hideDetailsText;
+  if (helpBoxOuter.classList.contains('hidden')) {
+    detailsButton.innerText = 'Подробнее';
+  } else {
+    detailsButton.innerText = 'Скромнее';
+  }
 
   // Details appears over the main content on small screens.
   if (mobileNav) {

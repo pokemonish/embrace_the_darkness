@@ -4,10 +4,10 @@
     <!-- <button class="js-back">Back</button> -->
     
     <div class="menu">
-        <button class="btn game-button menu__button">Start Game</button>
-        <button class="btn login-button menu__button">Login</button>
-        <button class="btn signup-button menu__button">Signup</button>
-        <button class="btn scoreboard-button menu__button">Scoreboard</button>
+        <!-- <button class="btn game-button menu__button">Start Game</button> -->
+        <button class="btn login-button menu__button">Я новенький</button>
+        <button class="btn signup-button menu__button">Я уже умею</button>
+        <button class="btn scoreboard-button menu__button">Они умеют</button>
     </div>
 
     
