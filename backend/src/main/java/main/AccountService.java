@@ -23,6 +23,12 @@ public class AccountService {
     @NotNull
     private final Map<String, UserProfile> sessions = new HashMap<>();
 
+    private long id = 1;
+
+    public long getAndIncrementID() {
+        return id++;
+    }
+
     public boolean addUser(String userName, UserProfile userProfile) {
 
         try {

@@ -29,7 +29,7 @@ public class SignInServlet extends HttpServlet {
     public SignInServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
-    
+
 
     @Override
     public void doPost(@NotNull HttpServletRequest request,
@@ -38,7 +38,7 @@ public class SignInServlet extends HttpServlet {
         HttpSession session = request.getSession();
         JsonObject jsonResponse = new JsonObject();
 
-        String sessionId = session.getId();
+        Long userId = (Long) session.getAttribute("userId");
 
         JsonObject requestData;
 
@@ -57,18 +57,26 @@ public class SignInServlet extends HttpServlet {
         String email = requestEmail == null ? "" : requestEmail.getAsString();
         String password = requestPassword == null ? "" : requestPassword.getAsString();
 
+        System.out.println(session.getAttribute("userId"));
+        System.out.println(accountService.getSessions(String.valueOf(userId)));
         if (email.isEmpty()) {
             jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
             jsonResponse.addProperty("Status", "password is required");
-        } else if (accountService.getSessions(sessionId) == null) {
+        } else if (accountService.getSessions(String.valueOf(userId)) == null) {
+
             UserProfile profile = accountService.getUser(email);
 
             if (profile != null && profile.getPassword().equals(password)) {
 
-                assert sessionId != null;
-                accountService.addSessions(sessionId, profile);
+                userId = accountService.getAndIncrementID();
+                String key = String.valueOf(userId);
 
+                assert key != null;
+                session.setAttribute("userId", userId);
+                System.out.println(profile.toString());
+                accountService.addSessions(key, profile);
+                System.out.println(accountService.getSessions(String.valueOf(userId)));
                 jsonResponse.addProperty("Status", "Login passed");
             } else {
                 jsonResponse.addProperty("Status", "Wrong login/password");

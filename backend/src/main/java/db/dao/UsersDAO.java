@@ -3,6 +3,7 @@ package db.dao;
 import base.UserProfile;
 import db.datasets.UsersDataSet;
 import db.executor.TExecutor;
+import org.jetbrains.annotations.Nullable;
 import resources.Config;
 
 import java.sql.Connection;
@@ -56,7 +57,9 @@ public class UsersDAO {
 
         return executor.execQuery(con, query,
             result -> {
-                result.next();
+                if (!result.next()) {
+                    return null;
+                }
 
                 return new UsersDataSet(result.getInt(1),
                         result.getString(2), result.getString(3));
@@ -67,7 +70,7 @@ public class UsersDAO {
     public void addUser(UserProfile user, Connection connection) throws SQLException {
 
         String query = String.format(INSERT_USER, user.getLogin(), user.getPassword());
-        System.out.append("Insert query ").append(query);
+        System.out.append("Insert query ").append(query).append('\n');
 
         executor.execUpdate(connection, query);
     }

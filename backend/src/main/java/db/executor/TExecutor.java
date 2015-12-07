@@ -11,18 +11,20 @@ public class TExecutor {
     public <T> T execQuery(Connection connection,
                            String query,
                            TResultHandler<T> handler) throws SQLException {
-        T value;
+
 
         try (Statement stmt = connection.createStatement()) {
 
             stmt.execute(query);
 
+            T value;
+
             try (ResultSet result = stmt.getResultSet()) {
                 value = handler.handle(result);
             }
+            return value;
         }
 
-        return value;
     }
 
     public void execUpdate(Connection connection, String update) throws SQLException {
