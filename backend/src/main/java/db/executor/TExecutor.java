@@ -10,21 +10,27 @@ import java.sql.Statement;
 public class TExecutor {
     public <T> T execQuery(Connection connection,
                            String query,
-                           TResultHandler<T> handler)
-            throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(query);
-        ResultSet result = stmt.getResultSet();
-        T value = handler.handle(result);
-        result.close();
-        stmt.close();
+                           TResultHandler<T> handler) throws SQLException {
 
-        return value;
+
+        try (Statement stmt = connection.createStatement()) {
+
+            stmt.execute(query);
+
+            T value;
+
+            try (ResultSet result = stmt.getResultSet()) {
+                value = handler.handle(result);
+            }
+            return value;
+        }
+
     }
 
     public void execUpdate(Connection connection, String update) throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(update);
-        stmt.close();
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(update);
+        }
     }
 }

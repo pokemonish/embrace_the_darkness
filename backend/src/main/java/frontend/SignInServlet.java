@@ -29,7 +29,7 @@ public class SignInServlet extends HttpServlet {
     public SignInServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
-    
+
 
     @Override
     public void doPost(@NotNull HttpServletRequest request,
@@ -57,8 +57,6 @@ public class SignInServlet extends HttpServlet {
         String email = requestEmail == null ? "" : requestEmail.getAsString();
         String password = requestPassword == null ? "" : requestPassword.getAsString();
 
-        System.out.append(email).append('\n').append(password);
-
         if (email.isEmpty()) {
             jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
@@ -74,6 +72,7 @@ public class SignInServlet extends HttpServlet {
 
                 assert key != null;
                 session.setAttribute("userId", userId);
+
                 accountService.addSessions(key, profile);
 
                 jsonResponse.addProperty("Status", "Login passed");

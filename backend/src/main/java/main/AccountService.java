@@ -2,10 +2,10 @@ package main;
 
 import base.DBService;
 import base.UserProfile;
+import db.DBException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,7 +25,6 @@ public class AccountService {
 
     private long id = 1;
 
-    //temporary
     public long getAndIncrementID() {
         return id++;
     }
@@ -34,7 +33,7 @@ public class AccountService {
 
         try {
             dbService.addUser(userProfile);
-        } catch (SQLException e) {
+        } catch (DBException e) {
             return false;
         }
 
@@ -48,7 +47,8 @@ public class AccountService {
     public int getUsersQuantity() throws RuntimeException{
         try {
             return dbService.countUsers();
-        } catch (SQLException e) {
+        } catch (DBException e) {
+            e.printStackTrace();
             throw new RuntimeException("Can't count users.");
         }
     }
@@ -62,7 +62,7 @@ public class AccountService {
         if (userName == null) return null;
         try {
             return dbService.getUserByName(userName);
-        } catch (SQLException e) {
+        } catch (DBException e) {
             return null;
         }
     }
