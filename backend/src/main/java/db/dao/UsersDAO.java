@@ -74,11 +74,9 @@ public class UsersDAO {
 
     public int countUsers(Connection connection) throws SQLException {
 
-        return executor.execQuery(connection, COUNT_USERS, resultSet -> {
-            resultSet.next();
-            return resultSet.getInt(1);
+        return executor.execQuery(connection, COUNT_USERS, result -> {
+            result.next();
+            return result.getInt(1);
         });
     }
-
-
 }

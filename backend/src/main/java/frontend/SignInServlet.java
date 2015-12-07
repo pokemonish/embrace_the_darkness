@@ -57,8 +57,6 @@ public class SignInServlet extends HttpServlet {
         String email = requestEmail == null ? "" : requestEmail.getAsString();
         String password = requestPassword == null ? "" : requestPassword.getAsString();
 
-        System.out.append(email).append('\n').append(password);
-
         if (email.isEmpty()) {
             jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
