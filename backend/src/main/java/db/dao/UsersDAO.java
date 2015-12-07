@@ -8,7 +8,7 @@ import resources.Config;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public final class UsersDAO {
+public class UsersDAO {
 
     private Connection con;
     private TExecutor executor;
@@ -25,12 +25,7 @@ public final class UsersDAO {
                                             "PRIMARY KEY (id))";
     private static final String DROP_TABLE = "DROP TABLE " + Config.getInstance().getDbName() + ".users";
 
-
-    public static UsersDAO makeUsersDAO(Connection con) {
-        return new  UsersDAO(con);
-    }
-
-    private UsersDAO(Connection con) {
+    public UsersDAO(Connection con) {
         this.con = con;
         this.executor = new TExecutor();
     }

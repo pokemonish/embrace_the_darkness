@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TExecutor {
+
     public <T> T execQuery(Connection connection,
                            String query,
                            TResultHandler<T> handler)

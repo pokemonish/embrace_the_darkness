@@ -39,19 +39,19 @@ public class DBServiceImpl implements DBService {
                     Config.getInstance().getDbPort() + '?' +
                     "user=" + Config.getInstance().getDbUser() + '&' +
                     "password=" + Config.getInstance().getDbPassword();
-            DataBaseDAO dataBaseDAO = DataBaseDAOImpl.makeDataBaseDAO(getConnection());
+            DataBaseDAO dataBaseDAO = new DataBaseDAOImpl(getConnection());
             dataBaseDAO.createDB();
         }
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.print("Bye bye!");
+            System.out.println("Bye bye!");
             if (Config.getInstance().isDoDeleteDB()) {
                 try {
                     DataBaseDAO dataBaseDAO =
-                            DataBaseDAOImpl.makeDataBaseDAO(getConnection());
+                            new DataBaseDAOImpl(getConnection());
                     dataBaseDAO.dropDB();
                 } catch (DBException e) {
-                    System.out.print("Database was not deleted");
+                    System.out.println("Database was not deleted");
                 }
             }
         }));
@@ -84,7 +84,7 @@ public class DBServiceImpl implements DBService {
     @Override
     public void addUser(UserProfile user) throws DBException {
 
-        UsersDAO usersDAO = UsersDAO.makeUsersDAO(connection);
+        UsersDAO usersDAO = new UsersDAO(connection);
 
         try {
             usersDAO.addUser(user, connection);
@@ -97,7 +97,7 @@ public class DBServiceImpl implements DBService {
     @Override
     public UserProfile getUserByName(String name) throws DBException {
 
-        UsersDAO usersDAO = UsersDAO.makeUsersDAO(connection);
+        UsersDAO usersDAO = new UsersDAO(connection);
 
         UsersDataSet usersDataSet;
 
@@ -114,7 +114,7 @@ public class DBServiceImpl implements DBService {
     @Override
     public int countUsers() throws DBException {
 
-        UsersDAO usersDAO = UsersDAO.makeUsersDAO(connection);
+        UsersDAO usersDAO = new UsersDAO(connection);
 
         try {
             return usersDAO.countUsers(connection);

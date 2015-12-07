@@ -20,21 +20,17 @@ public class DataBaseDAOImpl implements DataBaseDAO {
 
     private Connection connection;
 
-    private DataBaseDAOImpl(Connection connection) {
+    public DataBaseDAOImpl(Connection connection) {
         this.connection = connection;
-    }
-
-    public static DataBaseDAO makeDataBaseDAO(Connection connection) {
-        return new DataBaseDAOImpl(connection);
     }
 
     @Override
     public void createDB() throws DBException {
-        UsersDAO usersDAO = UsersDAO.makeUsersDAO(connection);
+        UsersDAO usersDAO = makeUsersDAO();
 
         try {
             connection.setAutoCommit(false);
-            TExecutor executor = new TExecutor();
+            TExecutor executor = makeTExecutor();
             executor.execUpdate(connection, CREATE_DATABASE);
             usersDAO.createTable();
             connection.commit();
@@ -56,11 +52,19 @@ public class DataBaseDAOImpl implements DataBaseDAO {
 
     @Override
     public void dropDB() throws DBException {
-        TExecutor executor = new TExecutor();
+        TExecutor executor = makeTExecutor();
         try {
             executor.execUpdate(connection, DROP_DATABASE);
         } catch (SQLException e) {
             throw new DBException(e);
         }
+    }
+
+    public TExecutor makeTExecutor() {
+        return new TExecutor();
+    }
+
+    public UsersDAO makeUsersDAO() {
+        return new UsersDAO(connection);
     }
 }
