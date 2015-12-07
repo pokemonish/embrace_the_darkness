@@ -22,7 +22,6 @@ import resources.Config;
 import resources.ReadXMLFileSAX;
 
 import javax.servlet.Servlet;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
@@ -35,15 +34,7 @@ public class Main {
 
     public static void main(@NotNull String[] args) throws Exception {
 
-        Config config = null;
-
-        try {
-            config = new Config();
-        } catch (IOException | NumberFormatException e) {
-            System.exit(1);
-        }
-
-        int port = config.getPort();
+        int port = Config.getInstance().getPort();
 
         String startMessage = "Starting at port: " + port + '\n' +
                 "Currently running on " + System.getProperty("os.name") +
@@ -52,7 +43,7 @@ public class Main {
 
         Logger.getAnonymousLogger().log(new LogRecord(Level.INFO, startMessage));
 
-        DBService dBservice = new DBServiceImpl(config);
+        DBService dBservice = new DBServiceImpl();
 
         AccountService accountService = new AccountService(dBservice);
         AuthService authService = new AuthServiceImpl();
@@ -75,17 +66,17 @@ public class Main {
         Servlet admin = new AdminPageServlet(accountService, gameMechanics);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(signin), config.getSignInUrl());
-        context.addServlet(new ServletHolder(signUp), config.getSignUpUrl());
-        context.addServlet(new ServletHolder(signOut), config.getSignOutUrl());
-        context.addServlet(new ServletHolder(admin), config.getAdminUrl());
-        context.addServlet(new ServletHolder(postName), config.getPostNameUrl());
+        context.addServlet(new ServletHolder(signin), Config.getInstance().getSignInUrl());
+        context.addServlet(new ServletHolder(signUp), Config.getInstance().getSignUpUrl());
+        context.addServlet(new ServletHolder(signOut), Config.getInstance().getSignOutUrl());
+        context.addServlet(new ServletHolder(admin), Config.getInstance().getAdminUrl());
+        context.addServlet(new ServletHolder(postName), Config.getInstance().getPostNameUrl());
         context.addServlet(new ServletHolder(new WebSocketGameServlet(authService,
-                gameMechanics, webSocketService)), config.getGameplayUrl());
+                gameMechanics, webSocketService)), Config.getInstance().getGameplayUrl());
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase(config.getResourceBase());
+        resource_handler.setResourceBase(Config.getInstance().getResourceBase());
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
@@ -94,6 +85,7 @@ public class Main {
         server.setHandler(handlers);
 
         server.start();
+
         gameMechanics.run();
     }
 }

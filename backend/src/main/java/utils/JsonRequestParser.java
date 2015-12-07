@@ -29,7 +29,7 @@ public class JsonRequestParser {
         try {
             parsedRequest = new Gson().fromJson(jb.toString(), JsonObject.class);
 
-        } catch (JsonSyntaxException e) {
+        } catch (JsonSyntaxException ignore) {
             throw new IOException("Error parsing JSON request string");
         }
 

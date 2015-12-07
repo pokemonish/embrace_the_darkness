@@ -65,7 +65,7 @@ public class SignUpServletTest extends AuthBasicTest {
     public void testCorrectDataDoPost() throws ServletException, IOException {
         parametersJson.addProperty("email", EMAIL_TEST);
         parametersJson.addProperty("password", PASSWORD_TEST);
-        testDoPost("New user created\n", HttpServletResponse.SC_OK, 1);
+        testDoPost("New user created", HttpServletResponse.SC_OK, 1);
 
         verify(mockedAccountService, times(1)).addUser(eq(EMAIL_TEST), eq(TEST_USER_PROFILE));
     }
@@ -74,7 +74,7 @@ public class SignUpServletTest extends AuthBasicTest {
     public void testDuplicateDataDoPost() throws ServletException, IOException {
         parametersJson.addProperty("email", EMAIL_TEST);
         parametersJson.addProperty("password", PASSWORD_TEST);
-        testDoPost("New user created\n", HttpServletResponse.SC_OK, 1);
+        testDoPost("New user created", HttpServletResponse.SC_OK, 1);
         testDoPost("User with name: " + EMAIL_TEST + " already exists", HttpServletResponse.SC_OK, 2);
         verify(mockedAccountService, times(2)).addUser(eq(EMAIL_TEST), eq(TEST_USER_PROFILE));
     }

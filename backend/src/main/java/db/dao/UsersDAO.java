@@ -3,20 +3,46 @@ package db.dao;
 import base.UserProfile;
 import db.datasets.UsersDataSet;
 import db.executor.TExecutor;
+import resources.Config;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class UsersDAO {
+public final class UsersDAO {
 
     private Connection con;
+    private TExecutor executor;
 
-    private static final String GET_USER_BY_NAME = "select * from users where user_name = \"%s\"";
-    private static final String INSERT_USER = "insert into users (user_name, password) values (\"%s\", \"%s\")";
-    private static final String COUNT_USERS = "select count(*) from users";
+    private static final String GET_USER_BY_NAME = "SELECT * FROM users WHERE user_name = \"%s\"";
+    private static final String INSERT_USER = "INSERT INTO users (user_name, password) VALUES (\"%s\", \"%s\")";
+    private static final String COUNT_USERS = "SELECT count(*) FROM users";
+    private static final String CREATE_TABLE =
+                                            "CREATE TABLE IF NOT EXISTS " +
+                                            Config.getInstance().getDbName() + ".users (" +
+                                            "id BIGINT NOT NULL AUTO_INCREMENT," +
+                                            "user_name VARCHAR(256) NOT NULL," +
+                                            "PASSWORD VARCHAR(256) NOT NULL," +
+                                            "PRIMARY KEY (id))";
+    private static final String DROP_TABLE = "DROP TABLE " + Config.getInstance().getDbName() + ".users";
 
-    public UsersDAO(Connection con) {
+
+    public static UsersDAO makeUsersDAO(Connection con) {
+        return new  UsersDAO(con);
+    }
+
+    private UsersDAO(Connection con) {
         this.con = con;
+        this.executor = new TExecutor();
+    }
+
+    public void createTable() throws SQLException {
+
+        executor.execUpdate(con, CREATE_TABLE);
+    }
+
+    public void dropTable() throws SQLException {
+
+        executor.execUpdate(con, DROP_TABLE);
     }
 
     public UsersDataSet get(long id) throws SQLException {
@@ -28,7 +54,6 @@ public class UsersDAO {
     }
 
     public UsersDataSet getUserByName(String name) throws SQLException {
-        TExecutor executor = new TExecutor();
 
         String query = String.format(GET_USER_BY_NAME, name);
 
@@ -45,7 +70,6 @@ public class UsersDAO {
     }
 
     public void addUser(UserProfile user, Connection connection) throws SQLException {
-        TExecutor executor = new TExecutor();
 
         String query = String.format(INSERT_USER, user.getLogin(), user.getPassword());
         System.out.append("Insert query ").append(query);
@@ -54,7 +78,6 @@ public class UsersDAO {
     }
 
     public int countUsers(Connection connection) throws SQLException {
-        TExecutor executor = new TExecutor();
 
         return executor.execQuery(connection, COUNT_USERS, resultSet -> {
             resultSet.next();

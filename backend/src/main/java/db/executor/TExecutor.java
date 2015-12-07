@@ -12,19 +12,21 @@ public class TExecutor {
                            String query,
                            TResultHandler<T> handler)
             throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(query);
-        ResultSet result = stmt.getResultSet();
-        T value = handler.handle(result);
-        result.close();
-        stmt.close();
+        try (Statement stmt = connection.createStatement();
+             ResultSet result = stmt.getResultSet()) {
 
-        return value;
+            stmt.execute(query);
+            T value = handler.handle(result);
+            result.close();
+            return value;
+        }
     }
 
     public void execUpdate(Connection connection, String update) throws SQLException {
-        Statement stmt = connection.createStatement();
-        stmt.execute(update);
-        stmt.close();
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(update);
+            stmt.close();
+        }
     }
 }
