@@ -47,7 +47,7 @@ define([
             
                 response.success(function (data) {
                   alert(data.Status);
-                }); 
+                });
                 return false;
             }
 
