@@ -15,6 +15,7 @@ define([
             'click .login-button': 'login',
             'click .scoreboard-button': 'scoreboard',
             'click .game-button': 'game',
+            'click .signup-button': 'signup'
         },
 
         initialize: function () {
@@ -25,6 +26,9 @@ define([
         },
         login: function () {
             Backbone.history.navigate('#login', {trigger: true});
+        },
+        signup: function () {
+            Backbone.history.navigate('#signup', {trigger: true});
         },
         scoreboard: function () {
             Backbone.history.navigate('#scoreboard', {trigger: true});

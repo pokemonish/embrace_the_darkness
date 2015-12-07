@@ -1,14 +1,14 @@
 <fest:template xmlns:fest="http://fest.mail.ru"
     context_name="json">
     
-    <div class="title title_center">Login</div>
+    <div class="title title_center">Signup</div>
 
     <div class="login__input_data">
-        <form class="login__form" id="login__form">
+        <form class="signup__form">
             <!-- field -->
             <div class="field">
                 <div class="field__in email-field__in">
-                    <input class="input" name="email" type="email" placeholder="Email" required="" />
+                    <input class="input" name="email" type="text" placeholder="Email" required="" />
                 </div>
                 <div class="field__error email-field__error">
                 </div>
@@ -23,7 +23,7 @@
             </div>
             <!-- field -->
             <div class="field field__btn">
-                <button class="btn login__btn btn-success" id="login">Login</button>
+                <button class="btn login__btn btn-success" id="signup">Signup</button>
             </div>
         </form>
     </div>
