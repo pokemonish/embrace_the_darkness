@@ -33,13 +33,13 @@ public class DBServiceImpl implements DBService {
         }
 
         if (Config.getInstance().isDoCreateDB()) {
-            DataBaseDAO dataBaseDAO = DataBaseDAOImpl.makeDataBaseDAO(getConnection());
             connectionUrl =
                     "jdbc:" + Config.getInstance().getDbType()
                     + "://" + Config.getInstance().getHost() + ':' +
                     Config.getInstance().getDbPort() + '?' +
                     "user=" + Config.getInstance().getDbUser() + '&' +
                     "password=" + Config.getInstance().getDbPassword();
+            DataBaseDAO dataBaseDAO = DataBaseDAOImpl.makeDataBaseDAO(getConnection());
             dataBaseDAO.createDB();
         }
 
