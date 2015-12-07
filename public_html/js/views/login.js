@@ -22,11 +22,29 @@ define([
             }
         },
 
-        initialize: function () {
-            this.render();
+        // initialize: function () {
+        //     console.log("loginView.initialize()");
+        //     this.render();
+        // },
+        initialize: function(options) {
+            this.template = options.template;
         },
         render: function () {
-            $(this.el).html(this.template);
+            console.log("loginView.render()");
+            // $(this.el).html(this.template);
+
+            var content = $(this.template).html();
+            $(this.el).html(content);
+
+            return this;
+        },
+        hide: function () {
+            console.log("loginView.hide()");
+            $(this.el).hide();
+        },
+        show: function () {
+            console.log("loginView.show()");
+            $(this.el).show();
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});

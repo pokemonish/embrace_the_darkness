@@ -1,9 +1,11 @@
 define([
     'backbone',
-    'tmpl/main'
+    'tmpl/main',
+    'views/login'
 ], function(
     Backbone,
-    tmpl
+    tmpl,
+    loginView
 ){
 
     var View = Backbone.View.extend({
@@ -19,12 +21,29 @@ define([
         },
 
         initialize: function () {
+            View.views = {
+                loginView : loginView
+            }
+
+            console.log("App.initialize()")
+
+            console.log(View.views)
             this.render();
         },
         render: function () {
             this.$el.html(this.template());
+            // this.hide();
+        },
+        hide: function () {
+            console.log("mainView.hide()");
+            $(this.el).hide();
+        },
+        show: function () {
+            console.log("mainView.show()");
+            $(this.el).show();
         },
         login: function () {
+            console.log("Go to #login from main");
             Backbone.history.navigate('#login', {trigger: true});
         },
         signup: function () {

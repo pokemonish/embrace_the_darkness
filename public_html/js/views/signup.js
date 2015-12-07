@@ -23,10 +23,19 @@ define([
         },
 
         initialize: function () {
-            this.render();
+            // this.render();
         },
         render: function () {
             $(this.el).html(this.template);
+            this.hide();
+        },
+        hide: function () {
+            console.log("signupView.hide()");
+            $(this.el).hide();
+        },
+        show: function () {
+            console.log("signupView.show()");
+            $(this.el).show();
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});

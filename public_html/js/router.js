@@ -23,21 +23,29 @@ define([
             'signup': 'signupAction',
             '*default': 'defaultActions'
         },
+        initialize: function(el) {
+            this.el = el;
+            
+            this.loginView = loginView({template: '#login'});
+        },
         defaultActions: function () {
             mainView.render();
         },
         scoreboardAction: function () {
-            scoreboardView.render();
+            // scoreboardView.render();
         },
         gameAction: function () {
-            gameView.render();
+            // gameView.render();
             // gameView.show();
         },
         loginAction: function () {
-            loginView.render();
+            console.log("YAHOO!")
+            mainView.hide();
+            loginView.show();
+            // loginView.render();
         },
         signupAction: function () {
-            signupView.render();
+            // signupView.render();
         },
     });
 

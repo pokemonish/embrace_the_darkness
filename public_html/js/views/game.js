@@ -19,13 +19,22 @@ define([
         },
         
         initialize: function () {
-            this.render();
+            // this.render();
         },
         render: function () {
             $(this.el).html(this.template);
+            this.hide();
             
-            dino.start();
+            // dino.start();
             
+        },
+        hide: function () {
+            console.log("gameView.hide()");
+            $(this.el).hide();
+        },
+        show: function () {
+            console.log("gameView.show()");
+            $(this.el).show();
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});
