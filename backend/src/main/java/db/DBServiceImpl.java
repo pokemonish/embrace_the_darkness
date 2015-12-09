@@ -6,6 +6,7 @@ import base.UserProfile;
 import db.dao.DataBaseDAOImpl;
 import db.dao.UsersDAO;
 import db.datasets.UsersDataSet;
+import db.handlers.ConnectionHandler;
 import org.jetbrains.annotations.NotNull;
 import resources.Config;
 
@@ -18,8 +19,17 @@ import java.sql.*;
 public class DBServiceImpl implements DBService {
 
     private String connectionUrl;
-    private Connection connection;
 
+    public static String getUrl() {
+
+        return "jdbc:" +
+                Config.getInstance().getDbType() + "://" +
+                Config.getInstance().getHost() + ':' +
+                Config.getInstance().getDbPort() + '/' +
+                Config.getInstance().getDbName() + '?' + "user=" +
+                Config.getInstance().getDbUser() + '&' + "password=" +
+                Config.getInstance().getDbPassword();
+    }
 
     public DBServiceImpl() throws DBException {
         try {
@@ -43,9 +53,9 @@ public class DBServiceImpl implements DBService {
             dataBaseDAO.createDB();
         }
 
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Bye bye!");
-            if (Config.getInstance().isDoDeleteDB()) {
+        if (Config.getInstance().isDoDeleteDB()) {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Bye bye!");
                 try {
                     DataBaseDAO dataBaseDAO =
                             new DataBaseDAOImpl(getConnection());
@@ -53,22 +63,20 @@ public class DBServiceImpl implements DBService {
                 } catch (DBException e) {
                     System.out.println("Database was not deleted");
                 }
-            }
-        }));
+            }));
+        }
 
-        StringBuilder url = new StringBuilder();
-        url.
-            append("jdbc:").append(Config.getInstance().getDbType()).append("://").
-            append(Config.getInstance().getHost()).append(':').
-            append(Config.getInstance().getDbPort()).append('/')
-            .append(Config.getInstance().getDbName()).append('?').
-            append("user=").append(Config.getInstance().getDbUser()).append('&').
-            append("password=").append(Config.getInstance().getDbPassword());
+        connectionUrl = getUrl();
 
-        connectionUrl = url.toString();
+        System.out.append("URL: ").append(getUrl()).append("\n");
+    }
 
-        System.out.append("URL: ").append(url).append("\n");
-        connection = getConnection();
+    private void connectAndPerform(ConnectionHandler handler) throws DBException {
+        try (Connection connection = getConnection()) {
+            handler.handle(connection);
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
     }
 
     @Override
@@ -83,44 +91,59 @@ public class DBServiceImpl implements DBService {
 
     @Override
     public void addUser(UserProfile user) throws DBException {
+        connectAndPerform(connection -> {
+            UsersDAO usersDAO = new UsersDAO(connection);
 
-        UsersDAO usersDAO = new UsersDAO(connection);
+            try {
+                usersDAO.addUser(user, connection);
+            } catch (SQLException e) {
+                throw new DBException(e);
+            }
+        });
+    }
 
-        try {
-            usersDAO.addUser(user, connection);
-        } catch (SQLException e) {
-            throw new DBException(e);
-        }
+    public void deleteUserByName(String name) throws DBException {
+        connectAndPerform(connection -> {
+            UsersDAO usersDAO = new UsersDAO(connection);
 
+            try {
+                usersDAO.deleteUserByName(name);
+            } catch (SQLException e) {
+                throw new DBException(e);
+            }
+        });
     }
 
     @Override
     public UserProfile getUserByName(String name) throws DBException {
+        final UsersDataSet[] usersDataSet = new UsersDataSet[1];
 
-        UsersDAO usersDAO = new UsersDAO(connection);
+        connectAndPerform(connection -> {
+            UsersDAO usersDAO = new UsersDAO(connection);
 
-        UsersDataSet usersDataSet;
+            try {
+                usersDataSet[0] = usersDAO.getUserByName(name);
+            } catch (SQLException e) {
+                throw new DBException(e);
+            }
+        });
 
-        try {
-            usersDataSet = usersDAO.getUserByName(name);
-        } catch (SQLException e) {
-            throw new DBException(e);
-        }
-
-        return new UserProfile(usersDataSet.getName(), usersDataSet.getPassword(), "");
+        return new UserProfile(usersDataSet[0].getName(), usersDataSet[0].getPassword(), "");
 
     }
 
     @Override
     public int countUsers() throws DBException {
+        Integer[] result = new Integer[1];
 
-        UsersDAO usersDAO = new UsersDAO(connection);
+        connectAndPerform(connection -> {UsersDAO usersDAO = new UsersDAO(connection);
 
-        try {
-            return usersDAO.countUsers(connection);
-        } catch (SQLException e) {
-            throw new DBException(e);
-        }
+            try {
+                result[0] = usersDAO.countUsers(connection);
+            } catch (SQLException e) {
+                throw new DBException(e);
+            }});
+
+        return result[0];
     }
-
 }

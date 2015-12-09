@@ -80,4 +80,12 @@ public class AccountService {
         }
         return false;
     }
+
+    public void deleteUser(String name) {
+        try {
+            dbService.deleteUserByName(name);
+        } catch (DBException ignore) {
+            System.out.println("User was not deleted");
+        }
+    }
 }

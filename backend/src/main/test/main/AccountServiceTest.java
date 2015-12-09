@@ -1,8 +1,17 @@
 package main;
 
+import base.DBService;
 import base.UserProfile;
+import db.DBException;
+import db.DBServiceImpl;
 import org.jetbrains.annotations.NotNull;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import resources.Config;
+
+import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
@@ -12,12 +21,24 @@ import static org.junit.Assert.*;
  */
 public class AccountServiceTest {
 
-    /*@NotNull
-    private final AccountService accountService = new AccountService();
+    private static final String TEST_FILE_PATH = "cfg/test.properties";
+    private AccountService accountService;
     @NotNull
     private final UserProfile testUser = new UserProfile("testLogin", "testPassword", "test@mail.ru");
     @NotNull
     private final String sessionId = "testSessionId";
+
+    @BeforeClass
+    public static void setUpBeforeClass() throws DBException{
+        Config.setConfigFilePath(TEST_FILE_PATH);
+        new DBServiceImpl();
+    }
+
+    @Before
+    public void setUp() throws DBException {
+        DBService service = new DBServiceImpl();
+        accountService = new AccountService(service);
+    }
 
     @Test
     public void testAddUser() throws Exception {
@@ -28,7 +49,9 @@ public class AccountServiceTest {
         assertNotNull(user);
         assertEquals(testUser.getLogin(), user.getLogin());
         assertEquals(testUser.getPassword(), user.getPassword());
-        assertEquals(testUser.getEmail(), user.getEmail());
+
+        accountService.deleteUser(testUser.getLogin());
+        //assertEquals(testUser.getEmail(), user.getEmail());
     }
 
 
@@ -49,6 +72,7 @@ public class AccountServiceTest {
     public void testUserUnicness() throws Exception {
         accountService.addUser(testUser.getLogin(), testUser);
         assertFalse(accountService.addUser(testUser.getLogin(), testUser));
+        accountService.deleteUser(testUser.getLogin());
     }
 
     @Test
@@ -62,9 +86,11 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testGetUsersQuantity() throws Exception {
+    public void testGetUsersQuantity() throws RuntimeException {
         accountService.addUser(testUser.getLogin(), testUser);
-        assert(accountService.getUsersQuantity() == 1);
+        int quantity = accountService.getUsersQuantity();
+        assertEquals(1, quantity);
+        accountService.deleteUser(testUser.getLogin());
     }
 
     @Test
@@ -81,6 +107,10 @@ public class AccountServiceTest {
 
         accountService.deleteSessions(sessionId);
         assertNull(accountService.getSessions(sessionId));
-    }*/
+    }
 
+    @After
+    public void cleanUp() {
+
+    }
 }

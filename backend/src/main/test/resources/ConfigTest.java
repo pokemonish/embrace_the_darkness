@@ -19,7 +19,7 @@ public class ConfigTest {
     @Test
     public void testGetParameter() throws Exception {
         Config.setConfigFilePath(TEST_FILE_PATH);
-        assertEquals(Config.getInstance().getHost(), TEST_VALUE_1);
+        assertEquals(Config.getInstance().getGameplayUrl(), TEST_VALUE_1);
         assertEquals(Config.getInstance().getSignInUrl(), TEST_VALUE_2);
     }
 

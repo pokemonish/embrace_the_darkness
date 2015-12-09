@@ -61,7 +61,7 @@ RunnerManager.prototype = {
                         var enemyNames = data.enemyNames;
                         for (var i = 0; i < enemyNames.length; ++i) {
                             console.log(enemyNames[i]);
-                            this.addRunner(enemyNames[i].name);
+                            this.addRunner(JSON.parse(enemyNames[i]).name);
                         }
                         this.start();
                         break;

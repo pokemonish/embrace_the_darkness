@@ -3,8 +3,7 @@ package db.dao;
 import base.UserProfile;
 import db.datasets.UsersDataSet;
 import db.executor.TExecutor;
-import org.jetbrains.annotations.Nullable;
-import resources.Config;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,29 +16,14 @@ public class UsersDAO {
     private static final String GET_USER_BY_NAME = "SELECT * FROM users WHERE user_name = \"%s\"";
     private static final String INSERT_USER = "INSERT INTO users (user_name, password) VALUES (\"%s\", \"%s\")";
     private static final String COUNT_USERS = "SELECT count(*) FROM users";
-    private static final String CREATE_TABLE =
-                                            "CREATE TABLE IF NOT EXISTS " +
-                                            Config.getInstance().getDbName() + ".users (" +
-                                            "id BIGINT NOT NULL AUTO_INCREMENT," +
-                                            "user_name VARCHAR(256) NOT NULL," +
-                                            "PASSWORD VARCHAR(256) NOT NULL," +
-                                            "PRIMARY KEY (id))";
-    private static final String DROP_TABLE = "DROP TABLE " + Config.getInstance().getDbName() + ".users";
+    private static final String DELETE_USER_BY_NAME = "DELETE FROM users WHERE user_name = \"%s\"";
+
 
     public UsersDAO(Connection con) {
         this.con = con;
         this.executor = new TExecutor();
     }
 
-    public void createTable() throws SQLException {
-
-        executor.execUpdate(con, CREATE_TABLE);
-    }
-
-    public void dropTable() throws SQLException {
-
-        executor.execUpdate(con, DROP_TABLE);
-    }
 
     public UsersDataSet get(long id) throws SQLException {
         TExecutor exec = new TExecutor();
@@ -65,6 +49,14 @@ public class UsersDAO {
                         result.getString(2), result.getString(3));
             }
         );
+    }
+
+    public void deleteUserByName(String name) throws SQLException {
+
+        String query = String.format(DELETE_USER_BY_NAME, name);
+
+        executor.execUpdate(con, query);
+
     }
 
     public void addUser(UserProfile user, Connection connection) throws SQLException {

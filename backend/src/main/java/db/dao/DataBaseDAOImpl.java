@@ -16,23 +16,37 @@ public class DataBaseDAOImpl implements DataBaseDAO {
             "CREATE SCHEMA IF NOT EXISTS " + Config.getInstance().getDbName();
     private static final String DROP_DATABASE =
             "DROP DATABASE " + Config.getInstance().getDbName();
-
+    private static final String CREATE_TABLE =
+            "CREATE TABLE IF NOT EXISTS " +
+                    Config.getInstance().getDbName() + ".users (" +
+                    "id BIGINT NOT NULL AUTO_INCREMENT UNIQUE," +
+                    "user_name VARCHAR(256) NOT NULL," +
+                    "PASSWORD VARCHAR(256) NOT NULL," +
+                    "PRIMARY KEY (id)," +
+                    "UNIQUE INDEX email_UNIQUE (user_name ASC))";
+    private static final String DROP_TABLE =
+            "DROP TABLE " + Config.getInstance().getDbName() + ".users";
 
     private Connection connection;
+    private TExecutor executor;
 
     public DataBaseDAOImpl(Connection connection) {
         this.connection = connection;
+        this.executor = new TExecutor();
+    }
+
+    public DataBaseDAOImpl(Connection connection, TExecutor executor) {
+        this.connection = connection;
+        this.executor = executor;
     }
 
     @Override
     public void createDB() throws DBException {
-        UsersDAO usersDAO = makeUsersDAO();
 
         try {
             connection.setAutoCommit(false);
-            TExecutor executor = makeTExecutor();
             executor.execUpdate(connection, CREATE_DATABASE);
-            usersDAO.createTable();
+            createTableUsers();
             connection.commit();
         } catch (SQLException e) {
 
@@ -52,19 +66,21 @@ public class DataBaseDAOImpl implements DataBaseDAO {
 
     @Override
     public void dropDB() throws DBException {
-        TExecutor executor = makeTExecutor();
         try {
             executor.execUpdate(connection, DROP_DATABASE);
+            System.out.println("Drop is " + DROP_DATABASE);
         } catch (SQLException e) {
             throw new DBException(e);
         }
     }
 
-    public TExecutor makeTExecutor() {
-        return new TExecutor();
+
+    public void createTableUsers() throws SQLException {
+        executor.execUpdate(connection, CREATE_TABLE);
     }
 
-    public UsersDAO makeUsersDAO() {
-        return new UsersDAO(connection);
+    public void dropTableUsers() throws SQLException {
+
+        executor.execUpdate(connection, DROP_TABLE);
     }
 }
