@@ -38,6 +38,7 @@ public class DBServiceImpl implements DBService {
                     Class.forName(Config.getInstance().getDbDriver()).newInstance());
         } catch (SQLException | InstantiationException |
                     IllegalAccessException | ClassNotFoundException e)  {
+            e.printStackTrace();
             System.out.append("Can't register driver ")
                     .append(Config.getInstance().getDbDriver());
             System.exit(1);
