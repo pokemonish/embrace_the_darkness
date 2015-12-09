@@ -1,6 +1,6 @@
 package db.dao;
 
-import base.DataBaseDAO;
+import base.DataBaseCreator;
 import db.DBException;
 import db.executor.TExecutor;
 import resources.Config;
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 /**
  * Created by fatman on 07/12/15.
  */
-public class DataBaseDAOImpl implements DataBaseDAO {
+public class DataBaseCreatorImpl implements DataBaseCreator {
     private static final String CREATE_DATABASE =
             "CREATE SCHEMA IF NOT EXISTS " + Config.getInstance().getDbName();
     private static final String DROP_DATABASE =
@@ -30,12 +30,12 @@ public class DataBaseDAOImpl implements DataBaseDAO {
     private Connection connection;
     private TExecutor executor;
 
-    public DataBaseDAOImpl(Connection connection) {
+    public DataBaseCreatorImpl(Connection connection) {
         this.connection = connection;
         this.executor = new TExecutor();
     }
 
-    public DataBaseDAOImpl(Connection connection, TExecutor executor) {
+    public DataBaseCreatorImpl(Connection connection, TExecutor executor) {
         this.connection = connection;
         this.executor = executor;
     }

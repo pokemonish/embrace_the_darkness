@@ -6,7 +6,7 @@ import db.DBException;
  * Created by fatman on 07/12/15.
  */
 
-public interface DataBaseDAO {
+public interface DataBaseCreator {
 
     void createDB() throws DBException;
 

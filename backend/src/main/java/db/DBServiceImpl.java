@@ -1,9 +1,9 @@
 package db;
 
 import base.DBService;
-import base.DataBaseDAO;
+import base.DataBaseCreator;
 import base.UserProfile;
-import db.dao.DataBaseDAOImpl;
+import db.dao.DataBaseCreatorImpl;
 import db.dao.UsersDAO;
 import db.datasets.UsersDataSet;
 import db.handlers.ConnectionHandler;
@@ -51,17 +51,17 @@ public class DBServiceImpl implements DBService {
                     Config.getInstance().getDbPort() + '?' +
                     "user=" + Config.getInstance().getDbUser() + '&' +
                     "password=" + Config.getInstance().getDbPassword();
-            DataBaseDAO dataBaseDAO = new DataBaseDAOImpl(getConnection());
-            dataBaseDAO.createDB();
+            DataBaseCreator dataBaseCreator = new DataBaseCreatorImpl(getConnection());
+            dataBaseCreator.createDB();
         }
 
         if (Config.getInstance().isDoDeleteDB()) {
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 System.out.println("Bye bye!");
                 try {
-                    DataBaseDAO dataBaseDAO =
-                            new DataBaseDAOImpl(getConnection());
-                    dataBaseDAO.dropDB();
+                    DataBaseCreator dataBaseCreator =
+                            new DataBaseCreatorImpl(getConnection());
+                    dataBaseCreator.dropDB();
                 } catch (DBException e) {
                     System.out.println("Database was not deleted");
                 }

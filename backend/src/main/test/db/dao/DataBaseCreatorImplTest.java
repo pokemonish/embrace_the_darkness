@@ -15,11 +15,11 @@ import java.sql.SQLException;
 /**
  * Created by fatman on 07/12/15.
  */
-public class DataBaseDAOImplTest extends Mockito {
+public class DataBaseCreatorImplTest extends Mockito {
 
     private static final String TEST_FILE_PATH = "cfg/test.properties";
     private Connection connectionMock = mock(Connection.class);
-    private DataBaseDAOImpl dataBaseDAO;
+    private DataBaseCreatorImpl dataBaseDAO;
     private TExecutor tExecutorMock = mock(TExecutor.class);
 
     @BeforeClass
@@ -30,7 +30,7 @@ public class DataBaseDAOImplTest extends Mockito {
 
     @Before
     public void setUp() {
-        dataBaseDAO = new DataBaseDAOImpl(connectionMock, tExecutorMock);
+        dataBaseDAO = new DataBaseCreatorImpl(connectionMock, tExecutorMock);
     }
 
     @Test
