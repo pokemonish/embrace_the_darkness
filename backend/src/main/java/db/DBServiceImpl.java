@@ -93,7 +93,7 @@ public class DBServiceImpl implements DBService {
     @Override
     public void addUser(UserProfile user) throws DBException {
         connectAndPerform(connection -> {
-            UsersDAO usersDAO = new UsersDAO(connection);
+            UsersDAO usersDAO = makeUsersDAO(connection);
 
             try {
                 usersDAO.addUser(user, connection);
@@ -106,7 +106,7 @@ public class DBServiceImpl implements DBService {
     @Override
     public void deleteUserByName(String name) throws DBException {
         connectAndPerform(connection -> {
-            UsersDAO usersDAO = new UsersDAO(connection);
+            UsersDAO usersDAO = makeUsersDAO(connection);
 
             try {
                 usersDAO.deleteUserByName(name);
@@ -122,7 +122,7 @@ public class DBServiceImpl implements DBService {
         final UsersDataSet[] usersDataSet = new UsersDataSet[1];
 
         connectAndPerform(connection -> {
-            UsersDAO usersDAO = new UsersDAO(connection);
+            UsersDAO usersDAO = makeUsersDAO(connection);
 
             try {
                 usersDataSet[0] = usersDAO.getUserByName(name);
@@ -142,7 +142,7 @@ public class DBServiceImpl implements DBService {
     public int countUsers() throws DBException {
         Integer[] result = new Integer[1];
 
-        connectAndPerform(connection -> {UsersDAO usersDAO = new UsersDAO(connection);
+        connectAndPerform(connection -> {UsersDAO usersDAO = makeUsersDAO(connection);
 
             try {
                 result[0] = usersDAO.countUsers(connection);
@@ -151,5 +151,9 @@ public class DBServiceImpl implements DBService {
             }});
 
         return result[0];
+    }
+
+    public UsersDAO makeUsersDAO(Connection connection) {
+        return new UsersDAO(connection);
     }
 }
