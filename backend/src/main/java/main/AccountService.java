@@ -29,27 +29,24 @@ public class AccountService {
         return id++;
     }
 
-    public boolean addUser(String userName, UserProfile userProfile) {
+    public void addUser(UserProfile userProfile) throws AccountServiceException {
 
         try {
             dbService.addUser(userProfile);
         } catch (DBException e) {
-            return false;
+            throw new AccountServiceException(e);
         }
-
-        return true;
     }
 
     public void addSessions(@NotNull String sessionId, @NotNull UserProfile userProfile) {
         sessions.put(sessionId, userProfile);
     }
 
-    public int getUsersQuantity() throws RuntimeException{
+    public int getUsersQuantity() throws RuntimeException, AccountServiceException {
         try {
             return dbService.countUsers();
-        } catch (DBException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Can't count users.");
+        } catch (DBException ignore) {
+            throw new AccountServiceException("Can't count users.");
         }
     }
 
@@ -58,12 +55,12 @@ public class AccountService {
     }
 
     @Nullable
-    public UserProfile getUser(@Nullable String userName) {
+    public UserProfile getUser(@Nullable String userName) throws AccountServiceException {
         if (userName == null) return null;
         try {
             return dbService.getUserByName(userName);
-        } catch (DBException e) {
-            return null;
+        } catch (DBException ignore) {
+            throw new AccountServiceException("Error getting user from db");
         }
     }
 
@@ -81,11 +78,11 @@ public class AccountService {
         return false;
     }
 
-    public void deleteUser(String name) {
+    public void deleteUser(String name) throws AccountServiceException {
         try {
             dbService.deleteUserByName(name);
         } catch (DBException ignore) {
-            System.out.println("User was not deleted");
+            throw new AccountServiceException("User was not deleted");
         }
     }
 }

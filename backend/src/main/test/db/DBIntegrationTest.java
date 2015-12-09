@@ -28,7 +28,6 @@ public class DBIntegrationTest extends Mockito {
     private static final int USERS_NUMBER_MAX = 15;
     private static final int USERS_NUMBER_MIN = 7;
 
-
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
@@ -49,7 +48,7 @@ public class DBIntegrationTest extends Mockito {
     }
 
     @Test
-    public void integrationTest() throws SQLException {
+    public void addGetAndDeleteUsersTest() throws SQLException {
         int numberOfUsers = new Random().nextInt(USERS_NUMBER_MAX) + USERS_NUMBER_MIN;
 
         for (int i = 0; i < numberOfUsers; ++i) {
@@ -62,6 +61,7 @@ public class DBIntegrationTest extends Mockito {
 
         for (int i = 0; i < numberOfUsers; ++i) {
             UsersDataSet profile = usersDAO.getUserByName(USER_NAME_TEST + i);
+            if (profile == null) throw new SQLException();
             assertEquals(USER_NAME_TEST + i, profile.getName());
             assertEquals(PASSWORD_TEST + i, profile.getPassword());
         }
@@ -71,7 +71,10 @@ public class DBIntegrationTest extends Mockito {
         }
 
         assertEquals(0, usersDAO.countUsers(connection));
+    }
 
+    @Test
+    public void uniqnessTest() throws SQLException {
         exception.expect(SQLException.class);
         when(userProfileMock.getLogin()).thenReturn(USER_NAME_TEST + 0);
         when(userProfileMock.getPassword()).thenReturn(PASSWORD_TEST + 0);

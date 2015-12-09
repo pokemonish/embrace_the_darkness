@@ -1,6 +1,7 @@
 package db.executor;
 
 import db.handlers.TResultHandler;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class TExecutor {
+    @Nullable
     public <T> T execQuery(Connection connection,
                            String query,
                            TResultHandler<T> handler) throws SQLException {

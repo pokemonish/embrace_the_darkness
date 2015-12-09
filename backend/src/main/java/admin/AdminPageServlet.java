@@ -1,6 +1,6 @@
 package admin;
 import base.GameMechanics;
-import mechanics.GameMechanicsImpl;
+import main.AccountServiceException;
 import utils.TimeHelper;
 import main.AccountService;
 import main.ResponseHandler;
@@ -52,8 +52,13 @@ public class AdminPageServlet extends HttpServlet {
             System.exit(0);
         }
 
+        try {
+            pageVariables.put("usersTotal", accountService.getUsersQuantity());
+        } catch (AccountServiceException e) {
+            pageVariables.put("usersTotal", "Unavailable");
+        }
 
-        pageVariables.put("usersTotal", accountService.getUsersQuantity());
+
         pageVariables.put("usersSignedIn", accountService.getSessionsQuantity());
         pageVariables.put("status", "run");
 

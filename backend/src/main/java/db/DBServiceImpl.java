@@ -8,6 +8,7 @@ import db.dao.UsersDAO;
 import db.datasets.UsersDataSet;
 import db.handlers.ConnectionHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import resources.Config;
 
 import java.sql.*;
@@ -102,6 +103,7 @@ public class DBServiceImpl implements DBService {
         });
     }
 
+    @Override
     public void deleteUserByName(String name) throws DBException {
         connectAndPerform(connection -> {
             UsersDAO usersDAO = new UsersDAO(connection);
@@ -114,6 +116,7 @@ public class DBServiceImpl implements DBService {
         });
     }
 
+    @Nullable
     @Override
     public UserProfile getUserByName(String name) throws DBException {
         final UsersDataSet[] usersDataSet = new UsersDataSet[1];
@@ -128,6 +131,9 @@ public class DBServiceImpl implements DBService {
             }
         });
 
+        if (usersDataSet[0] == null) {
+            return null;
+        }
         return new UserProfile(usersDataSet[0].getName(), usersDataSet[0].getPassword(), "");
 
     }

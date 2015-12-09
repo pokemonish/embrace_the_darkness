@@ -3,7 +3,6 @@ package db.dao;
 import db.DBException;
 import db.DBServiceImpl;
 import db.executor.TExecutor;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,8 +11,6 @@ import resources.Config;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by fatman on 07/12/15.

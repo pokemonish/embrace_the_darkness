@@ -5,14 +5,9 @@ import base.UserProfile;
 import db.DBException;
 import db.DBServiceImpl;
 import org.jetbrains.annotations.NotNull;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 import resources.Config;
-
-import java.sql.SQLException;
-
 import static org.junit.Assert.*;
 
 
@@ -20,6 +15,9 @@ import static org.junit.Assert.*;
  * Created by fatman on 23/10/15.
  */
 public class AccountServiceTest {
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     private static final String TEST_FILE_PATH = "cfg/test.properties";
     private AccountService accountService;
@@ -41,8 +39,8 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testAddUser() throws Exception {
-        accountService.addUser(testUser.getLogin(), testUser);
+    public void testAddUser() throws AccountServiceException {
+        accountService.addUser(testUser);
 
         final UserProfile user = accountService.getUser(testUser.getLogin());
 
@@ -51,7 +49,6 @@ public class AccountServiceTest {
         assertEquals(testUser.getPassword(), user.getPassword());
 
         accountService.deleteUser(testUser.getLogin());
-        //assertEquals(testUser.getEmail(), user.getEmail());
     }
 
 
@@ -69,10 +66,10 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testUserUnicness() throws Exception {
-        accountService.addUser(testUser.getLogin(), testUser);
-        assertFalse(accountService.addUser(testUser.getLogin(), testUser));
-        accountService.deleteUser(testUser.getLogin());
+    public void testUserUnicness() throws AccountServiceException {
+        accountService.addUser(testUser);
+        exception.expect(AccountServiceException.class);
+        accountService.addUser(testUser);
     }
 
     @Test
@@ -86,8 +83,8 @@ public class AccountServiceTest {
     }
 
     @Test
-    public void testGetUsersQuantity() throws RuntimeException {
-        accountService.addUser(testUser.getLogin(), testUser);
+    public void testGetUsersQuantity() throws RuntimeException, AccountServiceException {
+        accountService.addUser(testUser);
         int quantity = accountService.getUsersQuantity();
         assertEquals(1, quantity);
         accountService.deleteUser(testUser.getLogin());
@@ -111,6 +108,5 @@ public class AccountServiceTest {
 
     @After
     public void cleanUp() {
-
     }
 }

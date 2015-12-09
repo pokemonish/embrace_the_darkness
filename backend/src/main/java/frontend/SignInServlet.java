@@ -3,6 +3,7 @@ package frontend;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import main.AccountService;
+import main.AccountServiceException;
 import main.ResponseHandler;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
@@ -63,21 +64,25 @@ public class SignInServlet extends HttpServlet {
             jsonResponse.addProperty("Status", "password is required");
         } else if (accountService.getSessions(String.valueOf(userId)) == null) {
 
-            UserProfile profile = accountService.getUser(email);
+            try {
+                UserProfile profile = accountService.getUser(email);
 
-            if (profile != null && profile.getPassword().equals(password)) {
+                if (profile != null && profile.getPassword().equals(password)) {
 
-                userId = accountService.getAndIncrementID();
-                String key = String.valueOf(userId);
+                    userId = accountService.getAndIncrementID();
+                    String key = String.valueOf(userId);
 
-                assert key != null;
-                session.setAttribute("userId", userId);
+                    assert key != null;
+                    session.setAttribute("userId", userId);
 
-                accountService.addSessions(key, profile);
+                    accountService.addSessions(key, profile);
 
-                jsonResponse.addProperty("Status", "Login passed");
-            } else {
-                jsonResponse.addProperty("Status", "Wrong login/password");
+                    jsonResponse.addProperty("Status", "Login passed");
+                } else {
+                    jsonResponse.addProperty("Status", "Wrong login/password");
+                }
+            } catch (AccountServiceException e) {
+                jsonResponse.addProperty("Status", "password is required");
             }
         } else {
             jsonResponse.addProperty("Status", "You are alredy logged in");

@@ -3,7 +3,7 @@ package db.dao;
 import base.UserProfile;
 import db.datasets.UsersDataSet;
 import db.executor.TExecutor;
-import org.omg.CORBA.PUBLIC_MEMBER;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,6 +25,7 @@ public class UsersDAO {
     }
 
 
+    @Nullable
     public UsersDataSet get(long id) throws SQLException {
         TExecutor exec = new TExecutor();
         return exec.execQuery(con, "select * from users where id=" + id, result -> {
@@ -33,6 +34,7 @@ public class UsersDAO {
         });
     }
 
+    @Nullable
     public UsersDataSet getUserByName(String name) throws SQLException {
 
         String query = String.format(GET_USER_BY_NAME, name);
@@ -69,9 +71,15 @@ public class UsersDAO {
 
     public int countUsers(Connection connection) throws SQLException {
 
-        return executor.execQuery(connection, COUNT_USERS, result -> {
-            result.next();
+        Integer number = executor.execQuery(connection, COUNT_USERS, result -> {
+
+            if (!result.next()) {
+                throw new SQLException("Can't count users");
+            }
             return result.getInt(1);
         });
+        if (number == null) throw new SQLException("Can't count users");
+
+        return number;
     }
 }
