@@ -2,6 +2,9 @@
     context_name="json">
     <div class="title title_center">Scoreboard</div>
     <div>
+        
+    </div>
+    <div class="scoreboard field">
         <fest:for iterate="json.users" index="i">
             <p>
                 <fest:value>json.users.models[i].attributes.name</fest:value> -
@@ -10,8 +13,8 @@
         </fest:for>
     </div>
     
-    <div class="field field__btn">
-        <button class="btn btn-primary main__btn">Menu</button>
+    <div class="field">
+        <button class="btn btn-primary menu-btn field__btn">Menu</button>
     </div>
     
 </fest:template>

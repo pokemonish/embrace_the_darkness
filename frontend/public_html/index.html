@@ -1,72 +1,41 @@
-
-<!--<!DOCTYPE  html>
-<html><head>
-    <meta charset="utf-8" />
-    <title><!--</title>-->
-    <!--<link rel="stylesheet" href="/css/main.css" />
-    <script src="/js/lib/jquery.js"></script>
-    <script src="/js/tmpl/main.js"></script>
-    <script src="/js/tmpl/scoreboard.js"></script>
-    <script src="/js/tmpl/game.js"></script>
-    <script src="/js/tmpl/login.js"></script>
-</head><body>
-    <div id="page"></div>
-    <script>
-        var $page = $('#page');
-        function showScoreboardScreen() {
-        	$page.html(scoreboardTmpl());
-        	$page.find('.js-back').on('click', showMainScreen);
-        }
-        function hideScoreboardScreen() {
-            $page.find('.js-back').off('click', showMainScreen);
-        }
-        function showGameScreen() {
-        	$page.html(gameTmpl());
-            $page.find('.js-back').on('click', showMainScreen);
-        }
-        function hideGameScreen() {
-            $page.find('.js-back').off('click', showMainScreen);
-        }
-        function showLoginScreen() {
-        	$page.html(loginTmpl());
-            $page.find('.js-back').on('click', showMainScreen);
-        }
-        function hideLoginScreen() {
-            $page.find('.js-back').off('click', showMainScreen);
-        }
-        function showMainScreen() {
-            $page.html(mainTmpl());
-
-            $page.find('.js-scoreboard').on('click', showScoreboardScreen);
-
-            $page.find('.js-start-game').on('click', showGameScreen);
-
-            $page.find('.js-login').on('click', showLoginScreen);
-        }
-        function hideMainScreen() {
-            $page.find('.js-scoreboard').off('click', showScoreboardScreen);
-
-            $page.find('.js-start-game').off('click', showGameScreen);
-
-            $page.find('.js-login').off('click', showLoginScreen);
-
-            hideLoginScreen();
-            hideGameScreen();
-            hideScoreboardScreen();
-        }
-        showMainScreen();
-    </script>
-    
-    <!-- Livereload -->
-    <!--<script src="//localhost:35729/livereload.js"></script>
-</body></html>-->
-
 <!DOCTYPE html>
-<html><head>
+<html>
+<head>
     <meta charset="utf-8" />
-    <title><!-- TODO --></title>
-    <link rel="stylesheet" type="text/css" href="css/main.css" />
-</head><body>
-    <div id="page"></div>
+    <title>EGE</title>
+    <link rel="stylesheet" href="css/main.css"/>
+<!--     <link rel="stylesheet" type="text/css" href="/dino/css/1.css">
+    <link rel="stylesheet" type="text/css" href="/dino/css/2.css"> -->
+    <link rel="stylesheet" href="css/bootstrap-3.3.5-dist/css/bootstrap.css"/>
+
+    <script type="text/javascript" src="js/lib/jquery.js"></script>
+</head>
+<body>
+	<!-- Livereload -->
+    <script src="//localhost:35729/livereload.js"></script>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div id="page"></div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/trianglify/0.4.0/trianglify.min.js"></script>
+<script>
+    var pattern = Trianglify({
+        width: window.innerWidth,
+        height: window.innerHeight
+    });
+    document.body.appendChild(pattern.canvas())
+</script>
+
+   <!--  // <script src="/dino/js/runner.js"></script>
+    // <script src="/dino/js/runner_manager.js"></script>
+    // <script src="/dino/js/main.js"></script>
+    // <script src="/dino/js/pika1.js"></script>
+    // <script src="/dino/js/pika2.js"></script>
+    // <script src="/dino/js/pika2.js"></script> -->
+
     <script data-main="js/main" src="js/lib/require.js"></script>
-</body></html>
+</body>
+</html>
+

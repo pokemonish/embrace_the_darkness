@@ -1,6 +1,6 @@
 define([
     'backbone',
-    'tmpl/login',
+    'tmpl/signup',
     'models/score'
 ], function(
     Backbone,
@@ -16,9 +16,9 @@ define([
 
         events: {
             'click .menu-btn': 'backToMain',
-            'click #login':  function (e) {
+            'click #signup':  function (e) {
                 // e.preventDefault();
-                return this.login();
+                return this.signup();
             }
         },
 
@@ -31,11 +31,11 @@ define([
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});
         },
-        login: function() {
+        signup: function() {
             // Validate here
-            // validate("login__form")
-            
-            var data = $(".login__form").serialize().split("&");
+            // validate("signup__form")
+
+            var data = $(".signup__form").serialize().split("&");
             var userDetails={};
             
             for(var key in data) {
@@ -43,7 +43,7 @@ define([
             };
 
             if (userDetails['email'] && userDetails['password']) {
-               var response = this.model.send("/api/v1/auth/signin", 'POST', userDetails);
+               var response = this.model.send("/api/v1/auth/signup", 'POST', userDetails);
             
                 response.success(function (data) {
                   alert(data.Status);
@@ -52,7 +52,9 @@ define([
             }
 
             return true;
+            
         },
+
     });
 
 

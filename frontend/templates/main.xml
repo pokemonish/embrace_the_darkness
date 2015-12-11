@@ -3,9 +3,10 @@
     <div class="title title_center">Epic Game Ever</div>
     <!-- <button class="js-back">Back</button> -->
     
-    <div class="menu__buttons">
+    <div class="menu">
         <button class="btn game-button menu__button">Start Game</button>
         <button class="btn login-button menu__button">Login</button>
+        <button class="btn signup-button menu__button">Signup</button>
         <button class="btn scoreboard-button menu__button">Scoreboard</button>
     </div>
 

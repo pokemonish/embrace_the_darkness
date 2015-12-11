@@ -1,6 +1,6 @@
 define([
     'backbone',
-    'tmpl/login',
+    'tmpl/signup',
     'models/score'
 ], function(
     Backbone,
@@ -16,9 +16,9 @@ define([
 
         events: {
             'click .menu-btn': 'backToMain',
-            'submit #login__form':  function (e) {
+            'click #signup':  function (e) {
                 e.preventDefault();
-                this.login();
+                this.signup();
             }
         },
 
@@ -31,11 +31,9 @@ define([
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});
         },
-        login: function() {
+        signup: function() {
             // Validate here
             // validate("login__form")
-            
-            console.log("LOL");
 
             var userDetails = {
                 email: 'admin',

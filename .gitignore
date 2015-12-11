@@ -10,6 +10,7 @@ server_tml/
 logs/
 config/
 
+*.patch
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm
