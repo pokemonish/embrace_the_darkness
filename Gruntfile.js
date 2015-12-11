@@ -73,7 +73,7 @@ module.exports = function(grunt) {
         },
 
         concurrent: {
-            target: ['watch'],
+            target: ['watch', 'shell:runServer'],
             // target: ['watch'],
             options: {
                 logConcurrentOutput: true
