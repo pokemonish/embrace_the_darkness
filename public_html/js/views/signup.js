@@ -12,7 +12,7 @@ define([
 
         model: new User(),
         template: tmpl,
-        el: $('#page'),
+        el: $('#signup'),
 
         events: {
             'click .menu-btn': 'backToMain',
@@ -23,11 +23,11 @@ define([
         },
 
         initialize: function () {
-            // this.render();
+            this.render();
+            this.hide();
         },
         render: function () {
             $(this.el).html(this.template);
-            this.hide();
         },
         hide: function () {
             console.log("signupView.hide()");
@@ -36,6 +36,10 @@ define([
         show: function () {
             console.log("signupView.show()");
             $(this.el).show();
+            Backbone.trigger(this.getName(), this.$el);
+        },
+        getName: function () {
+            return "signup:show"
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});

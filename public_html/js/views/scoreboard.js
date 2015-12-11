@@ -11,7 +11,7 @@ define([
     var View = Backbone.View.extend({
 
         template: tmpl,
-        el: $('#page'),
+        el: $('#scoreboard'),
 
         events: {
             'click .menu-btn': 'backToMain',
@@ -21,11 +21,11 @@ define([
             // Add Top10 to template
             this.template = tmpl({'users': Scores})
 
-            // this.render();
+            this.render();
+            this.hide();
         },
         render: function () {
             $(this.el).html(this.template);
-            this.hide();
         },
         hide: function () {
             console.log("scoreboardView.hide()");
@@ -34,6 +34,10 @@ define([
         show: function () {
             console.log("scoreboardView.show()");
             $(this.el).show();
+            Backbone.trigger(this.getName(), this.$el);
+        },
+        getName: function () {
+            return "scoreboard:show"
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});

@@ -7,6 +7,10 @@ body {
   height: 100%;
 }
 
+.row__layout {
+  /*display:block;*/
+}
+
 .menu__button {
     display:block;
     margin: 5px;

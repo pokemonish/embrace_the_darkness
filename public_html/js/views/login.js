@@ -12,7 +12,7 @@ define([
 
         model: new User(),
         template: tmpl,
-        el: $('#page'),
+        el: $('#login'),
 
         events: {
             'click .menu-btn': 'backToMain',
@@ -22,21 +22,12 @@ define([
             }
         },
 
-        // initialize: function () {
-        //     console.log("loginView.initialize()");
-        //     this.render();
-        // },
-        initialize: function(options) {
-            this.template = options.template;
+        initialize: function () {
+            this.render();
+            this.hide();
         },
         render: function () {
-            console.log("loginView.render()");
-            // $(this.el).html(this.template);
-
-            var content = $(this.template).html();
-            $(this.el).html(content);
-
-            return this;
+            $(this.el).html(this.template);
         },
         hide: function () {
             console.log("loginView.hide()");
@@ -45,6 +36,10 @@ define([
         show: function () {
             console.log("loginView.show()");
             $(this.el).show();
+            Backbone.trigger(this.getName(), this.$el);
+        },
+        getName: function () {
+            return "login:show"
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});

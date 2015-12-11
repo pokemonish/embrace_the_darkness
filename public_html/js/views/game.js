@@ -12,18 +12,18 @@ define([
     var View = Backbone.View.extend({
 
         template: tmpl,
-        el: $('#page'),
+        el: $('#game'),
 
         events: {
             'click .menu-btn': 'backToMain',
         },
         
         initialize: function () {
-            // this.render();
+            this.render();
+            this.hide();
         },
         render: function () {
             $(this.el).html(this.template);
-            this.hide();
             
             // dino.start();
             
@@ -35,6 +35,10 @@ define([
         show: function () {
             console.log("gameView.show()");
             $(this.el).show();
+            Backbone.trigger(this.getName(), this.$el);
+        },
+        getName: function () {
+            return "game:show"
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});
