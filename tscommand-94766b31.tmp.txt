@@ -1,1 +1,0 @@
-"/home/fatman/Documents/TechnoPark/2_term/embrace_the_darkness/frontend/typescript/main.ts" --removeComments --inlineSourceMap --target ES5 --out "/home/fatman/Documents/TechnoPark/2_term/embrace_the_darkness/frontend/typescript/bin.js"
