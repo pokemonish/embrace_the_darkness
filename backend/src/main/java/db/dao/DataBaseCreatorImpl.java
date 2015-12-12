@@ -66,20 +66,16 @@ public class DataBaseCreatorImpl implements DataBaseCreator {
 
     @Override
     public void dropDB() throws DBException {
-        try {
-            executor.execUpdate(connection, DROP_DATABASE);
-            System.out.println("Drop is " + DROP_DATABASE);
-        } catch (SQLException e) {
-            throw new DBException(e);
-        }
+        executor.execUpdate(connection, DROP_DATABASE);
+        System.out.println("Drop is " + DROP_DATABASE);
     }
 
 
-    public void createTableUsers() throws SQLException {
+    public void createTableUsers() throws DBException {
         executor.execUpdate(connection, CREATE_TABLE);
     }
 
-    public void dropTableUsers() throws SQLException {
+    public void dropTableUsers() throws DBException {
 
         executor.execUpdate(connection, DROP_TABLE);
     }

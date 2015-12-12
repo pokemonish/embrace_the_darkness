@@ -1,5 +1,6 @@
 package db.executor;
 
+import db.DBException;
 import db.handlers.TResultHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -12,27 +13,34 @@ public class TExecutor {
     @Nullable
     public <T> T execQuery(Connection connection,
                            String query,
-                           TResultHandler<T> handler) throws SQLException {
+                           TResultHandler<T> handler) throws DBException {
 
+        try {
+            try (Statement stmt = connection.createStatement()) {
 
-        try (Statement stmt = connection.createStatement()) {
+                stmt.execute(query);
 
-            stmt.execute(query);
+                T value;
 
-            T value;
-
-            try (ResultSet result = stmt.getResultSet()) {
-                value = handler.handle(result);
+                try (ResultSet result = stmt.getResultSet()) {
+                    value = handler.handle(result);
+                }
+                return value;
             }
-            return value;
+        } catch (SQLException e) {
+            throw new DBException(e);
         }
 
     }
 
-    public void execUpdate(Connection connection, String update) throws SQLException {
+    public void execUpdate(Connection connection, String update) throws DBException {
 
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute(update);
+        try {
+            try (Statement stmt = connection.createStatement()) {
+                stmt.execute(update);
+            }
+        } catch (SQLException e) {
+            throw new DBException(e);
         }
     }
 }

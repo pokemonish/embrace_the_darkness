@@ -14,10 +14,10 @@ import java.util.Map;
  */
 public class AccountService {
 
-    private DBService dbService;
+    private DBService DBService;
 
-    public AccountService(DBService dbService) {
-        this.dbService = dbService;
+    public AccountService(DBService DBService) {
+        this.DBService = DBService;
     }
 
     @NotNull
@@ -32,7 +32,7 @@ public class AccountService {
     public void addUser(UserProfile userProfile) throws AccountServiceException {
 
         try {
-            dbService.addUser(userProfile);
+            DBService.getUsersDAO().addUser(userProfile);
         } catch (DBException e) {
             throw new AccountServiceException(e);
         }
@@ -44,7 +44,7 @@ public class AccountService {
 
     public int getUsersQuantity() throws RuntimeException, AccountServiceException {
         try {
-            return dbService.countUsers();
+            return DBService.getUsersDAO().countUsers();
         } catch (DBException ignore) {
             throw new AccountServiceException("Can't count users.");
         }
@@ -58,7 +58,7 @@ public class AccountService {
     public UserProfile getUser(@Nullable String userName) throws AccountServiceException {
         if (userName == null) return null;
         try {
-            return dbService.getUserByName(userName);
+            return DBService.getUsersDAO().getUserByName(userName);
         } catch (DBException ignore) {
             throw new AccountServiceException("Error getting user from db");
         }
@@ -80,7 +80,7 @@ public class AccountService {
 
     public void deleteUser(String name) throws AccountServiceException {
         try {
-            dbService.deleteUserByName(name);
+            DBService.getUsersDAO().deleteUserByName(name);
         } catch (DBException ignore) {
             throw new AccountServiceException("User was not deleted");
         }

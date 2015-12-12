@@ -2,13 +2,10 @@ package db;
 
 import base.DBService;
 import base.DataBaseCreator;
-import base.UserProfile;
 import db.dao.DataBaseCreatorImpl;
 import db.dao.UsersDAO;
-import db.datasets.UsersDataSet;
 import db.handlers.ConnectionHandler;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import resources.Config;
 
 import java.sql.*;
@@ -46,11 +43,11 @@ public class DBServiceImpl implements DBService {
 
         if (Config.getInstance().isDoCreateDB()) {
             connectionUrl =
-                    "jdbc:" + Config.getInstance().getDbType()
-                    + "://" + Config.getInstance().getHost() + ':' +
-                    Config.getInstance().getDbPort() + '?' +
-                    "user=" + Config.getInstance().getDbUser() + '&' +
-                    "password=" + Config.getInstance().getDbPassword();
+                "jdbc:" + Config.getInstance().getDbType()
+                + "://" + Config.getInstance().getHost() + ':' +
+                Config.getInstance().getDbPort() + '?' +
+                "user=" + Config.getInstance().getDbUser() + '&' +
+                "password=" + Config.getInstance().getDbPassword();
             DataBaseCreator dataBaseCreator = new DataBaseCreatorImpl(getConnection());
             dataBaseCreator.createDB();
         }
@@ -63,6 +60,7 @@ public class DBServiceImpl implements DBService {
                             new DataBaseCreatorImpl(getConnection());
                     dataBaseCreator.dropDB();
                 } catch (DBException e) {
+                    e.printStackTrace();
                     System.out.println("Database was not deleted");
                 }
             }));
@@ -73,17 +71,14 @@ public class DBServiceImpl implements DBService {
         System.out.append("URL: ").append(getUrl()).append("\n");
     }
 
-    private void connectAndPerform(ConnectionHandler handler) throws DBException {
+    private void connectAndPerform(ConnectionHandler handler) throws SQLException, DBException {
         try (Connection connection = getConnection()) {
             handler.handle(connection);
-        } catch (SQLException e) {
-            throw new DBException(e);
         }
     }
 
-    @Override
     @NotNull
-    public Connection getConnection() throws DBException{
+    private Connection getConnection() throws DBException {
         try {
             return DriverManager.getConnection(connectionUrl);
         } catch (SQLException e) {
@@ -92,69 +87,7 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public void addUser(UserProfile user) throws DBException {
-        connectAndPerform(connection -> {
-            UsersDAO usersDAO = makeUsersDAO(connection);
-
-            try {
-                usersDAO.addUser(user, connection);
-            } catch (SQLException e) {
-                throw new DBException(e);
-            }
-        });
-    }
-
-    @Override
-    public void deleteUserByName(String name) throws DBException {
-        connectAndPerform(connection -> {
-            UsersDAO usersDAO = makeUsersDAO(connection);
-
-            try {
-                usersDAO.deleteUserByName(name);
-            } catch (SQLException e) {
-                throw new DBException(e);
-            }
-        });
-    }
-
-    @Nullable
-    @Override
-    public UserProfile getUserByName(String name) throws DBException {
-        final UsersDataSet[] usersDataSet = new UsersDataSet[1];
-
-        connectAndPerform(connection -> {
-            UsersDAO usersDAO = makeUsersDAO(connection);
-
-            try {
-                usersDataSet[0] = usersDAO.getUserByName(name);
-            } catch (SQLException e) {
-                throw new DBException(e);
-            }
-        });
-
-        if (usersDataSet[0] == null) {
-            return null;
-        }
-        return new UserProfile(usersDataSet[0].getName(), usersDataSet[0].getPassword(), "");
-
-    }
-
-    @Override
-    public int countUsers() throws DBException {
-        Integer[] result = new Integer[1];
-
-        connectAndPerform(connection -> {UsersDAO usersDAO = makeUsersDAO(connection);
-
-            try {
-                result[0] = usersDAO.countUsers(connection);
-            } catch (SQLException e) {
-                throw new DBException(e);
-            }});
-
-        return result[0];
-    }
-
-    public UsersDAO makeUsersDAO(Connection connection) {
-        return new UsersDAO(connection);
+    public UsersDAO getUsersDAO() throws DBException {
+        return new UsersDAO(getConnection());
     }
 }

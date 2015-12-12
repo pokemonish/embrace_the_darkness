@@ -2,40 +2,32 @@ package main;
 
 import base.DBService;
 import base.UserProfile;
+import db.BasicDBTest;
 import db.DBException;
 import db.DBServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
-import resources.Config;
 import static org.junit.Assert.*;
 
 
 /**
  * Created by fatman on 23/10/15.
  */
-public class AccountServiceTest {
+public class AccountServiceTest extends BasicDBTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    private static final String TEST_FILE_PATH = "cfg/test.properties";
     private AccountService accountService;
     @NotNull
     private final UserProfile testUser = new UserProfile("testLogin", "testPassword", "test@mail.ru");
     @NotNull
     private final String sessionId = "testSessionId";
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws DBException{
-        Config.setConfigFilePath(TEST_FILE_PATH);
-        new DBServiceImpl();
-    }
-
     @Before
     public void setUp() throws DBException {
-        DBService service = new DBServiceImpl();
-        accountService = new AccountService(service);
+        accountService = new AccountService(s_dbService);
     }
 
     @Test

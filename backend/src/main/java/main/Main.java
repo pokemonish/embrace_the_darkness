@@ -49,11 +49,6 @@ public class Main {
         AccountService accountService = new AccountService(dBservice);
         AuthService authService = new AuthServiceImpl();
 
-        if (dBservice.getConnection() == null){
-            Logger.getAnonymousLogger().log(new LogRecord(Level.INFO,
-                    "Can't establish connection to database"));
-        }
-
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
         MechanicsParameters mechanicsParameters = (MechanicsParameters)ReadXMLFileSAX.readXML

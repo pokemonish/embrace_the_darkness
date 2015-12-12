@@ -8,6 +8,27 @@ import org.jetbrains.annotations.NotNull;
  */
 public class UserProfile {
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserProfile profile = (UserProfile) o;
+
+        return login.equals(profile.login) &&
+                password.equals(profile.password) &&
+                email.equals(profile.email);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = login.hashCode();
+        result = 31 * result + password.hashCode();
+        result = 31 * result + email.hashCode();
+        return result;
+    }
+
     @NotNull
     private String login = "";
     @NotNull
@@ -42,27 +63,4 @@ public class UserProfile {
         return email;
     }
 
-    @Override
-    public boolean equals(Object object) {
-        if (object == null) {
-            return false;
-        }
-        if (getClass() != object.getClass()) {
-            return false;
-        }
-
-        UserProfile profile = (UserProfile)object;
-
-        return (email.equals(profile.email)
-             && login.equals(profile.login)
-            && password.equals(profile.password));
-    }
-
-    @Override
-    public int hashCode() {
-        int result = login.hashCode();
-        result = 31 * result + password.hashCode();
-        result = 31 * result + email.hashCode();
-        return result;
-    }
 }

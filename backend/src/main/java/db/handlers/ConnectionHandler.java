@@ -10,5 +10,5 @@ import java.sql.SQLException;
  */
 public interface ConnectionHandler {
 
-    void handle(Connection connection) throws SQLException, DBException;
+    void handle(Connection connection) throws SQLException;
 }

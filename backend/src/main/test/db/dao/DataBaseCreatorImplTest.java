@@ -1,12 +1,11 @@
 package db.dao;
 
 import db.DBException;
-import db.DBServiceImpl;
+import db.TestWithConfig;
 import db.executor.TExecutor;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mockito;
+import static org.mockito.Mockito.*;
 import resources.Config;
 
 import java.sql.Connection;
@@ -15,18 +14,11 @@ import java.sql.SQLException;
 /**
  * Created by fatman on 07/12/15.
  */
-public class DataBaseCreatorImplTest extends Mockito {
+public class DataBaseCreatorImplTest extends TestWithConfig {
 
-    private static final String TEST_FILE_PATH = "cfg/test.properties";
     private Connection connectionMock = mock(Connection.class);
     private DataBaseCreatorImpl dataBaseDAO;
     private TExecutor tExecutorMock = mock(TExecutor.class);
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws DBException{
-        Config.setConfigFilePath(TEST_FILE_PATH);
-        new DBServiceImpl();
-    }
 
     @Before
     public void setUp() {

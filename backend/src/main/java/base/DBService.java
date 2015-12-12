@@ -1,6 +1,8 @@
 package base;
 
 import db.DBException;
+import db.dao.UsersDAO;
+import db.handlers.ConnectionHandler;
 import resources.Config;
 
 import java.sql.Connection;
@@ -15,21 +17,13 @@ public interface DBService {
     static String getUrl() {
 
         return "jdbc:" +
-                Config.getInstance().getDbType() + "://" +
-                Config.getInstance().getHost() + ':' +
-                Config.getInstance().getDbPort() + '/' +
-                Config.getInstance().getDbName() + '?' + "user=" +
-                Config.getInstance().getDbUser() + '&' + "password=" +
-                Config.getInstance().getDbPassword();
+            Config.getInstance().getDbType() + "://" +
+            Config.getInstance().getHost() + ':' +
+            Config.getInstance().getDbPort() + '/' +
+            Config.getInstance().getDbName() + '?' + "user=" +
+            Config.getInstance().getDbUser() + '&' + "password=" +
+            Config.getInstance().getDbPassword();
     }
 
-    Connection getConnection() throws DBException;
-
-    UserProfile getUserByName(String name) throws DBException;
-
-    void addUser(UserProfile user) throws DBException;
-
-    int countUsers() throws DBException;
-
-    void deleteUserByName(String name) throws DBException;
+    public UsersDAO getUsersDAO() throws DBException;
 }
