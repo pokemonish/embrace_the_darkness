@@ -1,19 +1,34 @@
 require.config({
-    urlArgs: "_=" + (new Date()).getTime(),
-    baseUrl: "js",
+    urlArgs: '_=' + (new Date()).getTime(),
+    baseUrl: 'js',
     paths: {
-        jquery: "lib/jquery",
-        underscore: "lib/underscore",
-        backbone: "lib/backbone"
+        jquery: 'lib/jquery',
+        underscore: 'lib/underscore',
+        backbone: 'lib/backbone',
+        pika1: 'dino/pika1',
+        pika2: 'dino/pika2',
+        dino_runner: 'dino/runner',
+        dino_manager: 'dino/runner_manager',
+        dino_main: 'dino/main',
     },
     shim: {
         'backbone': {
             deps: ['underscore', 'jquery'],
-            exports: 'Backbone'
+            exports: 'Backbone',
         },
         'underscore': {
-            exports: '_'
-        }
+            exports: '_',
+        },
+        'dino_runner' : {
+            exports: 'Runner',
+        },
+        'dino_manager': {
+            deps: ['dino_runner', 'jquery'],
+            exports: 'RunnerManager',
+        },
+        'dino_main' : {
+            deps: ['dino_manager'],
+        },
     }
 });
 
@@ -24,7 +39,7 @@ var App = {
             clientMain : new mainView()
         }
 
-        console.log("App.initialize()")
+        console.log('App.initialize()')
     },
 
     showView: function(view){
@@ -38,7 +53,10 @@ var App = {
 
 define([
     'backbone',
-    'router'
+    'router',
+    'pika1', 
+    'pika2',
+    'dino_main',
 ], function(
     Backbone,
     router
