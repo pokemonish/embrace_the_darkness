@@ -12,21 +12,34 @@ define([
 
         model: new User(),
         template: tmpl,
-        el: $('#page'),
+        el: $('#login'),
 
         events: {
-            'click .main__btn': 'backToMain',
+            'click .menu-btn': 'backToMain',
             'click #login':  function (e) {
-                e.preventDefault();
-                this.login();
+                // e.preventDefault();
+                return this.login();
             }
         },
 
         initialize: function () {
             this.render();
+            this.hide();
         },
         render: function () {
             $(this.el).html(this.template);
+        },
+        hide: function () {
+            console.log("loginView.hide()");
+            $(this.el).hide();
+        },
+        show: function () {
+            console.log("loginView.show()");
+            $(this.el).show();
+            Backbone.trigger(this.getName(), this.$el);
+        },
+        getName: function () {
+            return "login:show"
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});
@@ -42,16 +55,17 @@ define([
                 userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
             };
 
-            console.log(userDetails)
+            if (userDetails['email'] && userDetails['password']) {
+               var response = this.model.send("/api/v1/auth/signin", 'POST', userDetails);
             
-            this.model.urlRoot = "/api/v1/auth/signin"
-            this.model.fetch({data: userDetails, type: 'POST'})
+                response.success(function (data) {
+                  alert(data.Status);
+                });
+                return false;
+            }
 
-
-            return false;
-            
+            return true;
         },
-
     });
 
 

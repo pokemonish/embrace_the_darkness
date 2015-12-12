@@ -2,10 +2,6 @@ body {
     color: blue;
 }
 
-.menu__buttons {
-
-}
-
 .menu__button {
     display:block;
     margin: 5px;
@@ -15,7 +11,6 @@ body {
     display: block;
 }
 
- 
 .container-fluid {
   display: flex;
   justify-content: center;

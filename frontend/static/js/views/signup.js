@@ -15,7 +15,7 @@ define([
         el: $('#page'),
 
         events: {
-            'click .main__btn': 'backToMain',
+            'click .menu-btn': 'backToMain',
             'click #signup':  function (e) {
                 e.preventDefault();
                 this.signup();
