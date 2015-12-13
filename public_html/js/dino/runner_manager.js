@@ -35,8 +35,13 @@ RunnerManager.prototype = {
     },
 
     addRunner: function(name) {
-        if(!this.runners[name] && !this.started) {
-            this.runners[name] = new Runner(this.elem, false, this.seed);
+        try {
+            if(!this.runners[name] && !this.started) {
+                this.runners[name] = new Runner(this.elem, false, this.seed);
+            }
+        } catch(e) {
+            delete this.runners[name]; 
+            throw e;
         }
 
         return this.runners[name] || null;

@@ -277,24 +277,26 @@ Runner.prototype = {
    * Load and decode base 64 encoded sounds.
    */
   loadSounds: function() {
-    if (!IS_IOS) {
-      this.audioContext = new AudioContext();
+    try{
+      if (!IS_IOS) {
+        this.audioContext = new AudioContext();
 
-      var resourceTemplate =
-          document.getElementById(this.config.RESOURCE_TEMPLATE_ID).content;
+        var resourceTemplate =
+            document.getElementById(this.config.RESOURCE_TEMPLATE_ID).content;
 
-      for (var sound in Runner.sounds) {
-        var soundSrc =
-            resourceTemplate.getElementById(Runner.sounds[sound]).src;
-        soundSrc = soundSrc.substr(soundSrc.indexOf(',') + 1);
-        var buffer = decodeBase64ToArrayBuffer(soundSrc);
+        for (var sound in Runner.sounds) {
+          var soundSrc =
+              resourceTemplate.getElementById(Runner.sounds[sound]).src;
+          soundSrc = soundSrc.substr(soundSrc.indexOf(',') + 1);
+          var buffer = decodeBase64ToArrayBuffer(soundSrc);
 
-        // Async, so no guarantee of order in array.
-        this.audioContext.decodeAudioData(buffer, function(index, audioData) {
-            this.soundFx[index] = audioData;
-          }.bind(this, sound));
+          // Async, so no guarantee of order in array.
+          this.audioContext.decodeAudioData(buffer, function(index, audioData) {
+              this.soundFx[index] = audioData;
+            }.bind(this, sound));
+        }
       }
-    }
+    } catch(e) {}
   },
 
   /**
@@ -357,7 +359,7 @@ Runner.prototype = {
     if(this.playable) {
       this.startListening();
     }
-    this.gameInterval_ = setInterval(this.update.bind(this), 16);
+    this.gameInterval_  = setInterval(this.update.bind(this), 16);
 
     window.addEventListener(Runner.events.RESIZE, this.debounceResize.bind(this));
   },
@@ -728,7 +730,7 @@ Runner.prototype = {
       this.paused = false;
       this.tRex.update(0, Trex.status.RUNNING);
       this.time = getTimeStamp();
-      // this.update();
+      this.update();
     }
   },
 
