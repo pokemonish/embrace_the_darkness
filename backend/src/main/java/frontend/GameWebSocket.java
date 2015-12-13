@@ -5,6 +5,7 @@ import base.GameUser;
 import base.WebSocketService;
 import com.google.gson.Gson;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.WebSocketException;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
@@ -47,7 +48,7 @@ public class GameWebSocket {
             }
             jsonStart.add("enemyNames", JSONenemies);
             session.getRemote().sendString(jsonStart.toString());
-        } catch (IOException e) {
+        } catch (IOException | WebSocketException e) {
             System.out.print(e.toString());
         }
     }
@@ -59,7 +60,7 @@ public class GameWebSocket {
             jsonStart.addProperty("winner", user.getMyName());
             jsonStart.addProperty("win", win);
             session.getRemote().sendString(jsonStart.toString());
-        } catch (IOException e) {
+        } catch (IOException | WebSocketException e) {
             System.out.print(e.toString());
         }
     }
@@ -94,7 +95,7 @@ public class GameWebSocket {
         jsonStart.addProperty("score", user.getMyScore());
         try {
             session.getRemote().sendString(jsonStart.toString());
-        } catch (IOException e) {
+        } catch (IOException | WebSocketException e) {
             System.out.print(e.toString());
         }
     }
@@ -106,8 +107,9 @@ public class GameWebSocket {
 
             try {
                 session.getRemote().sendString(data.toString());
-            } catch (IOException e) {
-                System.out.print(e.toString());
+            } catch (IOException | WebSocketException e) {
+                System.out.println("Connection with player " + myName + " lost.");
+                System.out.println(e.toString());
             }
         }
     }
