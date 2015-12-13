@@ -27,7 +27,7 @@ public class GameWebSocketCreator implements WebSocketCreator {
     @Nullable
     @Override
     public GameWebSocket createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
-        String userId = String.valueOf(req.getHttpServletRequest().getSession().getId());
+        String userId = String.valueOf(req.getHttpServletRequest().getSession().getAttribute("userId"));
         UserProfile profile = this.accountService.getSessions(userId);
 
         if (profile == null) {
