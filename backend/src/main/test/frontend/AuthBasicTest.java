@@ -45,7 +45,9 @@ public class AuthBasicTest extends Mockito {
     protected AccountService mockedAccountService = mock(AccountService.class);
 
     protected final HttpSession mockedSession = mock(HttpSession.class);
-    protected static final String TEST_SESSION_ID = "TEST_SESSION_ID";
+    protected static final String TEST_SESSION_ID = "testSessionId";
+
+    protected static final long TEST_USER_ID = 15l;
 
     protected JsonObject parametersJson = new JsonObject();
 

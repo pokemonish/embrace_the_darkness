@@ -22,6 +22,8 @@ public class SignOutServletTest extends AuthBasicTest {
         when(mockedRequest.getReader()).thenReturn(mockedReader);
         when(mockedRequest.getSession()).thenReturn(mockedSession);
         when(mockedSession.getId()).thenReturn(TEST_SESSION_ID);
+        when(mockedSession.getAttribute("userId")).thenReturn(TEST_USER_ID);
+        when(mockedAccountService.deleteSessions(any())).thenReturn(true);
     }
 
     @Test

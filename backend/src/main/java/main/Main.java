@@ -1,7 +1,9 @@
 package main;
 
+import base.DBService;
 import base.GameMechanics;
 import base.WebSocketService;
+import db.DBServiceImpl;
 import frontend.*;
 import mechanics.MechanicsParameters;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -18,7 +20,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import resources.Config;
 import resources.ReadXMLFileSAX;
 
-
 import javax.servlet.Servlet;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -30,11 +31,10 @@ import java.util.logging.Logger;
 @SuppressWarnings("OverlyBroadThrowsClause")
 public class Main {
 
+    @SuppressWarnings("OverlyBroadThrowsClause")
     public static void main(@NotNull String[] args) throws Exception {
 
-        Config config = new Config();
-
-        int port = config.getPort();
+        int port = Config.getInstance().getPort();
 
         String startMessage = "Starting at port: " + port + '\n' +
                 "Currently running on " + System.getProperty("os.name") +
@@ -43,7 +43,9 @@ public class Main {
 
         Logger.getAnonymousLogger().log(new LogRecord(Level.INFO, startMessage));
 
-        AccountService accountService = new AccountService();
+        DBService dBservice = new DBServiceImpl();
+
+        AccountService accountService = new AccountService(dBservice);
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
@@ -54,19 +56,20 @@ public class Main {
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet signOut = new SignOutServlet(accountService);
-        Servlet admin = new AdminPageServlet(accountService);
+
+        Servlet admin = new AdminPageServlet(accountService, gameMechanics);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.addServlet(new ServletHolder(signin), config.getSignInUrl());
-        context.addServlet(new ServletHolder(signUp), config.getSignUpUrl());
-        context.addServlet(new ServletHolder(signOut), config.getSignOutUrl());
-        context.addServlet(new ServletHolder(admin), config.getAdminUrl());
+        context.addServlet(new ServletHolder(signin), Config.getInstance().getSignInUrl());
+        context.addServlet(new ServletHolder(signUp), Config.getInstance().getSignUpUrl());
+        context.addServlet(new ServletHolder(signOut), Config.getInstance().getSignOutUrl());
+        context.addServlet(new ServletHolder(admin), Config.getInstance().getAdminUrl());
         context.addServlet(new ServletHolder(new WebSocketGameServlet(accountService,
-                gameMechanics, webSocketService)), config.getGameplayUrl());
+                gameMechanics, webSocketService)), Config.getInstance().getGameplayUrl());
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
-        resource_handler.setResourceBase(config.getResourceBase());
+        resource_handler.setResourceBase(Config.getInstance().getResourceBase());
 
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
@@ -75,6 +78,7 @@ public class Main {
         server.setHandler(handlers);
 
         server.start();
+
         gameMechanics.run();
     }
 }

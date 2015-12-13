@@ -32,10 +32,13 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private boolean isActive = true;
 
+    @Override
     public boolean isActive() {
         return isActive;
     }
 
+
+    @Override
     public void setIsActive(boolean isActive) {
         this.isActive = isActive;
     }

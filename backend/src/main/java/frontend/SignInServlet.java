@@ -3,6 +3,7 @@ package frontend;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import main.AccountService;
+import main.AccountServiceException;
 import main.ResponseHandler;
 import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +30,7 @@ public class SignInServlet extends HttpServlet {
     public SignInServlet(@NotNull AccountService accountService) {
         this.accountService = accountService;
     }
-    
+
 
     @Override
     public void doPost(@NotNull HttpServletRequest request,
@@ -38,7 +39,7 @@ public class SignInServlet extends HttpServlet {
         HttpSession session = request.getSession();
         JsonObject jsonResponse = new JsonObject();
 
-        String sessionId = session.getId();
+        Long userId = (Long) session.getAttribute("userId");
 
         JsonObject requestData;
 
@@ -57,23 +58,31 @@ public class SignInServlet extends HttpServlet {
         String email = requestEmail == null ? "" : requestEmail.getAsString();
         String password = requestPassword == null ? "" : requestPassword.getAsString();
 
-        System.out.append(email).append('\n').append(password);
-
         if (email.isEmpty()) {
             jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
             jsonResponse.addProperty("Status", "password is required");
-        } else if (accountService.getSessions(sessionId) == null) {
-            UserProfile profile = accountService.getUser(email);
+        } else if (accountService.getSessions(String.valueOf(userId)) == null) {
 
-            if (profile != null && profile.getPassword().equals(password)) {
+            try {
+                UserProfile profile = accountService.getUser(email);
 
-                assert sessionId != null;
-                accountService.addSessions(sessionId, profile);
+                if (profile != null && profile.getPassword().equals(password)) {
 
-                jsonResponse.addProperty("Status", "Login passed");
-            } else {
-                jsonResponse.addProperty("Status", "Wrong login/password");
+                    userId = accountService.getAndIncrementID();
+                    String key = String.valueOf(userId);
+
+                    assert key != null;
+                    session.setAttribute("userId", userId);
+
+                    accountService.addSessions(key, profile);
+
+                    jsonResponse.addProperty("Status", "Login passed");
+                } else {
+                    jsonResponse.addProperty("Status", "Wrong login/password");
+                }
+            } catch (AccountServiceException e) {
+                jsonResponse.addProperty("Status", "password is required");
             }
         } else {
             jsonResponse.addProperty("Status", "You are alredy logged in");

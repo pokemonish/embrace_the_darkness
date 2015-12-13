@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import main.AccountService;
 import base.UserProfile;
+import main.AccountServiceException;
 import org.jetbrains.annotations.NotNull;
 import utils.JsonRequestParser;
 import main.ResponseHandler;
@@ -54,23 +55,17 @@ public class SignUpServlet extends HttpServlet {
             jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
             jsonResponse.addProperty("Status", "password is required");
-        } else if (accountService.addUser(name, new UserProfile(name, password, ""))) {
-
-            jsonResponse.addProperty("Status", "New user created\n");
-
         } else {
 
-            StringBuilder duplicateParametersMessage = new StringBuilder();
-            duplicateParametersMessage
-            .append("User with name: ")
-            .append(name)
-            .append(" already exists");
+            try {
+                accountService.addUser(new UserProfile(name, password, ""));
 
-            System.out.append(duplicateParametersMessage.toString()).append('\n');
+                jsonResponse.addProperty("Status", "New user created");
+            } catch (AccountServiceException e) {
+                //jsonResponse.addProperty("Status", e.getMessage());
 
-            jsonResponse.addProperty("Status", duplicateParametersMessage.toString());
-
-            System.out.append(jsonResponse.get("Status").toString());
+                jsonResponse.addProperty("Status", "User with name: " + name + " already exists");
+            }
         }
 
         ResponseHandler.respondWithJSON(response, jsonResponse);

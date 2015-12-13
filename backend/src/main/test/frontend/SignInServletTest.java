@@ -1,5 +1,6 @@
 package frontend;
 
+import main.AccountServiceException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,12 +17,12 @@ public class SignInServletTest extends AuthBasicTest {
     SignInServlet signInServlet = new SignInServlet(mockedAccountService);
 
     @Before
-    public void doBeforeTests() throws ServletException, IOException {
+    public void doBeforeTests() throws ServletException, IOException, AccountServiceException {
         when(mockedResponse.getWriter()).thenReturn(mockedWriter);
         when(mockedRequest.getReader()).thenReturn(mockedReader);
-        when(mockedAccountService.addUser(eq(EMAIL_TEST), any())).thenReturn(true).thenReturn(false);
         when(mockedRequest.getSession()).thenReturn(mockedSession);
-        when(mockedSession.getId()).thenReturn(TEST_SESSION_ID);
+        when(mockedSession.getAttribute("userId")).thenReturn(TEST_USER_ID);
+        when(mockedAccountService.getAndIncrementID()).thenReturn(TEST_USER_ID);
 
     }
 
@@ -62,7 +63,7 @@ public class SignInServletTest extends AuthBasicTest {
     }
 
     @Test
-    public void testWrongPasswordDoPost() throws ServletException, IOException {
+    public void testWrongPasswordDoPost() throws ServletException, IOException, AccountServiceException {
         when(mockedAccountService.getUser(eq(EMAIL_TEST))).thenReturn(TEST_USER_PROFILE);
 
         parametersJson.addProperty("email", EMAIL_TEST);
@@ -73,7 +74,7 @@ public class SignInServletTest extends AuthBasicTest {
     }
 
     @Test
-    public void testWrongLoginDoPost() throws ServletException, IOException {
+    public void testWrongLoginDoPost() throws ServletException, IOException, AccountServiceException {
         when(mockedAccountService.getUser(eq(EMAIL_TEST))).thenReturn(null);
 
         parametersJson.addProperty("email", EMAIL_TEST);
@@ -83,7 +84,7 @@ public class SignInServletTest extends AuthBasicTest {
     }
 
     @Test
-    public void testRightDataDoPost() throws ServletException, IOException {
+    public void testRightDataDoPost() throws ServletException, IOException, AccountServiceException {
         when(mockedAccountService.getUser(eq(EMAIL_TEST))).thenReturn(TEST_USER_PROFILE);
 
         parametersJson.addProperty("email", EMAIL_TEST);
@@ -91,12 +92,13 @@ public class SignInServletTest extends AuthBasicTest {
 
         testDoPost("Login passed", HttpServletResponse.SC_OK, 1);
 
-        verify(mockedAccountService, times(1)).addSessions(eq(TEST_SESSION_ID), eq(TEST_USER_PROFILE));
+        verify(mockedAccountService, times(1)).addSessions(eq(String.valueOf(TEST_USER_ID)),
+                                                            eq(TEST_USER_PROFILE));
     }
 
     @Test
     public void testDuplicateDoPost() throws ServletException, IOException {
-        when(mockedAccountService.getSessions(TEST_SESSION_ID)).thenReturn(TEST_USER_PROFILE);
+        when(mockedAccountService.getSessions(String.valueOf(TEST_USER_ID))).thenReturn(TEST_USER_PROFILE);
 
         parametersJson.addProperty("email", EMAIL_TEST);
         parametersJson.addProperty("password", PASSWORD_TEST);

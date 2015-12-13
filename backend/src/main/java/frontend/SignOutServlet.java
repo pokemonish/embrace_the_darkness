@@ -1,9 +1,9 @@
 package frontend;
 
+import base.UserProfile;
 import com.google.gson.JsonObject;
 import main.AccountService;
 import main.ResponseHandler;
-import base.UserProfile;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
@@ -32,18 +32,25 @@ public class SignOutServlet extends HttpServlet {
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        JsonObject jsonResponse = new JsonObject();
-        String sessionId = session.getId();
 
-        UserProfile profile = accountService.getSessions(sessionId);
+        Long userId = (Long) session.getAttribute("userId");
 
-        if (profile != null) {
-            accountService.deleteSessions(sessionId);
-            jsonResponse.addProperty("Status", "Signed out successfully!\nSee you soon!");
-        } else {
-            jsonResponse.addProperty("Status", "You are alredy signed out");
+        if (userId != null && accountService.deleteSessions(String.valueOf(userId))) {
+            session.removeAttribute("userId");
+
+            JsonObject jsonResponse = new JsonObject();
+            String sessionId = session.getId();
+
+            UserProfile profile = accountService.getSessions(sessionId);
+
+            if (profile != null) {
+                accountService.deleteSessions(sessionId);
+                jsonResponse.addProperty("Status", "Signed out successfully!\nSee you soon!");
+            } else {
+                jsonResponse.addProperty("Status", "You are alredy signed out");
+            }
+
+            ResponseHandler.respondWithJSON(response, jsonResponse);
         }
-
-        ResponseHandler.respondWithJSON(response, jsonResponse);
     }
 }
