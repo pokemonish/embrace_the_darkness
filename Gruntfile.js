@@ -74,10 +74,19 @@ module.exports = function(grunt) {
 
         concurrent: {
             target: ['watch', 'shell:runServer'],
-            // target: ['watch'],
             options: {
                 logConcurrentOutput: true
             },
+        },
+
+        requirejs: {
+            compile: {
+                options: {
+                    baseUrl: 'public_html/js',
+                    name: 'main',
+                    out: 'main-built.js'
+                }
+            }
         },
 
     });
@@ -96,9 +105,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-copy');
 
-
-    grunt.registerTask('generate', ['copy', 'fest'])
-    grunt.registerTask('default', ['generate', 'concurrent']);
-    grunt.registerTask('watcher', ['default', 'watch']);
-
+    grunt.registerTask('default', ['copy', 'fest', 'concurrent']);
+    grunt.registerTask('build', ['requirejs']);
 }

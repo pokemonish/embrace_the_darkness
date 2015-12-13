@@ -1,70 +1,153 @@
-var manager = new RunnerManager('#games');
+VERY_DEBUG_MODE = false
+
 
 var btn = document.getElementById('details-button');
 btn.onclick = function() {
     detailsButtonClick(); toggleHelpBox();
 };
 
-/*
- * Код ниже для примера.
- * Все это перекачует в runner_manager.js
- * В runner.js лежит оригинальный динозавр
- * В pika1.js и pika2.js лежит какая-то хуйня для интерфейса 
- * http://localhost:8080/dino/
- */
+var btn2 = document.getElementById('reload-button');
+btn2.onclick = function() {
+    stopGame();
+};
 
-//Смерть нашего игрока (лучше так не перезаписывать, а залезть в runner_manager.js)
+
+var socket = null;
+
+var manager = new RunnerManager('#games');
 manager.onPlayerDied = function() {
-    manager.sendEnemies("dead");
-};
+    sendToOponents('dead');
+    somebodyMaybeDied(true);
+}
+manager.reset()
 
-document.onkeydown = function(event) {
-    console.log(event);
-};
+function handleMessage(event) {
+    var data = JSON.parse(event.data);
+
+    if (typeof data === 'object' && data !== null) {
+        if ('status' in data) {
+            switch (data.status) {
+            case 'start':
+                console.log(data.enemyNames);
+                var enemyNames = data.enemyNames;
+                for (var i = 0; i < enemyNames.length; ++i) {
+                    manager.addRunner(enemyNames[i].name);
+                }
+                manager.start();
+                break;
+            case 'action':
+                if (data.action == 'dead') {
+                    somebodyMaybeDied(false);
+                    manager.runners[data.activePlayer].die();
+                } else if (data.action == 'unduck') {
+                    manager.runners[data.activePlayer].doAction('duck', false);
+                } else {
+                    manager.runners[data.activePlayer].doAction(data.action, true);
+                }
+                break;
+            }
+        }
+    }
+}
+
+function stopGame() {
+    sendToOponents('dead');
+
+    if(socket) {
+        socket.close()
+        socket = null;
+    }
+
+    manager.reset()
+}
+
+function somebodyMaybeDied(me) {
+    var over = true
+    for(k in manager.runners) {
+        if(!manager.runners[k].crashed) {
+            over = false;
+            break;
+        }
+    }
+    over = (manager.player.crashed && over);
+    if(over) {
+        stopGame()
+        if(me) {
+            alert('Ты победил, спартанец!')
+        }
+    }
+}
+
+function startGame() {
+    socket = 1;
+
+    var username = Math.random().toString(36).substring(2) + '@mail.ru';
+    $.ajax({
+        url : '/postName',
+        type : 'POST',
+
+        data: { 'username': username }, //OOOOOOPS
+        success : function(json) {
+            console.log(json);
+            console.log('success');
+        },
+        error: function() {
+            ;
+        }
+    });
+
+    setTimeout(function() {
+        var socket_url = 
+            (location.protocol == 'http:' ? 'ws://' : 'wss://') +
+            location.hostname + ':' + location.port + '/gameplay';
+        socket = new WebSocket(socket_url);
+        socket.onmessage = function(event) {
+            console.log(event)
+            handleMessage(event);
+        };
+        socket.onerror = function() {
+            ;
+        }
+    }, 1000) //WHYYYYY
+}
+
+function sendToOponents(data) {
+    if(socket && socket.readyState == 1) {
+        socket.send(
+            JSON.stringify({
+                'type': 'game logic', 'data': data
+            })
+        );
+    }
+}
 
 document.addEventListener('keydown', function(event) {
     switch (event.keyCode) {
         case 38:
         case 32:
-            manager.sendEnemies('jump');
+            if(VERY_DEBUG_MODE || localStorage.getItem('logined')==true) {
+                if(!socket){
+                    startGame();
+                } else {
+                    sendToOponents('jump');
+                }
+            }
             break;
         case 40:
-            manager.sendEnemies('duck');
+            sendToOponents('duck');
             break;
     }
-});
+})
 
 document.addEventListener('keyup', function(event) {
     if (event.keyCode == 40) {
-        manager.sendEnemies('unduck');
+        sendToOponents('unduck');
     }
-});
+})
 
-//Обнуляем менеджер и задаем сид
-manager.reset(458);
-/*
 
-//Добавляем игроков на экран
-var p1 = manager.addRunner('1'); 
-var p2 = manager.addRunner('2');
-
-// Начинаем игру 
-manager.start();
-
-//Прыгаем другого игрока
-setTimeout(function() {
-    p1.doAction('jump', true);
-}, 5000);
-//Нагинаем другого игрока
-setTimeout(function() {
-    p1.doAction('duck', true);
-}, 7000);
-//Отгинаем другого игрока
-setTimeout(function() {
-    p1.doAction('duck', false);
-}, 10000);
-//Убиваем бота (будем таки верить игрокам на слово, что здохли или ждать таймаута)
-setTimeout(function() {
-    p1.die();
-}, 14000);
-*/
+window.onblur = function() {
+    if(!VERY_DEBUG_MODE) {
+        stopGame();
+    }
+}

@@ -60,6 +60,10 @@ define([
             
                 response.success(function (data) {
                   alert(data.Status);
+                  console.log(data)
+                  if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
+                    localStorage.setItem('logined',true)
+                  }
                 });
                 return false;
             }

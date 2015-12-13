@@ -357,7 +357,7 @@ Runner.prototype = {
     if(this.playable) {
       this.startListening();
     }
-    this.gameInterval_  = setInterval(this.update.bind(this), 16);
+    this.gameInterval_ = setInterval(this.update.bind(this), 16);
 
     window.addEventListener(Runner.events.RESIZE, this.debounceResize.bind(this));
   },
@@ -728,7 +728,7 @@ Runner.prototype = {
       this.paused = false;
       this.tRex.update(0, Trex.status.RUNNING);
       this.time = getTimeStamp();
-      this.update();
+      // this.update();
     }
   },
 
