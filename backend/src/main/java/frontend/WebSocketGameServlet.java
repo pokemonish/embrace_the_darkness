@@ -1,8 +1,8 @@
 package frontend;
 
-import base.AuthService;
 import base.GameMechanics;
 import base.WebSocketService;
+import main.AccountService;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
@@ -13,15 +13,15 @@ import javax.servlet.annotation.WebServlet;
  */
 @WebServlet(name = "WebSocketGameServlet", urlPatterns = {"/gameplay"})
 public class WebSocketGameServlet extends WebSocketServlet {
-    private static final int IDLE_TIME = 60 * 1000;
-    private final AuthService authService;
+    private static final int IDLE_TIME = 6000 * 1000;
+    private final AccountService accountService;
     private final GameMechanics gameMechanics;
     private final WebSocketService webSocketService;
 
-    public WebSocketGameServlet(AuthService authService,
+    public WebSocketGameServlet(AccountService accountService,
                                 GameMechanics gameMechanics,
                                 WebSocketService webSocketService) {
-        this.authService = authService;
+        this.accountService = accountService;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;
     }
@@ -29,6 +29,6 @@ public class WebSocketGameServlet extends WebSocketServlet {
     @Override
     public void configure(WebSocketServletFactory factory) {
         factory.getPolicy().setIdleTimeout(IDLE_TIME);
-        factory.setCreator(new GameWebSocketCreator(authService, gameMechanics, webSocketService));
+        factory.setCreator(new GameWebSocketCreator(accountService, gameMechanics, webSocketService));
     }
 }

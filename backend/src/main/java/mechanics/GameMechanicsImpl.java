@@ -149,6 +149,8 @@ public class GameMechanicsImpl implements GameMechanics {
     @Override
     public void processGameLogicData(String playerName, JsonObject data) {
 
+        if (!allSessions.contains(dinoraika.get(playerName))) return;
+
         String action = data.get("data").getAsString();
         System.out.print(data.toString());
 

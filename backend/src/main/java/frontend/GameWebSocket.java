@@ -26,7 +26,7 @@ public class GameWebSocket {
         this.myName = myName;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;
-        System.out.append("WebSocket created\n");
+        System.out.println("WebSocket created");
     }
 
     public String getMyName() {
@@ -66,7 +66,7 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        System.out.append("\nGot message\n");
+        System.out.println("Got message");
 
         if (data.isEmpty()) return;
 

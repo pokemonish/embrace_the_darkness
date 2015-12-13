@@ -1,6 +1,5 @@
 package main;
 
-import base.AuthService;
 import base.GameMechanics;
 import base.WebSocketService;
 import frontend.*;
@@ -45,7 +44,6 @@ public class Main {
         Logger.getAnonymousLogger().log(new LogRecord(Level.INFO, startMessage));
 
         AccountService accountService = new AccountService();
-        AuthService authService = new AuthServiceImpl();
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
@@ -56,7 +54,6 @@ public class Main {
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet signOut = new SignOutServlet(accountService);
-        Servlet postName = new PostNameServlet(authService);
         Servlet admin = new AdminPageServlet(accountService);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
@@ -64,8 +61,7 @@ public class Main {
         context.addServlet(new ServletHolder(signUp), config.getSignUpUrl());
         context.addServlet(new ServletHolder(signOut), config.getSignOutUrl());
         context.addServlet(new ServletHolder(admin), config.getAdminUrl());
-        context.addServlet(new ServletHolder(postName), config.getPostNameUrl());
-        context.addServlet(new ServletHolder(new WebSocketGameServlet(authService,
+        context.addServlet(new ServletHolder(new WebSocketGameServlet(accountService,
                 gameMechanics, webSocketService)), config.getGameplayUrl());
 
         ResourceHandler resource_handler = new ResourceHandler();

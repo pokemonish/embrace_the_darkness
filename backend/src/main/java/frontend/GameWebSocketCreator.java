@@ -1,32 +1,43 @@
 package frontend;
 
-import base.AuthService;
+import base.UserProfile;
 import base.GameMechanics;
 import base.WebSocketService;
+import main.AccountService;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;
-
+import org.jetbrains.annotations.Nullable;
 /**
  * @author v.chibrikov
  */
 public class GameWebSocketCreator implements WebSocketCreator {
-    private final AuthService authService;
+    private final AccountService accountService;
     private final GameMechanics gameMechanics;
     private final WebSocketService webSocketService;
 
-    public GameWebSocketCreator(AuthService authService,
+    public GameWebSocketCreator(AccountService accountService,
                                 GameMechanics gameMechanics,
                                 WebSocketService webSocketService) {
-        this.authService = authService;
+        this.accountService = accountService;
         this.gameMechanics = gameMechanics;
         this.webSocketService = webSocketService;
     }
 
+    @Nullable
     @Override
     public GameWebSocket createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
-        String sessionId = req.getHttpServletRequest().getSession().getId();
-        String name = this.authService.getUserName(sessionId);
+        String userId = String.valueOf(req.getHttpServletRequest().getSession().getId());
+        UserProfile profile = this.accountService.getSessions(userId);
+
+        if (profile == null) {
+            System.out.println("Unauthorized user tryed to establish connection to " +
+                    "webscket from " + req.getHttpServletRequest().getHeader("User-Agent"));
+            return null;
+        }
+
+        String name = profile.getLogin();
+
         return new GameWebSocket(name, gameMechanics, webSocketService);
     }
 }

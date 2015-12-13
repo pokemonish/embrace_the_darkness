@@ -1,4 +1,4 @@
-VERY_DEBUG_MODE = false
+VERY_DEBUG_MODE = true
 
 
 var btn = document.getElementById('details-button');
@@ -81,34 +81,17 @@ function somebodyMaybeDied(me) {
 function startGame() {
     socket = 1;
 
-    var username = Math.random().toString(36).substring(2) + '@mail.ru';
-    $.ajax({
-        url : '/postName',
-        type : 'POST',
-
-        data: { 'username': username }, //OOOOOOPS
-        success : function(json) {
-            console.log(json);
-            console.log('success');
-        },
-        error: function() {
-            ;
-        }
-    });
-
-    setTimeout(function() {
-        var socket_url = 
-            (location.protocol == 'http:' ? 'ws://' : 'wss://') +
-            location.hostname + ':' + location.port + '/gameplay';
-        socket = new WebSocket(socket_url);
-        socket.onmessage = function(event) {
-            console.log(event)
-            handleMessage(event);
-        };
-        socket.onerror = function() {
-            ;
-        }
-    }, 1000) //WHYYYYY
+    var socket_url = 
+        (location.protocol == 'http:' ? 'ws://' : 'wss://') +
+        location.hostname + ':' + location.port + '/gameplay';
+    socket = new WebSocket(socket_url);
+    socket.onmessage = function(event) {
+        console.log(event)
+        handleMessage(event);
+    };
+    socket.onerror = function() {
+        ;
+    }
 }
 
 function sendToOponents(data) {
@@ -125,7 +108,7 @@ document.addEventListener('keydown', function(event) {
     switch (event.keyCode) {
         case 38:
         case 32:
-            if(VERY_DEBUG_MODE || localStorage.getItem('logined')==true) {
+            if(/*VERY_DEBUG_MODE || */localStorage.getItem('logined')=='true') {
                 if(!socket){
                     startGame();
                 } else {
