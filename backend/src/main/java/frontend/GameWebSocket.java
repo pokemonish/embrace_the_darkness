@@ -108,6 +108,7 @@ public class GameWebSocket {
             try {
                 session.getRemote().sendString(data.toString());
             } catch (IOException | WebSocketException e) {
+                gameMechanics.killPlayer(myName);
                 System.out.println("Connection with player " + myName + " lost.");
                 System.out.println(e.toString());
             }
