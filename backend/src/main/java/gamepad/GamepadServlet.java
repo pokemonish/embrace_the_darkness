@@ -32,7 +32,11 @@ public class GamepadServlet extends HttpServlet{
 
         String id = String.valueOf(request.getSession().getAttribute("userId"));
         UserProfile userProfile = accountService.getSessions(id);
+
+        JsonObject jsonResponse = new JsonObject();
         if (id == null || userProfile == null) {
+            jsonResponse.addProperty("Error", "You are not logged in");
+            ResponseHandler.respondWithJSON(response, jsonResponse);
             return;
         }
 
@@ -40,7 +44,6 @@ public class GamepadServlet extends HttpServlet{
 
         s_availableKeys.put(strKey, userProfile.getLogin());
 
-        JsonObject jsonResponse = new JsonObject();
         jsonResponse.addProperty("key", strKey);
 
         ResponseHandler.respondWithJSON(response, jsonResponse);
