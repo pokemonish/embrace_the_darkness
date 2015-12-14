@@ -30,7 +30,7 @@ public class SignUpServlet extends HttpServlet {
 
     @Override
     public void doPost(@NotNull HttpServletRequest request,
-                       @NotNull HttpServletResponse response) throws ServletException, IOException {
+                       @NotNull HttpServletResponse response) throws ServletException {
 
         JsonObject jsonResponse = new JsonObject();
 

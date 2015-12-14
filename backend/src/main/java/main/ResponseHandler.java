@@ -14,19 +14,22 @@ import java.util.Map;
  */
 public class ResponseHandler {
     public static void respondWithJSON(@NotNull HttpServletResponse response,
-                                       @NotNull JsonObject jsonResponse) throws IOException {
+                                       @NotNull JsonObject jsonResponse) {
 
         respondWithJSONAndStatus(response, jsonResponse, HttpServletResponse.SC_OK);
     }
 
     public static void respondWithJSONAndStatus(@NotNull HttpServletResponse response,
-                                         @NotNull JsonObject jsonResponse, int status) throws IOException {
+                                         @NotNull JsonObject jsonResponse, int status) {
         try (PrintWriter writer = response.getWriter()) {
             if (writer != null) {
                 writer.println(jsonResponse);
             } else {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
+        } catch (IOException e) {
+            e.printStackTrace();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
         response.setStatus(status);
     }

@@ -1,4 +1,4 @@
-package frontend;
+package game_socket_mechanics;
 
 import base.UserProfile;
 import base.GameMechanics;
@@ -32,7 +32,7 @@ public class GameWebSocketCreator implements WebSocketCreator {
 
         if (profile == null) {
             System.out.println("Unauthorized user tryed to establish connection to " +
-                    "webscket from " + req.getHttpServletRequest().getHeader("User-Agent"));
+                    "websocket with " + req.getHttpServletRequest().getHeader("User-Agent"));
             return null;
         }
 

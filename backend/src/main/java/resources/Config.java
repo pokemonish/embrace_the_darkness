@@ -17,6 +17,8 @@ public final class Config {
     private static final String SIGN_OUT_URL = "sign_out_url";
     private static final String ADMIN_URL = "admin_url";
     private static final String POST_NAME_URL = "post_name_url";
+    private static final String GAMEPAD_URL = "gamepad_url";
+    private static final String GAMEPADINPUTS_URL = "gamepadinputs_url";
     private static final String PORT = "port";
     private static final String GAMEPLAY_URL = "gameplay_url";
     private static final String RESOURCE_BASE = "resource_base";
@@ -36,6 +38,8 @@ public final class Config {
     private final String signOutUrl;
     private final String adminUrl;
     private final String gameplayUrl;
+    private final String gamepadUrl;
+    private final String gamepadInputsUrl;
     private final String resourceBase;
     private final String postNameUrl;
     private final String dbType;
@@ -46,6 +50,14 @@ public final class Config {
     private final String dbDriver;
     private final boolean doCreateDB;
     private final boolean doDeleteDB;
+
+    public String getGamepadUrl() {
+        return gamepadUrl;
+    }
+
+    public String getGamepadInputsUrl() {
+        return gamepadInputsUrl;
+    }
 
     public boolean isDoCreateDB() {
         return doCreateDB;
@@ -172,6 +184,8 @@ public final class Config {
         dbDriver = getParameter(DB_DRIVER);
         doCreateDB = Boolean.valueOf(getParameter(DO_CREATE_DATABASE));
         doDeleteDB = Boolean.valueOf(getParameter(DO_DELETE_DATABASE));
+        gamepadUrl = getParameter(GAMEPAD_URL);
+        gamepadInputsUrl = getParameter(GAMEPADINPUTS_URL);
     }
 
     private void setUp()  throws ConfigException {

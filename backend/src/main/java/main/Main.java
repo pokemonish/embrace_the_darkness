@@ -1,10 +1,14 @@
 package main;
 
+import game_socket_mechanics.WebSocketGameServlet;
+import game_socket_mechanics.WebSocketServiceImpl;
 import base.DBService;
 import base.GameMechanics;
 import base.WebSocketService;
 import db.DBServiceImpl;
 import frontend.*;
+import gamepad.GamepadServlet;
+import gamepad.GamepadSocketServlet;
 import mechanics.MechanicsParameters;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -28,7 +32,6 @@ import java.util.logging.Logger;
 /**
  * @author v.chibrikov
  */
-@SuppressWarnings("OverlyBroadThrowsClause")
 public class Main {
 
     @SuppressWarnings("OverlyBroadThrowsClause")
@@ -58,6 +61,7 @@ public class Main {
         Servlet signOut = new SignOutServlet(accountService);
 
         Servlet admin = new AdminPageServlet(accountService, gameMechanics);
+        Servlet gamepad = new GamepadServlet(accountService);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signin), Config.getInstance().getSignInUrl());
@@ -66,6 +70,9 @@ public class Main {
         context.addServlet(new ServletHolder(admin), Config.getInstance().getAdminUrl());
         context.addServlet(new ServletHolder(new WebSocketGameServlet(accountService,
                 gameMechanics, webSocketService)), Config.getInstance().getGameplayUrl());
+        context.addServlet(new ServletHolder(gamepad), Config.getInstance().getGamepadUrl());
+        context.addServlet(new ServletHolder(new GamepadSocketServlet(gameMechanics)),
+                            Config.getInstance().getGamepadInputsUrl());
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
