@@ -82,7 +82,7 @@ public class SignInServlet extends HttpServlet {
                     jsonResponse.addProperty("Status", "Wrong login/password");
                 }
             } catch (AccountServiceException e) {
-                jsonResponse.addProperty("Status", "password is required");
+                jsonResponse.addProperty("Status", "Wrong login/password");
             }
         } else {
             jsonResponse.addProperty("Status", "You are alredy logged in");
