@@ -110,7 +110,7 @@ function sendToOponents(data) {
 }
 
 document.addEventListener('keydown', function(event) {
-    event.preventDefault();
+    if(socket) event.preventDefault();
     switch (event.keyCode) {
         case 38:
         case 32:
@@ -142,9 +142,20 @@ window.onblur = function() {
 }
 
 
-
 var qrcode = new QRCode('qrcode');
-$.post('/gamepad', function(data) {
-    var url = location.protocol + location.hostname + ':' + location.port + '/joystick/?key=' + key;
-    qrcode.makeCode(data.key);
-});
+function getQR() {
+    console.log(1)
+    if(localStorage.getItem('logined')=='true') {
+        console.log(2)
+        $.post('/gamepad', function(data) {
+            data = JSON.parse(data);
+            if (typeof data['key'] !== 'undefined') {
+                var url = location.protocol + '//' + location.hostname + ':' + location.port + '/joystick/?key=' + data.key;
+                qrcode.makeCode(url);
+            }
+        })
+    } else {
+        setTimeout(getQR, 1000);
+    }
+}
+getQR();

@@ -35,11 +35,31 @@
     </div>
 
     <script>
+        function onFail() {
+            location.href = '../';
+        }
+
         function onInit() {
-            var secret = getParameterByName('secret');
+            var key = getParameterByName('key');
+            if(key) {
+                var socket_url = 
+                    (location.protocol == 'http:' ? 'ws://' : 'wss://') +
+                    location.hostname + ':' + location.port + '/gamepadinputs?key=' + key;
+                socket = new WebSocket(socket_url);
+                socket.onmessage = function(event) {
+                    console.log(event)
+                    handleMessage(event);
+                };
+                socket.onerror = function() {
+                    onFail()
+                }
+            } else {
+                onFail()
+            }
         }
 
         function onJump() {
+            sendToOponents('jump');
             navigator.vibrate(100);
         }
 
@@ -49,6 +69,18 @@
 
         var avgG = 9.81;
         var forced = false;
+
+        var socket = null;
+        
+        function sendToOponents(data) {
+            if(socket && socket.readyState == 1) {
+                socket.send(
+                    JSON.stringify({
+                        'type': 'game logic', 'data': data
+                    })
+                );
+            }
+        }
 
         function getParameterByName(name) {
             name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -94,7 +126,7 @@
 
         setInterval(function() {
             if(!check_active) {
-                location.href = '../'
+                onFail()
             }
         }, 1000);
         
