@@ -67,7 +67,7 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        System.out.println("Got message");
+        System.out.print("Got message");
 
         if (data.isEmpty()) return;
 

@@ -33,6 +33,8 @@ public class TExecutor {
 
     }
 
+
+
     public void execUpdate(Connection connection, String update) throws DBException {
 
         try {

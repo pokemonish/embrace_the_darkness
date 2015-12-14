@@ -155,7 +155,7 @@ public class GameMechanicsImpl implements GameMechanics {
         if (!allSessions.contains(dinoraika.get(playerName))) return;
 
         String action = data.get("data").getAsString();
-        System.out.print(data.toString());
+        System.out.println(data.toString());
 
         JsonObject response = new JsonObject();
         response.addProperty("activePlayer", playerName);

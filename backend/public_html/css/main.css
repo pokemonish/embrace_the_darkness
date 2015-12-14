@@ -2,20 +2,24 @@ body {
     color: blue;
 }
 
-.menu__buttons {
-
+.row__layout {
+  /*display:block;*/
 }
 
 .menu__button {
     display:block;
     margin: 5px;
+    text-align:center;
 }
 
-.login__input_data {
+.login {
     display: block;
 }
 
- 
+.scoreboard {
+    display: block;
+}
+
 .container-fluid {
   display: flex;
   justify-content: center;
@@ -39,7 +43,7 @@ body {
     width: 100%;
 }
 
-.main__btn {
+.main-btn {
     width: 50%;
     height: 50%;
 }

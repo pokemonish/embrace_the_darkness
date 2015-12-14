@@ -110,6 +110,7 @@ function sendToOponents(data) {
 }
 
 document.addEventListener('keydown', function(event) {
+    event.preventDefault();
     switch (event.keyCode) {
         case 38:
         case 32:
@@ -139,3 +140,11 @@ window.onblur = function() {
         stopGame();
     }
 }
+
+
+
+var qrcode = new QRCode('qrcode');
+$.post('/gamepad', function(data) {
+    var url = location.protocol + location.hostname + ':' + location.port + '/joystick/?key=' + key;
+    qrcode.makeCode(data.key);
+});
