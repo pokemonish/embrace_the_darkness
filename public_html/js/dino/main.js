@@ -151,6 +151,7 @@ function getQR() {
             data = JSON.parse(data);
             if (typeof data['key'] !== 'undefined') {
                 var url = location.protocol + '//' + location.hostname + ':' + location.port + '/joystick/?key=' + data.key;
+                console.log(url)
                 qrcode.makeCode(url);
             }
         })

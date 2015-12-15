@@ -59,6 +59,7 @@
         }
 
         function onJump() {
+            console.log('JUMP')
             sendToOponents('jump');
             navigator.vibrate(100);
         }
@@ -124,11 +125,16 @@
             ;
         }, false);
 
-        setInterval(function() {
-            if(!check_active) {
-                onFail()
-            }
-        }, 1000);
+        window.addEventListener('keypress', function(event){
+            event.preventDefault();
+            onJump();
+        })
+
+        // setInterval(function() {
+        //     if(!check_active) {
+        //         onFail()
+        //     }
+        // }, 1000);
         
         onInit();
     </script>
