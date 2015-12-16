@@ -6,7 +6,6 @@ import db.dao.DataBaseCreatorImpl;
 import db.executor.TExecutor;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import java.sql.SQLException;
 
 /**
  * Created by fatman on 12/12/15.

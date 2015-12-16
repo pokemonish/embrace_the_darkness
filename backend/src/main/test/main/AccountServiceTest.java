@@ -1,10 +1,8 @@
 package main;
 
-import base.DBService;
 import base.UserProfile;
 import db.BasicDBTest;
 import db.DBException;
-import db.DBServiceImpl;
 import org.jetbrains.annotations.NotNull;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -39,8 +37,6 @@ public class AccountServiceTest extends BasicDBTest {
         assertNotNull(user);
         assertEquals(testUser.getLogin(), user.getLogin());
         assertEquals(testUser.getPassword(), user.getPassword());
-
-        accountService.deleteUser(testUser.getLogin());
     }
 
 
@@ -79,7 +75,6 @@ public class AccountServiceTest extends BasicDBTest {
         accountService.addUser(testUser);
         int quantity = accountService.getUsersQuantity();
         assertEquals(1, quantity);
-        accountService.deleteUser(testUser.getLogin());
     }
 
     @Test
@@ -99,6 +94,7 @@ public class AccountServiceTest extends BasicDBTest {
     }
 
     @After
-    public void cleanUp() {
+    public void cleanUp() throws DBException {
+        s_dbService.getUsersDAO().deleteAllUsers();
     }
 }

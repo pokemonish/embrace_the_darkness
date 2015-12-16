@@ -10,12 +10,12 @@ public class UsersDAO {
 
     private TExecutor executor;
 
-    private static final String GET_USER_BY_ID = "SELECT * FROM USERS WHERE ID =";
+    private static final String GET_USER_BY_ID = "SELECT * FROM USERS WHERE ID =\"%s\"";
     private static final String GET_USER_BY_NAME = "SELECT * FROM users WHERE user_name = \"%s\"";
     private static final String INSERT_USER = "INSERT INTO users (user_name, password) VALUES (\"%s\", \"%s\")";
     private static final String COUNT_USERS = "SELECT count(*) FROM users";
     private static final String DELETE_USER_BY_NAME = "DELETE FROM users WHERE user_name = \"%s\"";
-
+    private static final String DELETE_ALL_USERS = "DELETE FROM users";
 
     public UsersDAO(TExecutor executor) {
         this.executor = executor;
@@ -53,7 +53,11 @@ public class UsersDAO {
         String query = String.format(DELETE_USER_BY_NAME, name);
 
         executor.execUpdate(query);
+    }
 
+    public void deleteAllUsers() throws DBException {
+
+        executor.execUpdate(DELETE_ALL_USERS);
     }
 
     public void addUser(UserProfile user) throws DBException {
