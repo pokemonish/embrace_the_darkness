@@ -7,8 +7,6 @@ import db.dao.UsersDAO;
 import db.executor.TExecutor;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
-import static org.mockito.Mockito.*;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -32,7 +30,6 @@ public class DBIntegrationTest extends BasicDBTest {
     private Connection connection;
     private UsersDAO usersDAO;
     private UserProfile testProfile = new UserProfile(USER_NAME_TEST, PASSWORD_TEST, "");
-    private UserProfile userProfileMock = mock(UserProfile.class);
     @Before
     public void setUp() throws SQLException {
         connection = DriverManager.getConnection(DBService.getUrl());
@@ -44,9 +41,7 @@ public class DBIntegrationTest extends BasicDBTest {
         int numberOfUsers = new Random().nextInt(USERS_NUMBER_MAX) + USERS_NUMBER_MIN;
 
         for (int i = 0; i < numberOfUsers; ++i) {
-            when(userProfileMock.getLogin()).thenReturn(USER_NAME_TEST + i);
-            when(userProfileMock.getPassword()).thenReturn(PASSWORD_TEST + i);
-            usersDAO.addUser(userProfileMock);
+            usersDAO.addUser(new UserProfile(USER_NAME_TEST + i, PASSWORD_TEST + i, ""));
         }
 
         assertEquals(numberOfUsers, usersDAO.countUsers());
