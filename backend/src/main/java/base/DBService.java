@@ -6,8 +6,6 @@ import db.handlers.ConnectionConsumer;
 import db.handlers.ConnectionHandler;
 import resources.Config;
 
-import java.sql.Connection;
-
 
 /**
  * Created by fatman on 23/11/15.
