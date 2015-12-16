@@ -3,7 +3,7 @@ package mechanics;
 import base.GameMechanics;
 import base.WebSocketService;
 import com.google.gson.JsonObject;
-import frontend.WebSocketServiceImpl;
+import game_socket_mechanics.WebSocketServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

@@ -1,7 +1,7 @@
 package base;
 
 import com.google.gson.JsonObject;
-import frontend.GameWebSocket;
+import game_socket_mechanics.GameWebSocket;
 
 /**
  * @author v.chibrikov

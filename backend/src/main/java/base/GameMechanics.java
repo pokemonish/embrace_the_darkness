@@ -24,4 +24,6 @@ public interface GameMechanics {
     void setIsActive(boolean value);
 
     boolean isActive();
+
+    void killPlayer(String playerName);
 }

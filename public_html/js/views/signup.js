@@ -12,7 +12,7 @@ define([
 
         model: new User(),
         template: tmpl,
-        el: $('#page'),
+        el: $('#signup'),
 
         events: {
             'click .menu-btn': 'backToMain',
@@ -24,17 +24,29 @@ define([
 
         initialize: function () {
             this.render();
+            this.hide();
         },
         render: function () {
             $(this.el).html(this.template);
+        },
+        hide: function () {
+            console.log("signupView.hide()");
+            $(this.el).hide();
+        },
+        show: function () {
+            console.log("signupView.show()");
+            $(this.el).show();
+            Backbone.trigger(this.getName(), this.$el);
+        },
+        getName: function () {
+            return "signup:show"
         },
         backToMain: function() {
             Backbone.history.navigate('#', {trigger: true});
         },
         signup: function() {
             // Validate here
-            // validate("signup__form")
-
+            
             var data = $(".signup__form").serialize().split("&");
             var userDetails={};
             
@@ -47,6 +59,10 @@ define([
             
                 response.success(function (data) {
                   alert(data.Status);
+                  if(data.Status=='New user created') {
+                    localStorage.setItem('logined',true);
+                    Backbone.history.navigate('#login', {trigger: true});
+                  }
                 }); 
                 return false;
             }

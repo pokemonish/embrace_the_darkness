@@ -1,0 +1,105 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Всё недоступно</title>
+
+    <style>
+        html, body {
+            padding: 0;
+            margin: 0;
+        }
+        #main {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+        }
+        #text {
+            width: 100%;
+            height: 100%;
+            background-image:url(dino.png) ;
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: center;
+        }
+    </style>
+</head>
+
+<body style="overflow:hidden;">
+    <div id="main">
+        <div id="text">
+        </div>
+    </div>
+
+    <script>
+        function onInit() {
+            var secret = getParameterByName('secret');
+        }
+
+        function onJump() {
+            navigator.vibrate(100);
+        }
+
+        var text = document.getElementById('text');
+        var main = document.getElementById('main');
+        var check_active = false;
+
+        var avgG = 9.81;
+        var forced = false;
+
+        function getParameterByName(name) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        }
+
+        function setAngle(deg) {
+            text.style.webkitTransform = 'rotate('+deg+'deg)'; 
+            text.style.mozTransform    = 'rotate('+deg+'deg)'; 
+            text.style.msTransform     = 'rotate('+deg+'deg)'; 
+            text.style.oTransform      = 'rotate('+deg+'deg)'; 
+            text.style.transform       = 'rotate('+deg+'deg)'; 
+        }
+
+        window.addEventListener('devicemotion', function(event) {  
+            check_active = true;
+            var x = event.accelerationIncludingGravity.x;  
+            var y = event.accelerationIncludingGravity.y;  
+            var z = event.accelerationIncludingGravity.z;
+
+            var yy = Math.atan2(x, z);
+            var xx = Math.atan2(y, z);
+            var rotareka = Math.abs(xx) + Math.abs(yy) > 0.5;
+            var angle = Math.atan2(x,y) * 180 / Math.PI - window.orientation;
+
+            var force = (Math.abs(Math.sqrt(x*x + y*y + z*z)) - avgG) > 14;
+            var forceka = force && !forced;
+            forced = force;
+
+            if(rotareka) {
+                setAngle(angle)
+            }
+            if(forceka) {
+                onJump()
+            }
+        }, false);
+
+        window.addEventListener('orientationchange', function() {
+            ;
+        }, false);
+
+        setInterval(function() {
+            if(!check_active) {
+                location.href = '../'
+            }
+        }, 1000);
+        
+        onInit();
+    </script>
+</body>
+
+</head>

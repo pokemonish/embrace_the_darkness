@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
 /**
  * Created by fatman on 20/09/15.
@@ -30,7 +29,7 @@ public class SignOutServlet extends HttpServlet {
 
     @Override
     public void doPost(@NotNull HttpServletRequest request,
-                       @NotNull HttpServletResponse response) throws ServletException, IOException {
+                       @NotNull HttpServletResponse response) throws ServletException {
         HttpSession session = request.getSession();
 
         Long userId = (Long) session.getAttribute("userId");

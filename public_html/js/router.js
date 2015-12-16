@@ -4,14 +4,16 @@ define([
     'views/game',
     'views/login',
     'views/signup',
-    'views/scoreboard'
+    'views/scoreboard',
+    'viewManager'
 ], function(
     Backbone,
     mainView,
     gameView,
     loginView,
     signupView,
-    scoreboardView
+    scoreboardView,
+    viewManager
 ){
     var page = $('#page');
 
@@ -23,21 +25,35 @@ define([
             'signup': 'signupAction',
             '*default': 'defaultActions'
         },
+        initialize: function(el) {
+            this.el = el;
+            this.views = [
+                mainView,
+                gameView,
+                loginView,
+                signupView,
+                scoreboardView,
+            ]
+
+            var VM = viewManager;
+
+            VM.foo(this.views)
+
+        },
         defaultActions: function () {
-            mainView.render();
+            mainView.show();
         },
         scoreboardAction: function () {
-            scoreboardView.render();
+            scoreboardView.show();
         },
         gameAction: function () {
-            gameView.render();
-            // gameView.show();
+            gameView.show();
         },
         loginAction: function () {
-            loginView.render();
+            loginView.show();
         },
         signupAction: function () {
-            signupView.render();
+            signupView.show();
         },
     });
 

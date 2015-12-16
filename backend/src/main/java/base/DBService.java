@@ -1,18 +1,29 @@
 package base;
 
+import db.DBException;
+import db.dao.UsersDAO;
+import db.handlers.ConnectionHandler;
+import resources.Config;
+
 import java.sql.Connection;
-import java.sql.SQLException;
+
 
 /**
  * Created by fatman on 23/11/15.
  */
 
 public interface DBService {
-    Connection getConnection();
 
-    UserProfile getUserByName(String name) throws SQLException;
+    static String getUrl() {
 
-    void addUser(UserProfile user) throws SQLException;
+        return "jdbc:" +
+            Config.getInstance().getDbType() + "://" +
+            Config.getInstance().getHost() + ':' +
+            Config.getInstance().getDbPort() + '/' +
+            Config.getInstance().getDbName() + '?' + "user=" +
+            Config.getInstance().getDbUser() + '&' + "password=" +
+            Config.getInstance().getDbPassword();
+    }
 
-    int countUsers() throws SQLException;
+    public UsersDAO getUsersDAO() throws DBException;
 }

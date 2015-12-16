@@ -1,5 +1,6 @@
 package frontend;
 
+import main.AccountServiceException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,12 +18,10 @@ public class SignUpServletTest extends AuthBasicTest {
     SignUpServlet signUpServlet = new SignUpServlet(mockedAccountService);
 
     @Before
-    public void doBeforeTests() throws ServletException, IOException{
-
+    public void doBeforeTests() throws ServletException, IOException, AccountServiceException {
+        doNothing().doThrow(new AccountServiceException()).when(mockedAccountService).addUser(any());
         when(mockedResponse.getWriter()).thenReturn(mockedWriter);
         when(mockedRequest.getReader()).thenReturn(mockedReader);
-        when(mockedAccountService.addUser(any(), any())).thenReturn(true).thenReturn(false);
-
     }
 
     public void testDoPost(String message, long expectedStatus, int timesNumber)
@@ -62,20 +61,20 @@ public class SignUpServletTest extends AuthBasicTest {
     }
 
     @Test
-    public void testCorrectDataDoPost() throws ServletException, IOException {
+    public void testCorrectDataDoPost() throws ServletException, IOException, AccountServiceException {
         parametersJson.addProperty("email", EMAIL_TEST);
         parametersJson.addProperty("password", PASSWORD_TEST);
         testDoPost("New user created", HttpServletResponse.SC_OK, 1);
 
-        verify(mockedAccountService, times(1)).addUser(eq(EMAIL_TEST), eq(TEST_USER_PROFILE));
+        verify(mockedAccountService, times(1)).addUser(eq(TEST_USER_PROFILE));
     }
 
     @Test
-    public void testDuplicateDataDoPost() throws ServletException, IOException {
+    public void testDuplicateDataDoPost() throws ServletException, IOException, AccountServiceException {
         parametersJson.addProperty("email", EMAIL_TEST);
         parametersJson.addProperty("password", PASSWORD_TEST);
         testDoPost("New user created", HttpServletResponse.SC_OK, 1);
         testDoPost("User with name: " + EMAIL_TEST + " already exists", HttpServletResponse.SC_OK, 2);
-        verify(mockedAccountService, times(2)).addUser(eq(EMAIL_TEST), eq(TEST_USER_PROFILE));
+        verify(mockedAccountService, times(2)).addUser(eq(TEST_USER_PROFILE));
     }
 }

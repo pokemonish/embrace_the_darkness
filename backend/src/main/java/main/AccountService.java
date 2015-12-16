@@ -2,10 +2,10 @@ package main;
 
 import base.DBService;
 import base.UserProfile;
+import db.DBException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,10 +14,10 @@ import java.util.Map;
  */
 public class AccountService {
 
-    private DBService dbService;
+    private DBService DBService;
 
-    public AccountService(DBService dbService) {
-        this.dbService = dbService;
+    public AccountService(DBService DBService) {
+        this.DBService = DBService;
     }
 
     @NotNull
@@ -25,31 +25,28 @@ public class AccountService {
 
     private long id = 1;
 
-    //temporary
     public long getAndIncrementID() {
         return id++;
     }
 
-    public boolean addUser(String userName, UserProfile userProfile) {
+    public void addUser(UserProfile userProfile) throws AccountServiceException {
 
         try {
-            dbService.addUser(userProfile);
-        } catch (SQLException e) {
-            return false;
+            DBService.getUsersDAO().addUser(userProfile);
+        } catch (DBException e) {
+            throw new AccountServiceException(e);
         }
-
-        return true;
     }
 
     public void addSessions(@NotNull String sessionId, @NotNull UserProfile userProfile) {
         sessions.put(sessionId, userProfile);
     }
 
-    public int getUsersQuantity() throws RuntimeException{
+    public int getUsersQuantity() throws RuntimeException, AccountServiceException {
         try {
-            return dbService.countUsers();
-        } catch (SQLException e) {
-            throw new RuntimeException("Can't count users.");
+            return DBService.getUsersDAO().countUsers();
+        } catch (DBException ignore) {
+            throw new AccountServiceException("Can't count users.");
         }
     }
 
@@ -58,12 +55,12 @@ public class AccountService {
     }
 
     @Nullable
-    public UserProfile getUser(@Nullable String userName) {
+    public UserProfile getUser(@Nullable String userName) throws AccountServiceException {
         if (userName == null) return null;
         try {
-            return dbService.getUserByName(userName);
-        } catch (SQLException e) {
-            return null;
+            return DBService.getUsersDAO().getUserByName(userName);
+        } catch (DBException ignore) {
+            throw new AccountServiceException("Error getting user from db");
         }
     }
 
@@ -79,5 +76,13 @@ public class AccountService {
             return true;
         }
         return false;
+    }
+
+    public void deleteUser(String name) throws AccountServiceException {
+        try {
+            DBService.getUsersDAO().deleteUserByName(name);
+        } catch (DBException ignore) {
+            throw new AccountServiceException("User was not deleted");
+        }
     }
 }

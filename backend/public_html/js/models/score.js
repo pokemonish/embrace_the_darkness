@@ -10,7 +10,11 @@ define([
             'score': 0
         },
 
-        urlRoot: '/api/v1/auth/signin',
+        // urlRootSignin: '/api/v1/auth/signin',
+        // urlRootSignup: '/api/v1/auth/signup',
+
+        urlRoot: '/api/v1/auth/signup',
+
 
     });
 

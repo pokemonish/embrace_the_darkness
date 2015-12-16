@@ -35,25 +35,22 @@ define([
             // Validate here
             // validate("login__form")
             
-            console.log("LOL");
-
-            var userDetails = {
-                email: 'admin',
-                password: 'admin'
-            };
+            var data = $(".login__form").serialize().split("&");
+            var userDetails={};
             
-            this.model.save(userDetails, {
-                success: function(user) {
-                    console.log(user.attributes.Status);
-                },
-                error: function(msg) {
-                    console.log(msg);
-                }
-            });
+            for(var key in data) {
+                userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
+            };
+
+            console.log(userDetails)
+            
+            this.model.urlRoot = "/api/v1/auth/signin"
+            this.model.fetch({data: userDetails, type: 'POST'})
+
 
             return false;
             
-        }
+        },
 
     });
 

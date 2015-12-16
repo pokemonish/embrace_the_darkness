@@ -1,8 +1,10 @@
 package frontend;
 
-import base.AuthService;
+import game_socket_mechanics.GameWebSocket;
+import game_socket_mechanics.GameWebSocketCreator;
 import base.GameMechanics;
 import base.WebSocketService;
+import main.AccountService;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.junit.Test;
@@ -15,7 +17,7 @@ import static org.junit.Assert.*;
  */
 public class GameWebSocketCreatorTest extends Mockito {
 
-    private AuthService authServiceMock = mock(AuthService.class);
+    private AccountService accountServiceMock = mock(AccountService.class, RETURNS_DEEP_STUBS);
     private GameMechanics gameMechanicsMock = mock(GameMechanics.class);
     private WebSocketService webSocketServiceMock = mock(WebSocketService.class);
     private ServletUpgradeRequest servletUpgradeRequestMock = mock(ServletUpgradeRequest.class, RETURNS_DEEP_STUBS);
@@ -25,7 +27,7 @@ public class GameWebSocketCreatorTest extends Mockito {
     private static final String TEST_USER_NAME = "TEST_USER_NAME";
 
     private GameWebSocketCreator gameWebSocketCreator =
-        new GameWebSocketCreator(authServiceMock,
+        new GameWebSocketCreator(accountServiceMock,
                                 gameMechanicsMock,
                                 webSocketServiceMock);
 
@@ -33,7 +35,7 @@ public class GameWebSocketCreatorTest extends Mockito {
     @Test
     public void testCreateWebSocket() throws Exception {
         when(servletUpgradeRequestMock.getHttpServletRequest().getSession().getId()).thenReturn(TEST_SESSION_ID);
-        when(authServiceMock.getUserName(TEST_SESSION_ID)).thenReturn(TEST_USER_NAME);
+        when(accountServiceMock.getUser(TEST_SESSION_ID).getLogin()).thenReturn(TEST_USER_NAME);
         GameWebSocket gameWebSocketTest = gameWebSocketCreator
                 .createWebSocket(servletUpgradeRequestMock, servletUpgradeResponseMock);
 

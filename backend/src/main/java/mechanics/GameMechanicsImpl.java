@@ -152,6 +152,8 @@ public class GameMechanicsImpl implements GameMechanics {
     @Override
     public void processGameLogicData(String playerName, JsonObject data) {
 
+        if (!allSessions.contains(dinoraika.get(playerName))) return;
+
         String action = data.get("data").getAsString();
         System.out.print(data.toString());
 
@@ -162,14 +164,19 @@ public class GameMechanicsImpl implements GameMechanics {
         if (action != null) {
             sendOtherPlayers(playerName, response);
             if (action.equals("dead")) {
-                GameSession gameSession = dinoraika.get(playerName);
-                if (gameSession.getDeadPlayers() == playersNumber - 1) {
-                    gameSession.setWinner(gameSession.getUsers().get(playerName));
-                }
-                gameSession.incrementDeadPlayers();
-                gameSession.getUsers().get(playerName).setIsDead(true);
+                killPlayer(playerName);
             }
         }
+    }
+
+    @Override
+    public void killPlayer(String playerName) {
+        GameSession gameSession = dinoraika.get(playerName);
+        if (gameSession.getDeadPlayers() == playersNumber - 1) {
+            gameSession.setWinner(gameSession.getUsers().get(playerName));
+        }
+        gameSession.incrementDeadPlayers();
+        gameSession.getUsers().get(playerName).setIsDead(true);
     }
 
     private void startGame() {

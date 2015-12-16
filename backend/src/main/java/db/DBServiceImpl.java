@@ -1,10 +1,11 @@
 package db;
 
 import base.DBService;
-import base.UserProfile;
+import base.DataBaseCreator;
+import db.dao.DataBaseCreatorImpl;
 import db.dao.UsersDAO;
-import db.datasets.UsersDataSet;
-import org.jetbrains.annotations.Nullable;
+import db.handlers.ConnectionHandler;
+import org.jetbrains.annotations.NotNull;
 import resources.Config;
 
 import java.sql.*;
@@ -12,73 +13,81 @@ import java.sql.*;
 /**
  * Created by fatman on 23/11/15.
  */
+
 public class DBServiceImpl implements DBService {
 
     private String connectionUrl;
 
-    public DBServiceImpl(Config config) {
+    public static String getUrl() {
+
+        return "jdbc:" +
+                Config.getInstance().getDbType() + "://" +
+                Config.getInstance().getHost() + ':' +
+                Config.getInstance().getDbPort() + '/' +
+                Config.getInstance().getDbName() + '?' + "user=" +
+                Config.getInstance().getDbUser() + '&' + "password=" +
+                Config.getInstance().getDbPassword();
+    }
+
+    public DBServiceImpl() throws DBException {
         try {
-            DriverManager.registerDriver((Driver) Class.forName(config.getDbDriver()).newInstance());
-        } catch (SQLException | InstantiationException | IllegalAccessException | ClassNotFoundException e)  {
-            System.out.append("Can't register driver ").append(config.getDbDriver());
+            DriverManager.registerDriver((Driver)
+                    Class.forName(Config.getInstance().getDbDriver()).newInstance());
+        } catch (SQLException | InstantiationException |
+                    IllegalAccessException | ClassNotFoundException e)  {
+            e.printStackTrace();
+            System.out.append("Can't register driver ")
+                    .append(Config.getInstance().getDbDriver());
             System.exit(1);
         }
 
-        StringBuilder url = new StringBuilder();
-        url.
-                append("jdbc:").append(config.getDbType()).append("://").
-                append(config.getHost()).append(':').
-                append(config.getDbPort()).append('/').
-                append(config.getDbName()).append('?').
-                append("user=").append(config.getDbUser()).append('&').
-                append("password=").append(config.getDbPassword());
+        if (Config.getInstance().isDoCreateDB()) {
+            connectionUrl =
+                "jdbc:" + Config.getInstance().getDbType()
+                + "://" + Config.getInstance().getHost() + ':' +
+                Config.getInstance().getDbPort() + '?' +
+                "user=" + Config.getInstance().getDbUser() + '&' +
+                "password=" + Config.getInstance().getDbPassword();
+            DataBaseCreator dataBaseCreator = new DataBaseCreatorImpl(getConnection());
+            dataBaseCreator.createDB();
+        }
 
-        connectionUrl = url.toString();
+        if (Config.getInstance().isDoDeleteDB()) {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Bye bye!");
+                try {
+                    DataBaseCreator dataBaseCreator =
+                            new DataBaseCreatorImpl(getConnection());
+                    dataBaseCreator.dropDB();
+                } catch (DBException e) {
+                    e.printStackTrace();
+                    System.out.println("Database was not deleted");
+                }
+            }));
+        }
 
-        System.out.append("URL: ").append(url).append("\n");
+        connectionUrl = getUrl();
+
+        System.out.append("URL: ").append(getUrl()).append("\n");
     }
 
-    @Override
-    @Nullable
-    public Connection getConnection() {
+    private void connectAndPerform(ConnectionHandler handler) throws SQLException, DBException {
+        try (Connection connection = getConnection()) {
+            handler.handle(connection);
+        }
+    }
+
+    @NotNull
+    private Connection getConnection() throws DBException {
         try {
             return DriverManager.getConnection(connectionUrl);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DBException(e);
         }
-        return null;
     }
 
     @Override
-    public void addUser(UserProfile user) throws SQLException {
-
-        Connection connection = getConnection();
-        if (connection == null) throw new SQLException();
-
-        UsersDAO usersDAO = new UsersDAO(connection);
-
-        usersDAO.addUser(user, connection);
-    }
-
-    @Override
-    public UserProfile getUserByName(String name) throws SQLException {
-        Connection connection = getConnection();
-        if (connection == null) throw new SQLException();
-
-        UsersDAO usersDAO = new UsersDAO(connection);
-
-        UsersDataSet usersDataSet = usersDAO.getUserByName(name);
-
-        return new UserProfile(usersDataSet.getName(), usersDataSet.getPassword(), "");
-    }
-
-    @Override
-    public int countUsers() throws SQLException {
-        Connection connection = getConnection();
-        if (connection == null) throw new SQLException();
-
-        UsersDAO usersDAO = new UsersDAO(connection);
-
-        return usersDAO.countUsers(connection);
+    public UsersDAO getUsersDAO() throws DBException {
+        return new UsersDAO(getConnection());
     }
 }

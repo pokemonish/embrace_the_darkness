@@ -2,9 +2,8 @@ body {
     color: blue;
 }
 
-.container-fluid {
-  width: 100%;
-  height: 100%;
+.row__layout {
+  /*display:block;*/
 }
 
 .menu__button {

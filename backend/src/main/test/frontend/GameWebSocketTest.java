@@ -1,5 +1,7 @@
 package frontend;
 
+import game_socket_mechanics.GameWebSocket;
+import game_socket_mechanics.WebSocketServiceImpl;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;

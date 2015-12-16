@@ -3,12 +3,14 @@ define([
     'views/main',
     'views/game',
     'views/login',
+    'views/signup',
     'views/scoreboard'
 ], function(
     Backbone,
     mainView,
     gameView,
     loginView,
+    signupView,
     scoreboardView
 ){
     var page = $('#page');
@@ -18,6 +20,7 @@ define([
             'scoreboard': 'scoreboardAction',
             'game': 'gameAction',
             'login': 'loginAction',
+            'signup': 'signupAction',
             '*default': 'defaultActions'
         },
         defaultActions: function () {
@@ -28,10 +31,14 @@ define([
         },
         gameAction: function () {
             gameView.render();
+            // gameView.show();
         },
         loginAction: function () {
             loginView.render();
-        }
+        },
+        signupAction: function () {
+            signupView.render();
+        },
     });
 
     return new Router();
