@@ -34,7 +34,7 @@ public class DataBaseCreatorImpl implements DataBaseCreator {
     public void createDB() throws DBException {
 
         executor.execTransaction(connection -> {
-            executor.execUpdate(CREATE_DATABASE);
+            executor.execUpdate(connection, CREATE_DATABASE);
             createTableUsers();
         });
     }

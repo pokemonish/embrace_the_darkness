@@ -6,6 +6,7 @@ import db.handlers.ConnectionConsumer;
 import db.handlers.TResultHandler;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -42,6 +43,15 @@ public class TExecutor {
                 stmt.execute(update);
             }
         });
+    }
+
+    public void execUpdate(Connection connection, String update) throws DBException {
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(update);
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
     }
 
     public void execTransaction(ConnectionConsumer consumer) throws DBException  {
