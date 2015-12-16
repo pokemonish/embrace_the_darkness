@@ -15,4 +15,5 @@ Cute game about darkness.
  grunt test
 
 ## Backend
-#### easy
+####System software requrements:
+mysql 5.5+
