@@ -5,6 +5,7 @@ import game_socket_mechanics.GameWebSocketCreator;
 import base.GameMechanics;
 import base.WebSocketService;
 import main.AccountService;
+import main.AccountServiceException;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.junit.Test;
@@ -33,13 +34,13 @@ public class GameWebSocketCreatorTest extends Mockito {
 
 
     @Test
-    public void testCreateWebSocket() throws Exception {
-        when(servletUpgradeRequestMock.getHttpServletRequest().getSession().getId()).thenReturn(TEST_SESSION_ID);
-        when(accountServiceMock.getUser(TEST_SESSION_ID).getLogin()).thenReturn(TEST_USER_NAME);
+    public void testCreateWebSocket() throws AccountServiceException {
+        when(servletUpgradeRequestMock.getHttpServletRequest().getSession().getAttribute(any())).thenReturn(TEST_SESSION_ID);
+        when(accountServiceMock.getSessions(TEST_SESSION_ID).getLogin()).thenReturn(TEST_USER_NAME);
         GameWebSocket gameWebSocketTest = gameWebSocketCreator
                 .createWebSocket(servletUpgradeRequestMock, servletUpgradeResponseMock);
 
-        verify(servletUpgradeRequestMock.getHttpServletRequest().getSession(), times(1)).getId();
+        verify(servletUpgradeRequestMock.getHttpServletRequest().getSession(), times(1)).getAttribute(any());
 
         GameWebSocket expectedGameWebSocket =
                 new GameWebSocket(TEST_USER_NAME, gameMechanicsMock,

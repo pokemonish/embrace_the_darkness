@@ -5,9 +5,6 @@ import db.DBException;
 import db.executor.TExecutor;
 import resources.Config;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 /**
  * Created by fatman on 07/12/15.
  */
@@ -27,56 +24,35 @@ public class DataBaseCreatorImpl implements DataBaseCreator {
     private static final String DROP_TABLE =
             "DROP TABLE " + Config.getInstance().getDbName() + ".users";
 
-    private Connection connection;
     private TExecutor executor;
 
-    public DataBaseCreatorImpl(Connection connection) {
-        this.connection = connection;
-        this.executor = new TExecutor();
-    }
-
-    public DataBaseCreatorImpl(Connection connection, TExecutor executor) {
-        this.connection = connection;
+    public DataBaseCreatorImpl(TExecutor executor) {
         this.executor = executor;
     }
 
     @Override
     public void createDB() throws DBException {
 
-        try {
-            connection.setAutoCommit(false);
-            executor.execUpdate(connection, CREATE_DATABASE);
+        executor.execTransaction(connection -> {
+            executor.execUpdate(CREATE_DATABASE);
             createTableUsers();
-            connection.commit();
-        } catch (SQLException e) {
-
-            try {
-                connection.rollback();
-            } catch (SQLException ignore) {
-            }
-            throw new DBException(e);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ignore) {
-            }
-        }
+        });
     }
 
 
     @Override
     public void dropDB() throws DBException {
-        executor.execUpdate(connection, DROP_DATABASE);
+        executor.execUpdate(DROP_DATABASE);
         System.out.println("Drop is " + DROP_DATABASE);
     }
 
 
     public void createTableUsers() throws DBException {
-        executor.execUpdate(connection, CREATE_TABLE);
+        executor.execUpdate(CREATE_TABLE);
     }
 
     public void dropTableUsers() throws DBException {
 
-        executor.execUpdate(connection, DROP_TABLE);
+        executor.execUpdate(DROP_TABLE);
     }
 }

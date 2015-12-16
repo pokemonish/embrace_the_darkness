@@ -4,6 +4,7 @@ package db;
 import base.DBService;
 import base.UserProfile;
 import db.dao.UsersDAO;
+import db.executor.TExecutor;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 import static org.mockito.Mockito.*;
@@ -35,7 +36,7 @@ public class DBIntegrationTest extends BasicDBTest {
     @Before
     public void setUp() throws SQLException {
         connection = DriverManager.getConnection(DBService.getUrl());
-        usersDAO = new UsersDAO(connection);
+        usersDAO = new UsersDAO(new TExecutor(s_dbService));
     }
 
     @Test

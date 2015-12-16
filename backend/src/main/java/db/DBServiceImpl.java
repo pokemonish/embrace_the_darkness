@@ -4,8 +4,11 @@ import base.DBService;
 import base.DataBaseCreator;
 import db.dao.DataBaseCreatorImpl;
 import db.dao.UsersDAO;
+import db.executor.TExecutor;
+import db.handlers.ConnectionConsumer;
 import db.handlers.ConnectionHandler;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import resources.Config;
 
 import java.sql.*;
@@ -48,7 +51,7 @@ public class DBServiceImpl implements DBService {
                 Config.getInstance().getDbPort() + '?' +
                 "user=" + Config.getInstance().getDbUser() + '&' +
                 "password=" + Config.getInstance().getDbPassword();
-            DataBaseCreator dataBaseCreator = new DataBaseCreatorImpl(getConnection());
+            DataBaseCreator dataBaseCreator = new DataBaseCreatorImpl(new TExecutor(this));
             dataBaseCreator.createDB();
         }
 
@@ -57,7 +60,7 @@ public class DBServiceImpl implements DBService {
                 System.out.println("Bye bye!");
                 try {
                     DataBaseCreator dataBaseCreator =
-                            new DataBaseCreatorImpl(getConnection());
+                            new DataBaseCreatorImpl(new TExecutor(this));
                     dataBaseCreator.dropDB();
                 } catch (DBException e) {
                     e.printStackTrace();
@@ -71,9 +74,22 @@ public class DBServiceImpl implements DBService {
         System.out.append("URL: ").append(getUrl()).append("\n");
     }
 
-    private void connectAndPerform(ConnectionHandler handler) throws SQLException, DBException {
+    @Nullable
+    @Override
+    public <T> T connectAndReturn(ConnectionHandler<T> handler) throws DBException {
+        try (Connection connection = getConnection()) {
+            return handler.handle(connection);
+        } catch (SQLException e) {
+            throw new DBException(e);
+        }
+    }
+
+    @Override
+    public void connectAndUpdate(ConnectionConsumer handler) throws DBException {
         try (Connection connection = getConnection()) {
             handler.handle(connection);
+        } catch (SQLException e) {
+            throw new DBException(e);
         }
     }
 
@@ -88,6 +104,6 @@ public class DBServiceImpl implements DBService {
 
     @Override
     public UsersDAO getUsersDAO() throws DBException {
-        return new UsersDAO(getConnection());
+        return new UsersDAO(new TExecutor(this));
     }
 }
