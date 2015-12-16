@@ -46,7 +46,6 @@ define([
         },
         login: function() {
             // Validate here
-            // validate("login__form")
             
             var data = $(".login__form").serialize().split("&");
             var userDetails={};
@@ -56,17 +55,60 @@ define([
             };
 
             if (userDetails['email'] && userDetails['password']) {
-               var response = this.model.send("/api/v1/auth/signin", 'POST', userDetails);
-            
-                response.success(function (data) {
-                  alert(data.Status);
-                  console.log(data)
-                  if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
-                    localStorage.setItem('logined',true)
-                  }
+                this.model.attributes['email'] = userDetails['email']
+                this.model.attributes['password'] = userDetails['password']
+
+                this.model.sync('login', this.model, {
+                    success: function(model, response, options) {
+                        if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
+                            localStorage.setItem('logined',true)
+                            Backbone.history.navigate('#main', {trigger: true});
+                        } else {
+                            console.log("login fail");
+                            alert(model.Status);
+                            Backbone.history.navigate('#main', {trigger: true});
+                        }
+                    },
+                    error: function(model, response, options) {
+                        console.log("login error");
+                        alert(model.Status);
+                    }
                 });
                 return false;
             }
+
+            /*
+            if (userDetails['email'] && userDetails['password']) {
+                this.model.save(userDetails, {
+                    success: function(user) {
+                        alert(data.Status);
+                        console.log(user);
+                        if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
+                            localStorage.setItem('logined',true)
+                        }
+                        
+                    },
+                    error: function(msg) {
+                        console.log("NO");
+                        console.log(msg);
+                    }
+                })
+                return false;
+            }
+            */
+
+            // if (userDetails['email'] && userDetails['password']) {
+            //    var response = this.model.send("/api/v1/auth/signin", 'POST', userDetails);
+            
+            //     response.success(function (data) {
+            //       alert(data.Status);
+            //       console.log(data)
+            //       if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
+            //         localStorage.setItem('logined',true)
+            //       }
+            //     });
+            //     return false;
+            // }
 
             return true;
         },

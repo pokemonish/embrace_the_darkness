@@ -21,6 +21,8 @@ define([
         initialize: function () {
             this.render();
             this.hide();
+
+            this.checkScore();
         },
         render: function () {
             this.$el.html(this.template());
@@ -49,6 +51,13 @@ define([
         },
         game: function () {
             Backbone.history.navigate('#game', {trigger: true});
+        },
+        checkScore: function () {
+            score = localStorage.getItem('score')
+
+            if (score != null) {
+                setTimeout(function() {Backbone.trigger("score:newScore", score);}, 3000)
+            }
         }
 
     });

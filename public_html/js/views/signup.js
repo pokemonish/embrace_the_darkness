@@ -35,6 +35,7 @@ define([
         },
         show: function () {
             console.log("signupView.show()");
+            console.log(this.model)
             $(this.el).show();
             Backbone.trigger(this.getName(), this.$el);
         },
@@ -55,6 +56,24 @@ define([
                 userDetails[data[key].split("=")[0]] = data[key].split("=")[1];
             };
 
+
+            if (userDetails['email'] && userDetails['password']) {
+                this.model.attributes['email'] = userDetails['email']
+                this.model.attributes['password'] = userDetails['password']
+
+                this.model.sync('signup', this.model, {
+                    success: function(model, response, options) {
+                        alert(model.Status);
+                        Backbone.history.navigate('#login', {trigger: true});
+                    },
+                    error: function(model, response, options) {
+                        console.log("signup error");
+                        alert(model.Status);
+                    }
+                });
+                return false;
+            }
+            /*
             if (userDetails['email'] && userDetails['password']) {
                var response = this.model.send("/api/v1/auth/signup", 'POST', userDetails);
             
@@ -63,6 +82,7 @@ define([
                 }); 
                 return false;
             }
+            */
 
             return true;
             
