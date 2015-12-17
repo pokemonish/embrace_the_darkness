@@ -151,18 +151,27 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void processGameLogicData(String playerName, JsonObject data) {
+        processGameLogicData(playerName, data, false);
+    }
+
+    @Override
+    public void processGameLogicData(String playerName, JsonObject data, boolean isFromJoystick) {
 
         if (!allSessions.contains(dinoraika.get(playerName))) return;
 
         String action = data.get("data").getAsString();
-        System.out.print(data.toString());
+        System.out.println(data.toString());
 
         JsonObject response = new JsonObject();
         response.addProperty("activePlayer", playerName);
         response.addProperty("action", action);
 
         if (action != null) {
-            sendOtherPlayers(playerName, response);
+            if (isFromJoystick) {
+                sendEverybody(playerName, response);
+            } else {
+                sendOtherPlayers(playerName, response);
+            }
             if (action.equals("dead")) {
                 killPlayer(playerName);
             }
@@ -180,8 +189,7 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     private void startGame() {
-
-        GameSession gameSession = new GameSession(waiters);
+        GameSession gameSession = new GameSession(waiters, playersNumber - 1);
         allSessions.add(gameSession);
         for (String waiter : waiters) {
             dinoraika.put(waiter, gameSession);
@@ -200,6 +208,25 @@ public class GameMechanicsImpl implements GameMechanics {
 
             if (!name.equals(playerName)) {
                 webSocketService.notifyEnemyAction(user, data);
+            }
+        }
+    }
+
+    @Override
+    public void sendEverybody(String playerName, JsonObject data) {
+        System.out.append("in sendeverybody");
+        GameSession gameSession = dinoraika.get(playerName);
+        Map<String, GameUser> users = gameSession.getUsers();
+
+        for(Map.Entry<String, GameUser> entry : users.entrySet()) {
+            GameUser user = entry.getValue();
+            String name = entry.getKey();
+
+            if (!name.equals(playerName)) {
+                System.out.append("sending to enemies");
+                webSocketService.notifyEnemyAction(user, data);
+            } else {
+                webSocketService.notifyMyAction(user, data);
             }
         }
     }

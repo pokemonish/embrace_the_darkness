@@ -46,9 +46,9 @@ public class Main {
 
         Logger.getAnonymousLogger().log(new LogRecord(Level.INFO, startMessage));
 
-        DBService dBservice = new DBServiceImpl();
+        DBService dbService = new DBServiceImpl();
 
-        AccountService accountService = new AccountService(dBservice);
+        AccountService accountService = new AccountService(dbService);
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
@@ -59,6 +59,8 @@ public class Main {
         Servlet signin = new SignInServlet(accountService);
         Servlet signUp = new SignUpServlet(accountService);
         Servlet signOut = new SignOutServlet(accountService);
+        Servlet getHighscore = new GetHighscoreServlet(dbService);
+        Servlet addHighscore = new AddHighscoreServlet(accountService, dbService);
 
         Servlet admin = new AdminPageServlet(accountService, gameMechanics);
         Servlet gamepad = new GamepadServlet(accountService);
@@ -73,6 +75,8 @@ public class Main {
         context.addServlet(new ServletHolder(gamepad), Config.getInstance().getGamepadUrl());
         context.addServlet(new ServletHolder(new GamepadSocketServlet(gameMechanics)),
                             Config.getInstance().getGamepadInputsUrl());
+        context.addServlet(new ServletHolder(addHighscore), "/score");
+        context.addServlet(new ServletHolder(getHighscore), "/top");
 
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);

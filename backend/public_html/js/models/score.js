@@ -14,7 +14,17 @@ define([
         // urlRootSignup: '/api/v1/auth/signup',
 
         urlRoot: '/api/v1/auth/signup',
+        send: function(path, method, data){ //название может быть какое угодно
+            data = JSON.stringify(data);
 
+            return this.fetch({
+                contentType: 'application/json',
+                type:method || 'POST', //здесь можно писать и GET и POST
+                cache:false,
+                data: data,
+                url:path
+            });
+        }
 
     });
 

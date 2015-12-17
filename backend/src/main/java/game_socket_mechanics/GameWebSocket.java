@@ -40,12 +40,14 @@ public class GameWebSocket {
             JsonObject jsonStart = new JsonObject();
             jsonStart.addProperty("status", "start");
             String[] enemies = user.getEnemyNames();
+            System.out.println("Length is " + enemies.length);
             JsonArray JSONenemies = new JsonArray();
             for (String nextEnemy : enemies) {
                 JsonObject enemy = new JsonObject();
                 enemy.addProperty("name", nextEnemy);
                 JSONenemies.add(enemy);
             }
+            System.out.println(JSONenemies);
             jsonStart.add("enemyNames", JSONenemies);
             session.getRemote().sendString(jsonStart.toString());
         } catch (IOException | WebSocketException e) {
@@ -67,7 +69,7 @@ public class GameWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        System.out.println("Got message");
+        System.out.print("Got message");
 
         if (data.isEmpty()) return;
 
@@ -97,6 +99,18 @@ public class GameWebSocket {
             session.getRemote().sendString(jsonStart.toString());
         } catch (IOException | WebSocketException e) {
             System.out.print(e.toString());
+        }
+    }
+
+    public void sendMyAction(JsonObject data) {
+        data.addProperty("status", "self_action");
+
+        try {
+            session.getRemote().sendString(data.toString());
+        } catch (IOException | WebSocketException e) {
+            gameMechanics.killPlayer(myName);
+            System.out.println("Connection with player " + myName + " lost.");
+            System.out.println(e.toString());
         }
     }
 

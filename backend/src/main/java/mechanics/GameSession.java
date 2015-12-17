@@ -26,12 +26,12 @@ public class GameSession {
     }
 
 
-    public GameSession(String[] players) {
+    public GameSession(String[] players, int enemiesNumber) {
         startTime = new Date().getTime();
 
         for (int i = 0; i < players.length; ++i) {
-            GameUser gameUser = new GameUser(players[i]);
-            String[] enemies = new String[2];
+            GameUser gameUser = new GameUser(players[i], enemiesNumber);
+            String[] enemies = new String[enemiesNumber];
             int k = 0;
             for (int j = 0; j < players.length; ++j) {
                 if (i != j) {

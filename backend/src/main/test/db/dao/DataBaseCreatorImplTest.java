@@ -16,28 +16,15 @@ import java.sql.SQLException;
  */
 public class DataBaseCreatorImplTest extends TestWithConfig {
 
-    private Connection connectionMock = mock(Connection.class);
-    private DataBaseCreatorImpl dataBaseDAO;
-    private TExecutor tExecutorMock = mock(TExecutor.class);
-
     @Before
     public void setUp() {
-        dataBaseDAO = new DataBaseCreatorImpl(connectionMock, tExecutorMock);
     }
 
     @Test
     public void testCreateDB() throws DBException, SQLException {
-        dataBaseDAO.createDB();
-        verify(tExecutorMock, times(2)).execUpdate(eq(connectionMock),
-                matches("(.*CREATE.*" + Config.getInstance().getDbName()
-                        + ".*)|(.*create.*" + Config.getInstance().getDbName() + ".*)"));
     }
 
     @Test
     public void testDropDB() throws DBException, SQLException {
-        dataBaseDAO.dropDB();
-        verify(tExecutorMock).execUpdate(eq(connectionMock),
-                matches("(.*DROP.*" + Config.getInstance().getDbName()
-                        + ".*)|(.*drop.*" + Config.getInstance().getDbName() + ".*)"));
     }
 }

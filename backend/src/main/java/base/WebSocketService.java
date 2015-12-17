@@ -17,4 +17,6 @@ public interface WebSocketService {
     void notifyGameOver(GameUser user, boolean win);
 
     void notifyEnemyAction(GameUser user, JsonObject data);
+
+    void notifyMyAction(GameUser user, JsonObject data);
 }

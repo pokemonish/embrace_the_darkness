@@ -767,31 +767,29 @@ Runner.prototype = {
   },
 
   doAction: function(action, active) {
-    if(!this.playable) {
-      if(action == 'jump') {
-        if(active) {
-          this.onKeyDown({
-            preventDefault: function(){},
-            keyCode: '38'
-          });
-        } else {
-          this.onKeyUp({
-            preventDefault: function(){},
-            keyCode: '38'
-          });
-        }
-      } else if(action == 'duck') {
-        if(active) {
-          this.onKeyDown({
-            preventDefault: function(){},
-            keyCode: '40'
-          });
-        } else {
-          this.onKeyUp({
-            preventDefault: function(){},
-            keyCode: '40'
-          });
-        }
+    if(action == 'jump') {
+      if(active) {
+        this.onKeyDown({
+          preventDefault: function(){},
+          keyCode: '38'
+        });
+      } else {
+        this.onKeyUp({
+          preventDefault: function(){},
+          keyCode: '38'
+        });
+      }
+    } else if(action == 'duck') {
+      if(active) {
+        this.onKeyDown({
+          preventDefault: function(){},
+          keyCode: '40'
+        });
+      } else {
+        this.onKeyUp({
+          preventDefault: function(){},
+          keyCode: '40'
+        });
       }
     }
   },

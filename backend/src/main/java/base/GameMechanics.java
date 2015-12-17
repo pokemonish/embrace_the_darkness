@@ -17,9 +17,13 @@ public interface GameMechanics {
 
     void sendOtherPlayers(String player, JsonObject data);
 
+    void sendEverybody(String playerName, JsonObject data);
+
     void deleteIfWaiter(String player);
 
     void processGameLogicData(String playerName, JsonObject data);
+
+    void processGameLogicData(String playerName, JsonObject data, boolean isFromJoystick);
 
     void setIsActive(boolean value);
 

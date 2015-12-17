@@ -25,7 +25,7 @@ public class GamepadWebSocket {
 
     @OnWebSocketMessage
     public void onMessage(String data) {
-        System.out.println("Got message");
+        System.out.println("Got message" + data);
 
         if (data.isEmpty()) return;
 
@@ -33,7 +33,7 @@ public class GamepadWebSocket {
 
         if (parsedData.get("type") != null &&
                 parsedData.get("type").getAsString().equals("game logic")) {
-            gameMechanics.processGameLogicData(myName, parsedData);
+            gameMechanics.processGameLogicData(myName, parsedData, true);
         }
     }
 

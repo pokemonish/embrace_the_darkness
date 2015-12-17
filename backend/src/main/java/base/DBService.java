@@ -1,11 +1,11 @@
 package base;
 
 import db.DBException;
+import db.dao.HighscoresDAO;
 import db.dao.UsersDAO;
+import db.handlers.ConnectionConsumer;
 import db.handlers.ConnectionHandler;
 import resources.Config;
-
-import java.sql.Connection;
 
 
 /**
@@ -25,5 +25,11 @@ public interface DBService {
             Config.getInstance().getDbPassword();
     }
 
-    public UsersDAO getUsersDAO() throws DBException;
+    UsersDAO getUsersDAO() throws DBException;
+
+    <T> T connectAndReturn(ConnectionHandler<T> handler) throws DBException;
+
+    void connectAndUpdate(ConnectionConsumer handler) throws DBException;
+
+    HighscoresDAO getHighscoreDAO() throws DBException;
 }

@@ -3,10 +3,9 @@ package db;
 import base.DBService;
 import base.DataBaseCreator;
 import db.dao.DataBaseCreatorImpl;
+import db.executor.TExecutor;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 /**
  * Created by fatman on 12/12/15.
@@ -29,12 +28,11 @@ public class BasicDBTest extends TestWithConfig {
     }
 
     @AfterClass
-    public static void cleanUpAfterClass() throws SQLException {
+    public static void cleanUpAfterClass() {
         if (!s_alreadyDeleted) {
             try {
                 DataBaseCreator dataBaseCreator =
-                        new DataBaseCreatorImpl(
-                                DriverManager.getConnection(DBService.getUrl()));
+                        new DataBaseCreatorImpl(new TExecutor(s_dbService));
                 dataBaseCreator.dropDB();
             } catch (DBException e) {
                 e.printStackTrace();

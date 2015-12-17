@@ -28,24 +28,31 @@ function handleMessage(event) {
         if (typeof data === 'object' && data !== null) {
             if ('status' in data) {
                 switch (data.status) {
-                case 'start':
-                    console.log(data.enemyNames);
-                    var enemyNames = data.enemyNames;
-                    for (var i = 0; i < enemyNames.length; ++i) {
-                        manager.addRunner(enemyNames[i].name);
-                    }
-                    manager.start();
-                    break;
-                case 'action':
-                    if (data.action == 'dead') {
-                        somebodyMaybeDied(false);
-                        manager.runners[data.activePlayer].die();
-                    } else if (data.action == 'unduck') {
-                        manager.runners[data.activePlayer].doAction('duck', false);
-                    } else {
-                        manager.runners[data.activePlayer].doAction(data.action, true);
-                    }
-                    break;
+                    case 'start':
+                        console.log(data.enemyNames);
+                        var enemyNames = data.enemyNames;
+                        for (var i = 0; i < enemyNames.length; ++i) {
+                            manager.addRunner(enemyNames[i].name);
+                        }
+                        manager.start();
+                        break;
+                    case 'action':
+                        if (data.action == 'dead') {
+                            somebodyMaybeDied(false);
+                            manager.runners[data.activePlayer].die();
+                        } else if (data.action == 'unduck') {
+                            manager.runners[data.activePlayer].doAction('duck', false);
+                        } else {
+                            manager.runners[data.activePlayer].doAction(data.action, true);
+                        }
+                        break;
+                    case 'self_action':
+                        if (data.action == 'unduck') {
+                            manager.player.doAction('duck', false);
+                        } else {
+                            manager.player.doAction(data.action, true);
+                        }
+                        break;
                 }
             }
         }
@@ -110,6 +117,7 @@ function sendToOponents(data) {
 }
 
 document.addEventListener('keydown', function(event) {
+    if(socket) event.preventDefault();
     switch (event.keyCode) {
         case 38:
         case 32:
@@ -139,3 +147,23 @@ window.onblur = function() {
         stopGame();
     }
 }
+
+
+var qrcode = new QRCode('qrcode');
+function getQR() {
+    console.log(1)
+    if(localStorage.getItem('logined')=='true') {
+        console.log(2)
+        $.post('/gamepad', function(data) {
+            data = JSON.parse(data);
+            if (typeof data['key'] !== 'undefined') {
+                var url = location.protocol + '//' + location.hostname + ':' + location.port + '/joystick/?key=' + data.key;
+                console.log(url)
+                qrcode.makeCode(url);
+            }
+        })
+    } else {
+        setTimeout(getQR, 1000);
+    }
+}
+getQR();

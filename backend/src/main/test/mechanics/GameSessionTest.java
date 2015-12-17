@@ -26,7 +26,7 @@ public class GameSessionTest {
             testPlayers[i] = TEST_ENEMY + i;
         }
         startTime = new Date().getTime();
-        gameSession = new GameSession(testPlayers);
+        gameSession = new GameSession(testPlayers, 2);
     }
 
     @Test

@@ -6,30 +6,25 @@ import db.datasets.UsersDataSet;
 import db.executor.TExecutor;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Connection;
-
 public class UsersDAO {
 
-    private Connection con;
     private TExecutor executor;
 
-    private static final String GET_USER_BY_ID = "SELECT * FROM USERS WHERE ID =";
+    private static final String GET_USER_BY_ID = "SELECT * FROM USERS WHERE ID =\"%s\"";
     private static final String GET_USER_BY_NAME = "SELECT * FROM users WHERE user_name = \"%s\"";
     private static final String INSERT_USER = "INSERT INTO users (user_name, password) VALUES (\"%s\", \"%s\")";
     private static final String COUNT_USERS = "SELECT count(*) FROM users";
     private static final String DELETE_USER_BY_NAME = "DELETE FROM users WHERE user_name = \"%s\"";
+    private static final String DELETE_ALL_USERS = "DELETE FROM users";
 
-
-    public UsersDAO(Connection con) {
-        this.con = con;
-        this.executor = new TExecutor();
+    public UsersDAO(TExecutor executor) {
+        this.executor = executor;
     }
 
 
     @Nullable
     public UsersDataSet get(long id) throws DBException {
-        TExecutor exec = new TExecutor();
-        return exec.execQuery(con, GET_USER_BY_ID + id, result -> {
+        return executor.execQuery(GET_USER_BY_ID + id, result -> {
             result.next();
             return new UsersDataSet(result.getLong(1), result.getString(2), result.getString(2));
         });
@@ -42,7 +37,7 @@ public class UsersDAO {
 
         System.out.append("Get user is ").append(query).append('\n');
 
-        return executor.execQuery(con, query,
+        return executor.execQuery(query,
             result -> {
                 if (!result.next()) {
                     throw new DBException("There is no such user.");
@@ -57,8 +52,12 @@ public class UsersDAO {
 
         String query = String.format(DELETE_USER_BY_NAME, name);
 
-        executor.execUpdate(con, query);
+        executor.execUpdate(query);
+    }
 
+    public void deleteAllUsers() throws DBException {
+
+        executor.execUpdate(DELETE_ALL_USERS);
     }
 
     public void addUser(UserProfile user) throws DBException {
@@ -66,12 +65,12 @@ public class UsersDAO {
         String query = String.format(INSERT_USER, user.getLogin(), user.getPassword());
         System.out.append("Insert query ").append(query).append('\n');
 
-        executor.execUpdate(con, query);
+        executor.execUpdate(query);
     }
 
     public int countUsers() throws DBException {
 
-        Integer number = executor.execQuery(con, COUNT_USERS, result -> {
+        Integer number = executor.execQuery(COUNT_USERS, result -> {
 
             if (!result.next()) {
                 throw new DBException("Can't count users");
