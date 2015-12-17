@@ -64,22 +64,24 @@ public class TExecutor {
     public void execTransaction(ConnectionConsumer consumer) throws DBException  {
         dbService.connectAndUpdate(connection ->
         {
+            if (conn == null) conn = connection;
             try {
-                connection.setAutoCommit(false);
-                consumer.handle(connection);
-                connection.commit();
+                conn.setAutoCommit(false);
+                consumer.handle(conn);
+                conn.commit();
             } catch (SQLException e) {
 
                 try {
-                    connection.rollback();
+                    conn.rollback();
                 } catch (SQLException ignore) {
                 }
                 throw new DBException(e);
             } finally {
                 try {
-                    connection.setAutoCommit(true);
+                    conn.setAutoCommit(true);
                 } catch (SQLException ignore) {
                 }
+                if (conn.equals(connection)) conn = null;
             }
         });
     }
