@@ -3,6 +3,7 @@ package mechanics;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
 import utils.TimeHelper;
@@ -151,6 +152,11 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void processGameLogicData(String playerName, JsonObject data) {
+        processGameLogicData(playerName, data, false);
+    }
+
+    @Override
+    public void processGameLogicData(String playerName, JsonObject data, boolean isFromJoystick) {
 
         if (!allSessions.contains(dinoraika.get(playerName))) return;
 
@@ -162,7 +168,11 @@ public class GameMechanicsImpl implements GameMechanics {
         response.addProperty("action", action);
 
         if (action != null) {
-            sendOtherPlayers(playerName, response);
+            if (isFromJoystick) {
+                sendEverybody(playerName, response);
+            } else {
+                sendOtherPlayers(playerName, response);
+            }
             if (action.equals("dead")) {
                 killPlayer(playerName);
             }
@@ -200,6 +210,30 @@ public class GameMechanicsImpl implements GameMechanics {
 
             if (!name.equals(playerName)) {
                 webSocketService.notifyEnemyAction(user, data);
+            }
+        }
+    }
+
+    @Override
+    public void sendEverybody(String playerName, JsonObject data) {
+        GameSession gameSession = dinoraika.get(playerName);
+        Map<String, GameUser> users = gameSession.getUsers();
+
+        for(Map.Entry<String, GameUser> entry : users.entrySet()) {
+            GameUser user = entry.getValue();
+            String name = entry.getKey();
+
+            if (!name.equals(playerName)) {
+                webSocketService.notifyEnemyAction(user, data);
+            } else {
+                JsonObject newData = new JsonObject();
+                for(Map.Entry<String, JsonElement> dataEntry : data.entrySet()) {
+                    if (dataEntry.getKey().equals("action")) {
+                        newData.addProperty("self_" + dataEntry.getKey(), dataEntry.getValue().getAsString());
+                    } else {
+                        newData.addProperty(dataEntry.getKey(), dataEntry.getValue().getAsString());
+                    }
+                }
             }
         }
     }

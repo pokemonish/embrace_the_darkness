@@ -43,8 +43,20 @@ public class GetHighscoreServlet extends HttpServlet {
             return;
         }
 
+        int topScoresNumber;
         try {
-            JsonArray highscores = dbService.getHighscoreDAO().getHighscoresLimit(requestData.get("top").getAsInt());
+            topScoresNumber = requestData.get("top").getAsInt();
+        } catch (NumberFormatException e) {
+            jsonResponse.addProperty("Status", "'top' parameter should be int. It's " +
+                    requestData.get("top") + " instead. " +
+                    "Shame on you, people.");
+            ResponseHandler.respondWithJSONAndStatus(response, jsonResponse,
+                    HttpServletResponse.SC_BAD_REQUEST);
+            return;
+        }
+
+        try {
+            JsonArray highscores = dbService.getHighscoreDAO().getHighscoresLimit(topScoresNumber);
             jsonResponse.add("highscores", highscores);
         } catch (DBException e) {
             e.printStackTrace();
