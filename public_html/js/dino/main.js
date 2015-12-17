@@ -47,6 +47,13 @@ function handleMessage(event) {
                     }
                     break;
                 }
+                case 'self_action':
+                    if (data.action == 'unduck') {
+                        manager.player.doAction('duck', false);
+                    } else {
+                        manager.player.doAction(data.action, true);
+                    }
+                    break;
             }
         }
     } catch(e) {
