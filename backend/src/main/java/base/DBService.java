@@ -1,6 +1,7 @@
 package base;
 
 import db.DBException;
+import db.dao.HighscoresDAO;
 import db.dao.UsersDAO;
 import db.handlers.ConnectionConsumer;
 import db.handlers.ConnectionHandler;
@@ -29,4 +30,6 @@ public interface DBService {
     <T> T connectAndReturn(ConnectionHandler<T> handler) throws DBException;
 
     void connectAndUpdate(ConnectionConsumer handler) throws DBException;
+
+    HighscoresDAO getHighscoreDAO() throws DBException;
 }

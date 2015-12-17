@@ -3,6 +3,7 @@ package db;
 import base.DBService;
 import base.DataBaseCreator;
 import db.dao.DataBaseCreatorImpl;
+import db.dao.HighscoresDAO;
 import db.dao.UsersDAO;
 import db.executor.TExecutor;
 import db.handlers.ConnectionConsumer;
@@ -105,5 +106,10 @@ public class DBServiceImpl implements DBService {
     @Override
     public UsersDAO getUsersDAO() throws DBException {
         return new UsersDAO(new TExecutor(this));
+    }
+
+    @Override
+    public HighscoresDAO getHighscoreDAO() throws DBException {
+        return new HighscoresDAO(new TExecutor(this));
     }
 }
