@@ -40,8 +40,8 @@ public class DataBaseCreatorImpl implements DataBaseCreator {
 
         executor.execTransaction(connection -> {
             executor.execUpdate(connection, CREATE_DATABASE);
-            executor.execUpdate(connection, CREATE_TABLE_USERS);
-            executor.execUpdate(connection, CREATE_TABLE_HIGHSCORES);
+            createTableUsers();
+            createTableHighscores();
         });
     }
 

@@ -13,6 +13,7 @@ import java.sql.Statement;
 
 public class TExecutor {
     DBService dbService;
+    Connection conn = null;
 
     public TExecutor(DBService dbService) {
         this.dbService = dbService;
@@ -23,7 +24,7 @@ public class TExecutor {
                            TResultHandler<T> handler) throws DBException {
         return dbService.connectAndReturn(connection -> {
             try (Statement stmt = connection.createStatement()) {
-
+                if (conn == null) conn = connection;
                 stmt.execute(query);
 
                 T value;
@@ -32,6 +33,8 @@ public class TExecutor {
                     value = handler.handle(result);
                 }
                 return value;
+            } finally {
+                if (conn.equals(connection))conn = null;
             }
         });
     }
@@ -39,8 +42,11 @@ public class TExecutor {
     public void execUpdate(String update) throws DBException {
 
         dbService.connectAndUpdate(connection -> {
+            if (conn == null) conn = connection;
             try (Statement stmt = connection.createStatement()) {
                 stmt.execute(update);
+            } finally {
+                if (conn.equals(connection)) conn = null;
             }
         });
     }
