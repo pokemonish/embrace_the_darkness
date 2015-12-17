@@ -23,8 +23,9 @@ public class TExecutor {
     public<T> T execQuery(String query,
                            TResultHandler<T> handler) throws DBException {
         return dbService.connectAndReturn(connection -> {
-            try (Statement stmt = connection.createStatement()) {
-                if (conn == null) conn = connection;
+            if (conn == null) conn = connection;
+            try (Statement stmt = conn.createStatement()) {
+
                 stmt.execute(query);
 
                 T value;
@@ -43,7 +44,7 @@ public class TExecutor {
 
         dbService.connectAndUpdate(connection -> {
             if (conn == null) conn = connection;
-            try (Statement stmt = connection.createStatement()) {
+            try (Statement stmt = conn.createStatement()) {
                 stmt.execute(update);
             } finally {
                 if (conn.equals(connection)) conn = null;
