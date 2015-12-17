@@ -230,10 +230,14 @@ public class GameMechanicsImpl implements GameMechanics {
                 for(Map.Entry<String, JsonElement> dataEntry : data.entrySet()) {
                     if (dataEntry.getKey().equals("action")) {
                         newData.addProperty("self_" + dataEntry.getKey(), dataEntry.getValue().getAsString());
+                        System.out.println("Sending special: " + "self_" + dataEntry.getKey() +
+                                            ' ' +  dataEntry.getValue().getAsString());
                     } else {
                         newData.addProperty(dataEntry.getKey(), dataEntry.getValue().getAsString());
                     }
                 }
+
+                webSocketService.notifyEnemyAction(user, newData);
             }
         }
     }
