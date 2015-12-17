@@ -16,7 +16,7 @@ public class GameUserTest extends Mockito {
     private static final String ENEMY_NAME_TEST_2 = "enemy2TestName";
     private String[] enemyTestNames = new String[2];
 
-    private GameUser gameUser = new GameUser(USER_NAME_TEST);
+    private GameUser gameUser = new GameUser(USER_NAME_TEST, 2);
 
     @Before
     public void setUp() {

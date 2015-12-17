@@ -5,7 +5,7 @@ package base;
  */
 public class GameUser {
     private final String myName;
-    private String[] enemyNames = new String[2];
+    private String[] enemyNames;
     private int myScore = 0;
 
     public boolean isDead() {
@@ -18,8 +18,9 @@ public class GameUser {
 
     private boolean isDead = false;
 
-    public GameUser(String myName) {
+    public GameUser(String myName, int enemiesNumber) {
         this.myName = myName;
+        this.enemyNames = new String[enemiesNumber];
     }
 
     public String getMyName() {

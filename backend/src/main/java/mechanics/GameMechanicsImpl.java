@@ -3,7 +3,6 @@ package mechanics;
 import base.GameMechanics;
 import base.GameUser;
 import base.WebSocketService;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.jetbrains.annotations.Nullable;
 import utils.TimeHelper;
@@ -190,8 +189,7 @@ public class GameMechanicsImpl implements GameMechanics {
     }
 
     private void startGame() {
-
-        GameSession gameSession = new GameSession(waiters);
+        GameSession gameSession = new GameSession(waiters, playersNumber - 1);
         allSessions.add(gameSession);
         for (String waiter : waiters) {
             dinoraika.put(waiter, gameSession);
@@ -216,6 +214,7 @@ public class GameMechanicsImpl implements GameMechanics {
 
     @Override
     public void sendEverybody(String playerName, JsonObject data) {
+        System.out.append("in sendeverybody");
         GameSession gameSession = dinoraika.get(playerName);
         Map<String, GameUser> users = gameSession.getUsers();
 
@@ -224,22 +223,10 @@ public class GameMechanicsImpl implements GameMechanics {
             String name = entry.getKey();
 
             if (!name.equals(playerName)) {
+                System.out.append("sending to enemies");
                 webSocketService.notifyEnemyAction(user, data);
             } else {
-                JsonObject newData = new JsonObject();
-                for(Map.Entry<String, JsonElement> dataEntry : data.entrySet()) {
-                    System.out.println(dataEntry.getKey());
-                    System.out.println(dataEntry.getValue());
-                    if (dataEntry.getKey().equals("status")) {
-                        newData.addProperty(dataEntry.getKey(), "self_" + dataEntry.getValue().getAsString());
-                        System.out.println("Sending special: " + "self_" + dataEntry.getKey() +
-                                            ' ' +  dataEntry.getValue().getAsString());
-                    } else {
-                        newData.addProperty(dataEntry.getKey(), dataEntry.getValue().getAsString());
-                    }
-                }
-
-                webSocketService.notifyEnemyAction(user, newData);
+                webSocketService.notifyMyAction(user, data);
             }
         }
     }

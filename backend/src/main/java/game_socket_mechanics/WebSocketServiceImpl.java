@@ -38,4 +38,8 @@ public class WebSocketServiceImpl implements WebSocketService {
     public void notifyGameOver(GameUser user, boolean win) {
         userSockets.get(user.getMyName()).gameOver(user, win);
     }
+
+    public void notifyMyAction(GameUser user, JsonObject data) {
+        userSockets.get(user.getMyName()).sendMyAction(data);
+    }
 }

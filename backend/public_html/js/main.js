@@ -5,6 +5,7 @@ require.config({
         jquery: 'lib/jquery',
         underscore: 'lib/underscore',
         backbone: 'lib/backbone',
+        qrcode: 'lib/qrcode.min',
         pika1: 'dino/pika1',
         pika2: 'dino/pika2',
         dino_runner: 'dino/runner',
@@ -15,6 +16,10 @@ require.config({
         'backbone': {
             deps: ['underscore', 'jquery'],
             exports: 'Backbone',
+        },
+        'qrcode' : {
+            deps: ['jquery'],
+            exports: 'QRCode',
         },
         'underscore': {
             exports: '_',
@@ -27,7 +32,7 @@ require.config({
             exports: 'RunnerManager',
         },
         'dino_main' : {
-            deps: ['dino_manager'],
+            deps: ['dino_manager', 'qrcode', 'jquery'],
         },
     }
 });
