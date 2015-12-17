@@ -228,8 +228,10 @@ public class GameMechanicsImpl implements GameMechanics {
             } else {
                 JsonObject newData = new JsonObject();
                 for(Map.Entry<String, JsonElement> dataEntry : data.entrySet()) {
-                    if (dataEntry.getKey().equals("action")) {
-                        newData.addProperty("self_" + dataEntry.getKey(), dataEntry.getValue().getAsString());
+                    System.out.println(dataEntry.getKey());
+                    System.out.println(dataEntry.getValue());
+                    if (dataEntry.getKey().equals("status")) {
+                        newData.addProperty(dataEntry.getKey(), "self_" + dataEntry.getValue().getAsString());
                         System.out.println("Sending special: " + "self_" + dataEntry.getKey() +
                                             ' ' +  dataEntry.getValue().getAsString());
                     } else {
