@@ -28,32 +28,32 @@ function handleMessage(event) {
         if (typeof data === 'object' && data !== null) {
             if ('status' in data) {
                 switch (data.status) {
-                case 'start':
-                    console.log(data.enemyNames);
-                    var enemyNames = data.enemyNames;
-                    for (var i = 0; i < enemyNames.length; ++i) {
-                        manager.addRunner(enemyNames[i].name);
-                    }
-                    manager.start();
-                    break;
-                case 'action':
-                    if (data.action == 'dead') {
-                        somebodyMaybeDied(false);
-                        manager.runners[data.activePlayer].die();
-                    } else if (data.action == 'unduck') {
-                        manager.runners[data.activePlayer].doAction('duck', false);
-                    } else {
-                        manager.runners[data.activePlayer].doAction(data.action, true);
-                    }
-                    break;
+                    case 'start':
+                        console.log(data.enemyNames);
+                        var enemyNames = data.enemyNames;
+                        for (var i = 0; i < enemyNames.length; ++i) {
+                            manager.addRunner(enemyNames[i].name);
+                        }
+                        manager.start();
+                        break;
+                    case 'action':
+                        if (data.action == 'dead') {
+                            somebodyMaybeDied(false);
+                            manager.runners[data.activePlayer].die();
+                        } else if (data.action == 'unduck') {
+                            manager.runners[data.activePlayer].doAction('duck', false);
+                        } else {
+                            manager.runners[data.activePlayer].doAction(data.action, true);
+                        }
+                        break;
+                    case 'self_action':
+                        if (data.action == 'unduck') {
+                            manager.player.doAction('duck', false);
+                        } else {
+                            manager.player.doAction(data.action, true);
+                        }
+                        break;
                 }
-                case 'self_action':
-                    if (data.action == 'unduck') {
-                        manager.player.doAction('duck', false);
-                    } else {
-                        manager.player.doAction(data.action, true);
-                    }
-                    break;
             }
         }
     } catch(e) {
