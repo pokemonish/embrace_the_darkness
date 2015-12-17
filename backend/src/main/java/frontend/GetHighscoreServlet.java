@@ -37,7 +37,7 @@ public class GetHighscoreServlet extends HttpServlet {
         }
 
         if (!requestData.has("top")) {
-            jsonResponse.addProperty("Status", "Request data doesn't have 'score' member in it.");
+            jsonResponse.addProperty("Status", "Request data doesn't have 'top' member in it.");
             ResponseHandler.respondWithJSONAndStatus(response, jsonResponse,
                     HttpServletResponse.SC_BAD_REQUEST);
             return;
