@@ -15,7 +15,10 @@ btn2.onclick = function() {
 var socket = null;
 
 var manager = new RunnerManager('#games');
-manager.onPlayerDied = function() {
+manager.onPlayerDied = function(distanceMeter) {
+    console.log(distanceMeter);
+    Backbone.trigger("score:newScore", distanceMeter);
+
     sendToOponents('dead');
     somebodyMaybeDied(true);
 }
@@ -85,7 +88,7 @@ function somebodyMaybeDied(me) {
     if(over) {
         stopGame()
         if(me) {
-            alert('Ты победил, спартанец!')
+            alert('Ты победил, спартанец!');
         }
     }
 }
