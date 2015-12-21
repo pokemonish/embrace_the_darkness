@@ -1,4 +1,4 @@
-package game_socket_mechanics;
+package gamesocketmech;
 
 import base.GameMechanics;
 import base.WebSocketService;

@@ -1,4 +1,4 @@
-package game_socket_mechanics;
+package gamesocketmech;
 
 import accountservice.UserProfile;
 import base.GameMechanics;

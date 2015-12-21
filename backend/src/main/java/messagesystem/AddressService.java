@@ -16,8 +16,8 @@ public final class AddressService {
 
     private AtomicInteger accountServiceCounter = new AtomicInteger();
 
-    public void registerFrontEnd(FrontEnd frontEnd) {
-        this.frontEnd = frontEnd.getAddress();
+    public void registerFrontEnd(FrontEnd frontEndserv) {
+        this.frontEnd = frontEndserv.getAddress();
     }
 
     public void registerAccountService(AccountServiceTh accountService) {

@@ -1,7 +1,5 @@
 package messagesystem;
 
-import java.util.concurrent.TimeoutException;
-
 /**
  * Created by fatman on 20/12/15.
  */

@@ -1,7 +1,7 @@
 package frontend;
 
-import game_socket_mechanics.GameWebSocket;
-import game_socket_mechanics.WebSocketServiceImpl;
+import gamesocketmech.GameWebSocket;
+import gamesocketmech.WebSocketServiceImpl;
 import base.GameUser;
 import com.google.gson.JsonObject;
 import org.junit.Test;

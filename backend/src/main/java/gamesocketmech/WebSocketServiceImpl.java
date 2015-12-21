@@ -1,4 +1,4 @@
-package game_socket_mechanics;
+package gamesocketmech;
 
 import base.GameUser;
 import base.WebSocketService;
@@ -39,6 +39,7 @@ public class WebSocketServiceImpl implements WebSocketService {
         userSockets.get(user.getMyName()).gameOver(user, win);
     }
 
+    @Override
     public void notifyMyAction(GameUser user, JsonObject data) {
         userSockets.get(user.getMyName()).sendMyAction(data);
     }

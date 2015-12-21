@@ -9,7 +9,6 @@ import messagesystem.TimeOutHelper;
 import org.jetbrains.annotations.NotNull;
 import utils.JsonRequestParser;
 import main.ResponseHandler;
-import static accountservice.Statuses.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

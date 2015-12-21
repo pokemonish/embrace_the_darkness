@@ -16,6 +16,8 @@ import java.util.*;
  * Created by fatman on 14/12/15.
  */
 public class GamepadServlet extends HttpServlet{
+    public static final int NUM_BITS = 130;
+    public static final int RADIX = 32;
     private static Map<String, String> s_availableKeys = new HashMap<>();
     private AccountService accountService;
 
@@ -40,7 +42,7 @@ public class GamepadServlet extends HttpServlet{
             return;
         }
 
-        String strKey = new BigInteger(130, new Random()).toString(32);
+        String strKey = new BigInteger(NUM_BITS, new Random()).toString(RADIX);
 
         s_availableKeys.put(strKey, userProfile.getLogin());
 
