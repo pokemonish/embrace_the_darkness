@@ -1,6 +1,5 @@
 package main;
 
-import accountservice.AccountService;
 import accountservice.AccountServiceTh;
 import frontendservice.FrontEnd;
 import gamesocketmech.WebSocketGameServlet;
@@ -53,7 +52,8 @@ public class Main {
         DBService dbService = new DBServiceImpl();
 
         final MessageSystem messageSystem = new MessageSystem();
-        final Thread accountServiceThread = new Thread(new AccountServiceTh(messageSystem, dbService));
+        AccountServiceTh accountServiceTh = new AccountServiceTh(messageSystem, dbService);
+        final Thread accountServiceThread = new Thread(accountServiceTh);
         accountServiceThread.setDaemon(true);
         accountServiceThread.setName("Account Service");
         final FrontEnd frontEnd = new FrontEnd(messageSystem);
@@ -63,33 +63,36 @@ public class Main {
         frontEndThread.start();
         accountServiceThread.start();
 
-        AccountService accountService = new AccountService(dbService);
-
         WebSocketService webSocketService = new WebSocketServiceImpl();
 
         MechanicsParameters mechanicsParameters = (MechanicsParameters)ReadXMLFileSAX.readXML
                 ("data/MechanicsParameters.xml");
         GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService, mechanicsParameters);
 
+        final Thread gameMechanicsThread = new Thread(gameMechanics);
+        gameMechanicsThread.setDaemon(true);
+        gameMechanicsThread.setName("GameMechanics");
+        gameMechanicsThread.start();
+
         Servlet signin = new SignInServlet(frontEnd);
         Servlet signUp = new SignUpServlet(frontEnd);
         Servlet signOut = new SignOutServlet(frontEnd);
         Servlet getHighscore = new GetHighscoreServlet(dbService);
-        Servlet addHighscore = new AddHighscoreServlet(accountService, dbService);
+        Servlet addHighscore = new AddHighscoreServlet(frontEnd, dbService);
 
-        Servlet admin = new AdminPageServlet(accountService, gameMechanics);
-        Servlet gamepad = new GamepadServlet(accountService);
+        Servlet admin = new AdminPageServlet(accountServiceTh, gameMechanics);
+        Servlet gamepad = new GamepadServlet(frontEnd);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.addServlet(new ServletHolder(signin), Config.getInstance().getSignInUrl());
         context.addServlet(new ServletHolder(signUp), Config.getInstance().getSignUpUrl());
         context.addServlet(new ServletHolder(signOut), Config.getInstance().getSignOutUrl());
         context.addServlet(new ServletHolder(admin), Config.getInstance().getAdminUrl());
-        context.addServlet(new ServletHolder(new WebSocketGameServlet(accountService,
+        context.addServlet(new ServletHolder(new WebSocketGameServlet(frontEnd,
                 gameMechanics, webSocketService)), Config.getInstance().getGameplayUrl());
         context.addServlet(new ServletHolder(gamepad), Config.getInstance().getGamepadUrl());
         context.addServlet(new ServletHolder(new GamepadSocketServlet(gameMechanics)),
-                            Config.getInstance().getGamepadInputsUrl());
+                Config.getInstance().getGamepadInputsUrl());
         context.addServlet(new ServletHolder(addHighscore), "/score");
         context.addServlet(new ServletHolder(getHighscore), "/top");
 
@@ -105,6 +108,9 @@ public class Main {
 
         server.start();
 
-        gameMechanics.run();
+        server.join();
+        gameMechanicsThread.join();
+        frontEndThread.join();
+        accountServiceThread.join();
     }
 }

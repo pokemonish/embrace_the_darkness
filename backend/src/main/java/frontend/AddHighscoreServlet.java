@@ -4,7 +4,7 @@ import base.DBService;
 import accountservice.UserProfile;
 import com.google.gson.JsonObject;
 import db.DBException;
-import accountservice.AccountService;
+import frontendservice.FrontEnd;
 import main.ResponseHandler;
 import utils.JsonRequestParser;
 
@@ -17,11 +17,11 @@ import java.io.IOException;
  * Created by fatman on 17/12/15.
  */
 public class AddHighscoreServlet extends HttpServlet {
-    private AccountService accountService;
+    private FrontEnd frontEnd;
     private DBService dbService;
 
-    public AddHighscoreServlet(AccountService accountService, DBService dbService) {
-        this.accountService = accountService;
+    public AddHighscoreServlet(FrontEnd frontEnd, DBService dbService) {
+        this.frontEnd = frontEnd;
         this.dbService = dbService;
     }
 
@@ -30,7 +30,7 @@ public class AddHighscoreServlet extends HttpServlet {
 
         String id = String.valueOf(request.getSession().getAttribute("userId"));
         JsonObject jsonResponse = new JsonObject();
-        UserProfile userProfile = accountService.getSessions(id);
+        UserProfile userProfile = frontEnd.isAuthenticated(id);
         if (id == null || userProfile == null) {
             jsonResponse.addProperty("Status", "You're not logged in.");
             ResponseHandler.respondWithJSONAndStatus(response, jsonResponse,

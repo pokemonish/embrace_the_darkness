@@ -86,6 +86,7 @@ public final class FrontEnd implements FrontEndService, Abonent, Runnable {
     @Override
     public void exited(String userId) {
         accountMap.remove(userId);
+        userAuthStates.put(userId, null);
     }
 
     @Override

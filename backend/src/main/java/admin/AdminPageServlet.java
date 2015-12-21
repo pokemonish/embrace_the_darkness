@@ -1,8 +1,8 @@
 package admin;
+import accountservice.AccountServiceTh;
 import base.GameMechanics;
 import accountservice.AccountServiceException;
 import utils.TimeHelper;
-import accountservice.AccountService;
 import main.ResponseHandler;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,13 +17,13 @@ import java.util.Map;
 public class AdminPageServlet extends HttpServlet {
 
     @NotNull
-    private final AccountService accountService;
+    private final AccountServiceTh accountServiceTh;
     @NotNull
     private final GameMechanics gameMechanics;
 
-    public AdminPageServlet(@NotNull AccountService accountService,
+    public AdminPageServlet(@NotNull AccountServiceTh accountServiceTh,
                             @NotNull GameMechanics gameMechanics) {
-        this.accountService = accountService;
+        this.accountServiceTh = accountServiceTh;
         this.gameMechanics = gameMechanics;
     }
 
@@ -53,13 +53,13 @@ public class AdminPageServlet extends HttpServlet {
         }
 
         try {
-            pageVariables.put("usersTotal", accountService.getUsersQuantity());
+            pageVariables.put("usersTotal", accountServiceTh.getUsersQuantity());
         } catch (AccountServiceException e) {
             pageVariables.put("usersTotal", "Unavailable");
         }
 
 
-        pageVariables.put("usersSignedIn", accountService.getSessionsQuantity());
+        pageVariables.put("usersSignedIn", accountServiceTh.getSessionsQuantity());
         pageVariables.put("status", "run");
 
         ResponseHandler.drawPage(response, "admin.html", pageVariables);

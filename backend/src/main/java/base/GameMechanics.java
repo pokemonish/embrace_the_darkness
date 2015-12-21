@@ -6,13 +6,14 @@ import com.google.gson.JsonObject;
  * @author v.chibrikov
  */
 
-public interface GameMechanics {
+public interface GameMechanics extends Runnable {
 
     void addUser(String user);
 
     @SuppressWarnings("unused")
     void incrementScore(String userName);
 
+    @Override
     void run();
 
     void sendOtherPlayers(String player, JsonObject data);

@@ -1,5 +1,6 @@
 package frontend;
 
+import frontendservice.FrontEnd;
 import gamesocketmech.GameWebSocket;
 import gamesocketmech.GameWebSocketCreator;
 import base.GameMechanics;
@@ -18,7 +19,7 @@ import static org.junit.Assert.*;
  */
 public class GameWebSocketCreatorTest extends Mockito {
 
-    private AccountService accountServiceMock = mock(AccountService.class, RETURNS_DEEP_STUBS);
+    private FrontEnd frontEndServiceMock = mock(FrontEnd.class, RETURNS_DEEP_STUBS);
     private GameMechanics gameMechanicsMock = mock(GameMechanics.class);
     private WebSocketService webSocketServiceMock = mock(WebSocketService.class);
     private ServletUpgradeRequest servletUpgradeRequestMock = mock(ServletUpgradeRequest.class, RETURNS_DEEP_STUBS);
@@ -28,7 +29,7 @@ public class GameWebSocketCreatorTest extends Mockito {
     private static final String TEST_USER_NAME = "TEST_USER_NAME";
 
     private GameWebSocketCreator gameWebSocketCreator =
-        new GameWebSocketCreator(accountServiceMock,
+        new GameWebSocketCreator(frontEndServiceMock,
                                 gameMechanicsMock,
                                 webSocketServiceMock);
 
@@ -36,7 +37,7 @@ public class GameWebSocketCreatorTest extends Mockito {
     @Test
     public void testCreateWebSocket() throws AccountServiceException {
         when(servletUpgradeRequestMock.getHttpServletRequest().getSession().getAttribute(any())).thenReturn(TEST_SESSION_ID);
-        when(accountServiceMock.getSessions(TEST_SESSION_ID).getLogin()).thenReturn(TEST_USER_NAME);
+        when(frontEndServiceMock.isAuthenticated(TEST_SESSION_ID).getLogin()).thenReturn(TEST_USER_NAME);
         GameWebSocket gameWebSocketTest = gameWebSocketCreator
                 .createWebSocket(servletUpgradeRequestMock, servletUpgradeResponseMock);
 

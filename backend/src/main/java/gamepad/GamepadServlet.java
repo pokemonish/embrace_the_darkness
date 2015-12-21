@@ -2,7 +2,7 @@ package gamepad;
 
 import accountservice.UserProfile;
 import com.google.gson.JsonObject;
-import accountservice.AccountService;
+import frontendservice.FrontEnd;
 import main.ResponseHandler;
 
 import javax.servlet.http.HttpServlet;
@@ -19,10 +19,10 @@ public class GamepadServlet extends HttpServlet{
     public static final int NUM_BITS = 130;
     public static final int RADIX = 32;
     private static Map<String, String> s_availableKeys = new HashMap<>();
-    private AccountService accountService;
+    private FrontEnd frontEnd;
 
-    public GamepadServlet(AccountService accountService) {
-        this.accountService = accountService;
+    public GamepadServlet(FrontEnd frontEnd) {
+        this.frontEnd = frontEnd;
     }
 
     public static Map<String, String> getAvailableKeys() {
@@ -33,7 +33,7 @@ public class GamepadServlet extends HttpServlet{
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String id = String.valueOf(request.getSession().getAttribute("userId"));
-        UserProfile userProfile = accountService.getSessions(id);
+        UserProfile userProfile = frontEnd.isAuthenticated(id);
 
         JsonObject jsonResponse = new JsonObject();
         if (id == null || userProfile == null) {

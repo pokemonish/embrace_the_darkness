@@ -1,7 +1,7 @@
 package admin;
 
+import accountservice.AccountServiceTh;
 import base.GameMechanics;
-import accountservice.AccountService;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -20,11 +20,11 @@ public class AdminPageServletTest extends Mockito {
 
     private HttpServletRequest requestMock = mock(HttpServletRequest.class);
     private HttpServletResponse responseMock = mock(HttpServletResponse.class);
-    private AccountService accountServiceMock = mock(AccountService.class);
+    private AccountServiceTh AccountServiceThMock = mock(AccountServiceTh.class);
     private GameMechanics gameMechanicsMock = mock(GameMechanics.class);
 
     private AdminPageServlet adminPageServlet =
-            new AdminPageServlet(accountServiceMock, gameMechanicsMock);
+            new AdminPageServlet(AccountServiceThMock, gameMechanicsMock);
 
     @Rule
     public final ExpectedSystemExit exit = ExpectedSystemExit.none();
