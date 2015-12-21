@@ -1,6 +1,6 @@
 package db.dao;
 
-import base.UserProfile;
+import accountservice.UserProfile;
 import db.DBException;
 import db.datasets.UsersDataSet;
 import db.executor.TExecutor;
@@ -40,7 +40,7 @@ public class UsersDAO {
         return executor.execQuery(query,
             result -> {
                 if (!result.next()) {
-                    throw new DBException("There is no such user.");
+                    return null;
                 }
 
                 return new UserProfile(result.getString(2), result.getString(3), "");

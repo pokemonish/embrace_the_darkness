@@ -1,8 +1,8 @@
 package frontend;
 
-import base.UserProfile;
+import accountservice.UserProfile;
 import com.google.gson.JsonObject;
-import main.AccountService;
+import accountservice.AccountService;
 import org.jetbrains.annotations.NotNull;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;

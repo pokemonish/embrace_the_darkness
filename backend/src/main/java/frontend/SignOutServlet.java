@@ -1,9 +1,10 @@
 package frontend;
 
-import base.UserProfile;
 import com.google.gson.JsonObject;
-import main.AccountService;
+import frontendservice.FrontEnd;
 import main.ResponseHandler;
+import messagesystem.MyTimeOutException;
+import messagesystem.TimeOutHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
@@ -19,10 +20,10 @@ import javax.servlet.http.HttpSession;
 
 public class SignOutServlet extends HttpServlet {
     @NotNull
-    private final AccountService accountService;
+    private final FrontEnd frontEnd;
 
-    public SignOutServlet(@NotNull AccountService accountService) {
-        this.accountService = accountService;
+    public SignOutServlet(@NotNull FrontEnd frontEnd) {
+        this.frontEnd = frontEnd;
     }
 
 
@@ -32,24 +33,20 @@ public class SignOutServlet extends HttpServlet {
                        @NotNull HttpServletResponse response) throws ServletException {
         HttpSession session = request.getSession();
 
-        Long userId = (Long) session.getAttribute("userId");
+        String userId = String.valueOf(session.getAttribute("userId"));
+        JsonObject jsonResponse = new JsonObject();
 
-        if (userId != null && accountService.deleteSessions(String.valueOf(userId))) {
-            session.removeAttribute("userId");
-
-            JsonObject jsonResponse = new JsonObject();
-            String sessionId = session.getId();
-
-            UserProfile profile = accountService.getSessions(sessionId);
-
-            if (profile != null) {
-                accountService.deleteSessions(sessionId);
+        if (frontEnd.isAuthenticated(userId) == null) jsonResponse.addProperty("Status", "You are alredy signed out");
+        try {
+            new TimeOutHelper().doInTime(() -> {
+                frontEnd.exit(userId);
+                while (frontEnd.getAuthStatus(userId) != null);
                 jsonResponse.addProperty("Status", "Signed out successfully!\nSee you soon!");
-            } else {
-                jsonResponse.addProperty("Status", "You are alredy signed out");
-            }
-
-            ResponseHandler.respondWithJSON(response, jsonResponse);
+            });
+        } catch (MyTimeOutException e) {
+            jsonResponse.addProperty("Status", "Request took too long");
         }
+
+        ResponseHandler.respondWithJSON(response, jsonResponse);
     }
 }

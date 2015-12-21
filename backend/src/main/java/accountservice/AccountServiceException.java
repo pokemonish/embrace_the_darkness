@@ -1,4 +1,4 @@
-package main;
+package accountservice;
 
 /**
  * Created by fatman on 09/12/15.

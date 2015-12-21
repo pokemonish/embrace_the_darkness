@@ -1,10 +1,10 @@
 package frontend;
 
 import base.DBService;
-import base.UserProfile;
+import accountservice.UserProfile;
 import com.google.gson.JsonObject;
 import db.DBException;
-import main.AccountService;
+import accountservice.AccountService;
 import main.ResponseHandler;
 import utils.JsonRequestParser;
 

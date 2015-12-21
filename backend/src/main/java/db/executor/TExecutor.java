@@ -22,7 +22,7 @@ public class TExecutor {
     @Nullable
     public<T> T execQuery(String query,
                            TResultHandler<T> handler) throws DBException {
-        return dbService.connectAndReturn(connection -> {
+        return dbService.connectAndReturnSmth(connection -> {
             if (conn == null) conn = connection;
             try (Statement stmt = conn.createStatement()) {
 
@@ -35,7 +35,7 @@ public class TExecutor {
                 }
                 return value;
             } finally {
-                if (conn.equals(connection))conn = null;
+                if (conn.equals(connection)) conn = null;
             }
         });
     }

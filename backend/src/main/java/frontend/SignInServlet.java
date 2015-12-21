@@ -2,10 +2,10 @@ package frontend;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import main.AccountService;
-import main.AccountServiceException;
+import frontendservice.FrontEnd;
 import main.ResponseHandler;
-import base.UserProfile;
+import messagesystem.MyTimeOutException;
+import messagesystem.TimeOutHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import static accountservice.Statuses.*;
 
 import utils.JsonRequestParser;
 
@@ -25,10 +26,10 @@ import utils.JsonRequestParser;
 public class SignInServlet extends HttpServlet {
 
     @NotNull
-    private final AccountService accountService;
+    private final FrontEnd frontEnd;
 
-    public SignInServlet(@NotNull AccountService accountService) {
-        this.accountService = accountService;
+    public SignInServlet(@NotNull FrontEnd frontEnd) {
+        this.frontEnd = frontEnd;
     }
 
 
@@ -39,7 +40,7 @@ public class SignInServlet extends HttpServlet {
         HttpSession session = request.getSession();
         JsonObject jsonResponse = new JsonObject();
 
-        Long userId = (Long) session.getAttribute("userId");
+        String userId = String.valueOf(session.getAttribute("userId"));
 
         JsonObject requestData;
 
@@ -62,30 +63,35 @@ public class SignInServlet extends HttpServlet {
             jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
             jsonResponse.addProperty("Status", "password is required");
-        } else if (accountService.getSessions(String.valueOf(userId)) == null) {
-
+        } else if (frontEnd.getAuthStatus(String.valueOf(userId)) == AuthorizationStates.WAITING_FOR_AUTHORIZATION) {
+            jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
+        } else if (frontEnd.getAuthStatus(String.valueOf(userId)) != AuthorizationStates.AUTHORIZED) {
             try {
-                UserProfile profile = accountService.getUser(email);
-
-                if (profile != null && profile.getPassword().equals(password)) {
-
-                    userId = accountService.getAndIncrementID();
-                    String key = String.valueOf(userId);
-
-                    assert key != null;
-                    session.setAttribute("userId", userId);
-
-                    accountService.addSessions(key, profile);
-
-                    jsonResponse.addProperty("Status", "Login passed");
-                } else {
-                    jsonResponse.addProperty("Status", "Wrong login/password");
+                final String[] id = new String[1];
+                new TimeOutHelper().doInTime(() -> {
+                    id[0] = frontEnd.authenticate(email, password);
+                    while (frontEnd.getAuthStatus(id[0]) == AuthorizationStates.WAITING_FOR_AUTHORIZATION);
+                });
+                switch (frontEnd.getAuthStatus(id[0])) {
+                    case AUTHORIZED:
+                        session.setAttribute("userId", id[0]);
+                        jsonResponse.addProperty("Status", "Login passed");
+                        break;
+                    case ERROR:
+                        jsonResponse.addProperty("Status", "Error occured, please, try again later.");
+                        break;
+                    case WRONG_AUTHORIZATION_DATA:
+                        jsonResponse.addProperty("Status", "Wrong login/password");
+                        break;
+                    case WAITING_FOR_AUTHORIZATION:
+                        break;
                 }
-            } catch (AccountServiceException e) {
-                jsonResponse.addProperty("Status", "Wrong login/password");
+
+            } catch (MyTimeOutException e) {
+                jsonResponse.addProperty("Status", "Request took too long");
             }
         } else {
-            jsonResponse.addProperty("Status", "You are alredy logged in");
+            jsonResponse.addProperty("Status", "You are already logged in");
         }
 
         ResponseHandler.respondWithJSON(response, jsonResponse);

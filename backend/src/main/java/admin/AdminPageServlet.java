@@ -1,8 +1,8 @@
 package admin;
 import base.GameMechanics;
-import main.AccountServiceException;
+import accountservice.AccountServiceException;
 import utils.TimeHelper;
-import main.AccountService;
+import accountservice.AccountService;
 import main.ResponseHandler;
 import org.jetbrains.annotations.NotNull;
 

@@ -27,7 +27,7 @@ public interface DBService {
 
     UsersDAO getUsersDAO() throws DBException;
 
-    <T> T connectAndReturn(ConnectionHandler<T> handler) throws DBException;
+    <T> T connectAndReturnSmth(ConnectionHandler<T> handler) throws DBException;
 
     void connectAndUpdate(ConnectionConsumer handler) throws DBException;
 

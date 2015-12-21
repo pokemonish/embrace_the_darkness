@@ -1,7 +1,6 @@
-package main;
+package accountservice;
 
 import base.DBService;
-import base.UserProfile;
 import db.DBException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -69,6 +68,16 @@ public class AccountService {
         return sessions.get(sessionId);
     }
 
+    public boolean authenticate(String name, String password, String userId)
+            throws AccountServiceException {
+        UserProfile user = getUser(name);
+        if (user == null) return false;
+        if (user.getLogin().equals(name) && user.getPassword().equals(password)) {
+            addSessions(userId, user);
+            return true;
+        }
+        return false;
+    }
 
     public boolean deleteSessions(@Nullable String sessionId) {
         if (sessions.get(sessionId) != null) {

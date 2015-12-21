@@ -1,9 +1,9 @@
 package game_socket_mechanics;
 
-import base.UserProfile;
+import accountservice.UserProfile;
 import base.GameMechanics;
 import base.WebSocketService;
-import main.AccountService;
+import accountservice.AccountService;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeRequest;
 import org.eclipse.jetty.websocket.servlet.ServletUpgradeResponse;
 import org.eclipse.jetty.websocket.servlet.WebSocketCreator;

@@ -1,4 +1,4 @@
-<class type="base.UserProfile">
+<class type="accountservice.UserProfile">
     <login>testLogin</login>
     <password>testPassword</password>
     <email>testEmail</email>

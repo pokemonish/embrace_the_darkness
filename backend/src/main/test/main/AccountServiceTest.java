@@ -1,6 +1,8 @@
 package main;
 
-import base.UserProfile;
+import accountservice.AccountService;
+import accountservice.AccountServiceException;
+import accountservice.UserProfile;
 import db.BasicDBTest;
 import db.DBException;
 import org.jetbrains.annotations.NotNull;

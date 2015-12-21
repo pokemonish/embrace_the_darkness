@@ -2,12 +2,14 @@ package frontend;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import main.AccountService;
-import base.UserProfile;
-import main.AccountServiceException;
+import accountservice.UserProfile;
+import frontendservice.FrontEnd;
+import messagesystem.MyTimeOutException;
+import messagesystem.TimeOutHelper;
 import org.jetbrains.annotations.NotNull;
 import utils.JsonRequestParser;
 import main.ResponseHandler;
+import static accountservice.Statuses.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -22,10 +24,10 @@ import java.io.IOException;
 
 public class SignUpServlet extends HttpServlet {
     @NotNull
-    private final AccountService accountService;
+    private final FrontEnd frontEnd;
 
-    public SignUpServlet(@NotNull AccountService accountService) {
-        this.accountService = accountService;
+    public SignUpServlet(@NotNull FrontEnd frontEnd) {
+        this.frontEnd = frontEnd;
     }
 
     @Override
@@ -56,15 +58,24 @@ public class SignUpServlet extends HttpServlet {
         } else if (password.isEmpty()) {
             jsonResponse.addProperty("Status", "password is required");
         } else {
-
             try {
-                accountService.addUser(new UserProfile(name, password, ""));
-
-                jsonResponse.addProperty("Status", "New user created");
-            } catch (AccountServiceException e) {
-                //jsonResponse.addProperty("Status", e.getMessage());
-
-                jsonResponse.addProperty("Status", "User with name: " + name + " already exists");
+                new TimeOutHelper().doInTime(() -> {
+                    frontEnd.register(new UserProfile(name, password, ""));
+                    while (frontEnd.getRegistrationResult(name) == null) ;
+                });
+                switch (frontEnd.getRegistrationResult(name)) {
+                    case ERROR:
+                        jsonResponse.addProperty("Status", "Error occured, please, try again later.");
+                        break;
+                    case SUCCESS:
+                        jsonResponse.addProperty("Status", "New user created");
+                        break;
+                    case USER_ALREADY_EXISTS:
+                        jsonResponse.addProperty("Status", "User with name: " + name + " already exists");
+                        break;
+                }
+            } catch (MyTimeOutException e) {
+                jsonResponse.addProperty("Status", "Request took too long");
             }
         }
 

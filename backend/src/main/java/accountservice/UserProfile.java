@@ -1,4 +1,4 @@
-package base;
+package accountservice;
 
 
 import org.jetbrains.annotations.NotNull;

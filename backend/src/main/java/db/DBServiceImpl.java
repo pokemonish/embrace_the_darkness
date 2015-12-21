@@ -2,6 +2,7 @@ package db;
 
 import base.DBService;
 import base.DataBaseCreator;
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import db.dao.DataBaseCreatorImpl;
 import db.dao.HighscoresDAO;
 import db.dao.UsersDAO;
@@ -77,7 +78,7 @@ public class DBServiceImpl implements DBService {
 
     @Nullable
     @Override
-    public <T> T connectAndReturn(ConnectionHandler<T> handler) throws DBException {
+    public <T> T connectAndReturnSmth(ConnectionHandler<T> handler) throws DBException {
         try (Connection connection = getConnection()) {
             return handler.handle(connection);
         } catch (SQLException e) {
@@ -86,10 +87,15 @@ public class DBServiceImpl implements DBService {
     }
 
     @Override
-    public void connectAndUpdate(ConnectionConsumer handler) throws DBException {
+    public void connectAndUpdate(ConnectionConsumer handler) throws DBException, AlreadyExistsException {
         try (Connection connection = getConnection()) {
             handler.handle(connection);
         } catch (SQLException e) {
+            if (e.getClass().equals(SQLIntegrityConstraintViolationException.class) ||
+                    e.getClass().equals(MySQLIntegrityConstraintViolationException.class)
+                    || e.getClass().equals(com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException.class)) {
+                throw new AlreadyExistsException(e);
+            }
             throw new DBException(e);
         }
     }

@@ -1,8 +1,8 @@
 package gamepad;
 
-import base.UserProfile;
+import accountservice.UserProfile;
 import com.google.gson.JsonObject;
-import main.AccountService;
+import accountservice.AccountService;
 import main.ResponseHandler;
 
 import javax.servlet.http.HttpServlet;

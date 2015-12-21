@@ -2,7 +2,7 @@ package db;
 
 
 import base.DBService;
-import base.UserProfile;
+import accountservice.UserProfile;
 import db.dao.UsersDAO;
 import db.executor.TExecutor;
 import org.junit.*;

@@ -1,5 +1,8 @@
 package main;
 
+import accountservice.AccountService;
+import accountservice.AccountServiceTh;
+import frontendservice.FrontEnd;
 import game_socket_mechanics.WebSocketGameServlet;
 import game_socket_mechanics.WebSocketServiceImpl;
 import base.DBService;
@@ -10,6 +13,7 @@ import frontend.*;
 import gamepad.GamepadServlet;
 import gamepad.GamepadSocketServlet;
 import mechanics.MechanicsParameters;
+import messagesystem.MessageSystem;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.jetbrains.annotations.NotNull;
@@ -48,6 +52,17 @@ public class Main {
 
         DBService dbService = new DBServiceImpl();
 
+        final MessageSystem messageSystem = new MessageSystem();
+        final Thread accountServiceThread = new Thread(new AccountServiceTh(messageSystem, dbService));
+        accountServiceThread.setDaemon(true);
+        accountServiceThread.setName("Account Service");
+        final FrontEnd frontEnd = new FrontEnd(messageSystem);
+        final Thread frontEndThread = new Thread(frontEnd);
+        frontEndThread.setDaemon(true);
+        frontEndThread.setName("FrontEnd");
+        frontEndThread.start();
+        accountServiceThread.start();
+
         AccountService accountService = new AccountService(dbService);
 
         WebSocketService webSocketService = new WebSocketServiceImpl();
@@ -56,9 +71,9 @@ public class Main {
                 ("data/MechanicsParameters.xml");
         GameMechanics gameMechanics = new GameMechanicsImpl(webSocketService, mechanicsParameters);
 
-        Servlet signin = new SignInServlet(accountService);
-        Servlet signUp = new SignUpServlet(accountService);
-        Servlet signOut = new SignOutServlet(accountService);
+        Servlet signin = new SignInServlet(frontEnd);
+        Servlet signUp = new SignUpServlet(frontEnd);
+        Servlet signOut = new SignOutServlet(frontEnd);
         Servlet getHighscore = new GetHighscoreServlet(dbService);
         Servlet addHighscore = new AddHighscoreServlet(accountService, dbService);
 

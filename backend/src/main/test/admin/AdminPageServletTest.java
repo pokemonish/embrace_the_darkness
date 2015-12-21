@@ -1,7 +1,7 @@
 package admin;
 
 import base.GameMechanics;
-import main.AccountService;
+import accountservice.AccountService;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;

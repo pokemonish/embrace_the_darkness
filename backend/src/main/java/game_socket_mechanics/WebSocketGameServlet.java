@@ -2,7 +2,7 @@ package game_socket_mechanics;
 
 import base.GameMechanics;
 import base.WebSocketService;
-import main.AccountService;
+import accountservice.AccountService;
 import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
 import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 

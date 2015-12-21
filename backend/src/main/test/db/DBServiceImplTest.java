@@ -1,16 +1,11 @@
 package db;
 
-import base.UserProfile;
+import accountservice.UserProfile;
 import db.dao.UsersDAO;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Rule;
-import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import resources.Config;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
