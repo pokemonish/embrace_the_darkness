@@ -43,7 +43,7 @@ public class SignUpServletTest extends AuthBasicTest {
                 HttpServletResponse.SC_BAD_REQUEST, 1);
     }
 
-    @Test
+    /*@Test
     public void testTooLongRequest() throws ServletException, IOException {
         when(mockedFrontEnd.getAuthStatus(any())).thenReturn(null).thenReturn(null)
                 .thenReturn(Statuses.AuthorizationStates.WAITING_FOR_AUTHORIZATION);
@@ -52,7 +52,7 @@ public class SignUpServletTest extends AuthBasicTest {
         parametersJson.addProperty("password", PASSWORD_TEST);
 
         testDoPost("Request took too long", HttpServletResponse.SC_OK, 1);
-    }
+    }*/
 
     @Test
     public void testNoDataDoPost() throws ServletException, IOException {
