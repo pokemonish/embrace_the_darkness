@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * @author e.shubin
  */
-public final class FrontEnd implements FrontEndService, Abonent, Runnable {
+public class FrontEnd implements FrontEndService, Abonent, Runnable {
     private final Address address = new Address();
     private final MessageSystem messageSystem;
 

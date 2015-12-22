@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author e.shubin
  */
-public final class AccountServiceTh implements Abonent, Runnable {
+public class AccountServiceTh implements Abonent, Runnable {
     private final Address address = new Address();
     private final MessageSystem messageSystem;
 

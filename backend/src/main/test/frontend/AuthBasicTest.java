@@ -1,8 +1,10 @@
 package frontend;
 
+import accountservice.AccountServiceTh;
 import accountservice.UserProfile;
 import com.google.gson.JsonObject;
 import accountservice.AccountService;
+import frontendservice.FrontEnd;
 import org.jetbrains.annotations.NotNull;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
@@ -42,7 +44,8 @@ public class AuthBasicTest extends Mockito {
     @NotNull
     protected BufferedReader mockedReader = mock(BufferedReader.class);
     @NotNull
-    protected AccountService mockedAccountService = mock(AccountService.class);
+    protected AccountServiceTh mockedAccountServiceTh = mock(AccountServiceTh.class);
+    protected FrontEnd mockedFrontEnd = mock(FrontEnd.class);
 
     protected final HttpSession mockedSession = mock(HttpSession.class);
     protected static final String TEST_SESSION_ID = "testSessionId";

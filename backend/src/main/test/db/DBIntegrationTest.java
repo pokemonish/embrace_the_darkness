@@ -62,7 +62,7 @@ public class DBIntegrationTest extends BasicDBTest {
 
     @Test
     public void uniqnessTest() throws SQLException, DBException {
-        exception.expect(DBException.class);
+        exception.expect(AlreadyExistsException.class);
         usersDAO.addUser(testProfile);
         usersDAO.addUser(testProfile);
     }
