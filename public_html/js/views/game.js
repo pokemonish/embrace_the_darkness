@@ -26,33 +26,20 @@ define([
 
             var self = this;
             Backbone.on("score:newScore", function (distanceMeter) {
-                // var response = self.model.send("/score", 'POST', {score: distanceMeter});
-
-                // console.log(distanceMeter);
-            
-                // response.success(function (data) {
-                //     alert(data.Status);
-                // });
-                // response.error(function (data) {
-                //     localStorage.setItem('score', distanceMeter);
-                // })
                 self.model.attributes['score'] = distanceMeter
 
-                self.model.sync('score', self.model, {
+                self.model.sync('score', {
                     success: function(model, response, options) {
-                        localStorage.removeItem('score');
+                        self.model.removeScore();
                     },
                     error: function(model, response, options) {
-                        localStorage.setItem('score', distanceMeter);
+                        self.model.setScore(distanceMeter);
                     }
                 });
             });
         },
         render: function () {
-            $(this.el).html(this.template);
-            
-            // dino.start();
-            
+            $(this.el).html(this.template);            
         },
         hide: function () {
             console.log("gameView.hide()");

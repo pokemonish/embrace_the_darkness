@@ -61,7 +61,7 @@ define([
                 this.model.attributes['email'] = userDetails['email']
                 this.model.attributes['password'] = userDetails['password']
 
-                this.model.sync('signup', this.model, {
+                this.model.sync('signup', {
                     success: function(model, response, options) {
                         alert(model.Status);
                         Backbone.history.navigate('#login', {trigger: true});
@@ -73,16 +73,6 @@ define([
                 });
                 return false;
             }
-            /*
-            if (userDetails['email'] && userDetails['password']) {
-               var response = this.model.send("/api/v1/auth/signup", 'POST', userDetails);
-            
-                response.success(function (data) {
-                  alert(data.Status);
-                }); 
-                return false;
-            }
-            */
 
             return true;
             

@@ -37,7 +37,7 @@ define([
 
             var VM = viewManager;
 
-            VM.foo(this.views)
+            VM.initHandlers(this.views)
 
         },
         defaultActions: function () {

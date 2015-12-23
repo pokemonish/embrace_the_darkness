@@ -1,13 +1,15 @@
 define([
     'backbone',
     'tmpl/main',
+    'models/score'
 ], function(
     Backbone,
-    tmpl
+    tmpl,
+    User
 ){
 
     var View = Backbone.View.extend({
-
+        model: new User(),
         template: tmpl,
         el: $('#main'),
 
@@ -22,7 +24,7 @@ define([
             this.render();
             this.hide();
 
-            this.checkScore();
+            this.model.checkScore();
         },
         render: function () {
             this.$el.html(this.template());
@@ -40,7 +42,6 @@ define([
             return "main:show"
         },
         login: function () {
-            // console.log("Go to #login from main");
             Backbone.history.navigate('#login', {trigger: true});
         },
         signup: function () {
@@ -51,13 +52,6 @@ define([
         },
         game: function () {
             Backbone.history.navigate('#game', {trigger: true});
-        },
-        checkScore: function () {
-            score = localStorage.getItem('score')
-
-            if (score != null) {
-                setTimeout(function() {Backbone.trigger("score:newScore", score);}, 3000)
-            }
         }
 
     });
