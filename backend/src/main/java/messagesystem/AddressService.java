@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @author e.shubin
  */
-public final class AddressService {
+public class AddressService {
     private Address frontEnd;
     private List<Address> accountServiceList = new ArrayList<>();
 
@@ -29,10 +29,7 @@ public final class AddressService {
     }
 
     public synchronized Address getAccountServiceAddress() {
-        int index = accountServiceCounter.getAndIncrement();
-        if (index >= accountServiceList.size()) {
-            index = 0;
-        }
+        int index = accountServiceCounter.getAndIncrement() % accountServiceList.size();
         return accountServiceList.get(index);
     }
 }
