@@ -12,52 +12,24 @@ define([
             'score': 0
         },
          // Lets create function which will return the custom URL based on the method type
-    getCustomUrl: function (method) {
-        switch (method) {
-            case 'read':
-                console.log('read');
-                return 'http://localhost:51377/api/Books/' + this.id;
-                break;
-            case 'create':
-                console.log('create');
-                return 'http://localhost:51377/api/Books';
-                break;
-            case 'update':
-                console.log('update');
-                return 'http://localhost:51377/api/Books/' + this.id;
-                break;
-            case 'delete':
-                console.log('delete');
-                return 'http://localhost:51377/api/Books/' + this.id;
-                break;
-        }
-    },
-    // Now lets override the sync function to use our custom URLs
-    sync: function (method, model, options) {
-        options || (options = {});
-        options.url = this.getCustomUrl(method.toLowerCase());
-        
-        // Lets notify backbone to use our URLs and do follow default course
-        return Backbone.sync.apply(this, arguments);
-    },
 
-        // sync: function(method, options) {
-        //     switch(method) {
-        //         case 'delete':
-        //             console.log('delete');
-        //             // options.url = '/api/orders/cancelOrder';
-        //             // return Backbone.sync('create', model, options);
-        //         case 'login':
-        //             options.url = '/api/v1/auth/signin';
-        //             return Backbone.sync('create', this, options);
-        //         case 'signup':
-        //             options.url = '/api/v1/auth/signup';
-        //             return Backbone.sync('create', this, options);
-        //         case 'score':
-        //             options.url = '/score';
-        //             return Backbone.sync('create', this, options);
-        //     }
-        // },
+        sync: function(method, options) {
+            switch(method) {
+                case 'delete':
+                    console.log('delete');
+                    // options.url = '/api/orders/cancelOrder';
+                    // return Backbone.sync('create', model, options);
+                case 'login':
+                    options.url = '/api/v1/auth/signin';
+                    return Backbone.sync('create', this, options);
+                case 'signup':
+                    options.url = '/api/v1/auth/signup';
+                    return Backbone.sync('create', this, options);
+                case 'score':
+                    options.url = '/score';
+                    return Backbone.sync('create', this, options);
+            }
+        },
         checkScore: function() {
             score = localStorage.getItem('score')
 
