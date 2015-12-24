@@ -1,13 +1,15 @@
 define([
     'backbone',
     'tmpl/main',
+    'models/score'
 ], function(
     Backbone,
-    tmpl
+    tmpl,
+    User
 ){
 
     var View = Backbone.View.extend({
-
+        model: new User(),
         template: tmpl,
         el: $('#main'),
 
@@ -21,6 +23,8 @@ define([
         initialize: function () {
             this.render();
             this.hide();
+
+            this.model.checkScore();
         },
         render: function () {
             this.$el.html(this.template());
@@ -38,7 +42,6 @@ define([
             return "main:show"
         },
         login: function () {
-            // console.log("Go to #login from main");
             Backbone.history.navigate('#login', {trigger: true});
         },
         signup: function () {

@@ -55,15 +55,24 @@ define([
             };
 
             if (userDetails['email'] && userDetails['password']) {
-               var response = this.model.send("/api/v1/auth/signin", 'POST', userDetails);
-            
-                response.success(function (data) {
-                  alert(data.Status);
-                  console.log(data)
-                  if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
-                    localStorage.setItem('logined',true);
-                    Backbone.history.navigate('#', {trigger: true});
-                  }
+                this.model.attributes['email'] = userDetails['email']
+                this.model.attributes['password'] = userDetails['password']
+
+                this.model.sync('login', {
+                    success: function(model, response, options) {
+                        if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
+                            localStorage.setItem('logined',true)
+                            Backbone.history.navigate('#main', {trigger: true});
+                        } else {
+                            console.log("login fail");
+                            alert(model.Status);
+                            Backbone.history.navigate('#main', {trigger: true});
+                        }
+                    },
+                    error: function(model, response, options) {
+                        console.log("login error");
+                        alert(model.Status);
+                    }
                 });
                 return false;
             }
