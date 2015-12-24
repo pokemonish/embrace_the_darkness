@@ -60,7 +60,7 @@ define([
 
                 this.model.sync('login', {
                     success: function(model, response, options) {
-                        if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
+                        if(model.Status=='Login passed' || model.Status=='You are alredy logged in') {
                             localStorage.setItem('logined',true)
                             Backbone.history.navigate('#main', {trigger: true});
                         } else {
