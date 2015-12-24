@@ -89,6 +89,17 @@ module.exports = function(grunt) {
             }
         },
 
+        sass: {
+            options: {
+                sourceMap: true,
+            },
+            dist: {
+                files: {
+                    'main.css': 'main.scss',
+                }
+            }
+        },
+
     });
 
 
@@ -106,5 +117,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('default', ['copy', 'fest', 'concurrent']);
-    grunt.registerTask('build', ['requirejs']);
+    grunt.registerTask('build', ['sass']);
 }
