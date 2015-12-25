@@ -94,8 +94,6 @@ function somebodyMaybeDied(me) {
 }
 
 function startGame() {
-    socket = 1;
-
     var socket_url = 
         (location.protocol == 'http:' ? 'ws://' : 'wss://') +
         location.hostname + ':' + location.port + '/gameplay';
@@ -105,7 +103,7 @@ function startGame() {
         handleMessage(event);
     };
     socket.onerror = function() {
-        ;
+        stopGame();
     }
 }
 
