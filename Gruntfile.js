@@ -40,6 +40,16 @@ module.exports = function(grunt) {
                     interrupt: true,
                     livereload: true,
                 }
+            },
+            saas: {
+                files: [
+                    'frontend/saas/**/*'
+                ],
+                tasks: ['sass'],
+                options: {
+                    interrupt: true,
+                    livereload: true,
+                }
             }
         },
 
@@ -82,9 +92,24 @@ module.exports = function(grunt) {
         requirejs: {
             compile: {
                 options: {
-                    baseUrl: 'public_html/js',
+                    baseUrl: 'public_html/js',// папка где находятся все js файлы
+                    removeCombined: true,
+                    mainConfigFile: 'public_html/js/main.js',// главный файл с описанием конфигурации и билда require.js
+                    findNestedDependencies: true,
+                    out: 'public_html/js/main.min.js',// выходящий минифицированный и конкатенированный файл готовые для продакшена
                     name: 'main',
-                    out: 'main-built.js'
+                    keepBuildDir: true
+                }
+            }
+        },
+
+        sass: {
+            options: {
+                sourceMap: false,
+            },
+            dist: {
+                files: {
+                    'public_html/css/main.css': 'frontend/saas/main.scss',
                 }
             }
         },
@@ -106,5 +131,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
 
     grunt.registerTask('default', ['copy', 'fest', 'concurrent']);
-    grunt.registerTask('build', ['requirejs']);
+    grunt.registerTask('build', ['sass', 'requirejs']);
 }

@@ -14,6 +14,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
+import java.util.Date;
 
 @WebSocket
 public class GameWebSocket {
@@ -49,7 +50,9 @@ public class GameWebSocket {
             }
             System.out.println(JSONenemies);
             jsonStart.add("enemyNames", JSONenemies);
+            System.out.println("send string start " + new Date().getTime());
             session.getRemote().sendString(jsonStart.toString());
+            System.out.println("send string finish " + new Date().getTime());
         } catch (IOException | WebSocketException e) {
             System.out.print(e.toString());
         }

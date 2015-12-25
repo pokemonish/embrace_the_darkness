@@ -1,0 +1,49 @@
+body {
+    color: blue;
+}
+
+.row__layout {
+  /*display:block;*/
+}
+
+.menu__button {
+    display:block;
+    margin: 5px;
+    text-align:center;
+}
+
+.login {
+    display: block;
+}
+
+.scoreboard {
+    display: block;
+}
+
+.container-fluid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.title {
+    font-size: 32px;
+}
+
+.title_center {
+    margin: 10px;
+    text-align: center;
+}
+
+.field {
+    margin: 10px;
+}
+
+.login__btn {
+    width: 100%;
+}
+
+.main-btn {
+    width: 50%;
+    height: 50%;
+}

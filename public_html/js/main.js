@@ -63,8 +63,7 @@ define([
     'pika2',
     'dino_main',
 ], function(
-    Backbone,
-    router
+    Backbone
 ){
     Backbone.history.start();
 });

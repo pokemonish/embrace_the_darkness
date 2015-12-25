@@ -1,0 +1,78 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Всё недоступно</title>
+    
+    <link rel="stylesheet" href="/css/main.css"/>
+</head>
+
+<body id="t" class="neterror offline" style="font-family: 'Segoe UI', Tahoma, sans-serif; font-size: 75%;">
+    <div id="main-frame-error" class="interstitial-wrapper">
+        <div id="games"></div>
+        <div id="main-content">
+            <div id="main-message">
+                <h1>Игра недоступна</h1>
+                <p hidden=""></p>
+                <div class="error-code">GAME_PROBE_FINISHED_NO_GAME</div>
+            </div>
+        </div>
+        <div id="buttons" class="nav-wrapper suggested-left">
+            <div id="control-buttons">
+                <button id="reload-button" class="blue-button text-button">Перезагрузить</button>
+            </div>
+            <button id="details-button" class="text-button small-link">Подробнее</button>
+        </div>
+        <div id="details" class="hidden">
+            <div class="suggestions">
+                <div class="suggestion-header">Проверьте свои яйца</div>
+                <div class="suggestion-body">Возможно, у вас слишком мало динозавров.</div>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="row__layout" id="main"></div>
+                    <div class="row__layout" id="game"></div>
+                    <div class="row__layout" id="login"></div>
+                    <div class="row__layout" id="signup"></div>
+                    <div class="row__layout" id="scoreboard"></div>
+                </div>
+            </div>
+            <div class="suggestions">
+                <div class="suggestion-header">Попробуйте больше прыгать</div>
+                <div class="suggestion-body">Это самое логичное решение вашей проблемы.</div>
+            </div>
+            <button class="text-button" id="diagnose-button" style="display: none;"></button>
+            <div id="diagnose-frame" class="hidden"></div>
+            <form class="suggestions" style="display: none;">
+                <div class="suggestion-header"></div>
+                <div id="search-container">
+                    <input type="text" name="q" id="search-box">
+                    <button type="submit" id="search-button" class="blue-button">
+                        <img id="search-image">
+                    </button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <div id="qrcode" align="center"></div>
+    </div>
+    <div id="sub-frame-error">
+        <img class="icon icon-offline" title="Потеряно соединение с Интернетом.">
+        <div id="sub-frame-error-details" >Потеряно соединение с Интернетом.</div>
+    </div>
+
+    <div id="offline-resources">
+        <img id="offline-resources-1x" src="/media/offline-resources-1x.png">
+        <img id="offline-resources-2x" src="/media/offline-resources-2x.png">
+        <template id="audio-resources">
+            <audio id="offline-sound-press" src="/media/offline-sound-press.mp3"></audio>
+            <audio id="offline-sound-hit" src="/media/offline-sound-hit.mp3"></audio>
+            <audio id="offline-sound-reached" src="/media/offline-sound-reached.mp3"></audio>
+        </template>
+    </div>
+
+    <script data-main="js/main.min" src="/js/lib/require.js"></script>
+</body>
+
+</html>

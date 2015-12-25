@@ -1,16 +1,18 @@
 define([
     'backbone',
     'tmpl/game',
-    'app/dino'
+    'app/dino',
+    'models/score'
 ], function(
     Backbone,
     tmpl,
-    Dino
+    Dino,
+    User
 ){
     var dino = new Dino();
 
     var View = Backbone.View.extend({
-
+        model: new User(),
         template: tmpl,
         el: $('#game'),
 
@@ -21,12 +23,23 @@ define([
         initialize: function () {
             this.render();
             this.hide();
+
+            var self = this;
+            Backbone.on("score:newScore", function (distanceMeter) {
+                self.model.attributes['score'] = distanceMeter
+
+                self.model.sync('score', {
+                    success: function(model, response, options) {
+                        self.model.removeScore();
+                    },
+                    error: function(model, response, options) {
+                        self.model.setScore(distanceMeter);
+                    }
+                });
+            });
         },
         render: function () {
-            $(this.el).html(this.template);
-            
-            // dino.start();
-            
+            $(this.el).html(this.template);            
         },
         hide: function () {
             console.log("gameView.hide()");

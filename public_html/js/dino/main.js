@@ -15,7 +15,10 @@ btn2.onclick = function() {
 var socket = null;
 
 var manager = new RunnerManager('#games');
-manager.onPlayerDied = function() {
+manager.onPlayerDied = function(distanceMeter) {
+    console.log(distanceMeter);
+    Backbone.trigger("score:newScore", distanceMeter);
+
     sendToOponents('dead');
     somebodyMaybeDied(true);
 }
@@ -85,14 +88,12 @@ function somebodyMaybeDied(me) {
     if(over) {
         stopGame()
         if(me) {
-            alert('Ты победил, спартанец!')
+            alert('Ты победил, спартанец!');
         }
     }
 }
 
 function startGame() {
-    socket = 1;
-
     var socket_url = 
         (location.protocol == 'http:' ? 'ws://' : 'wss://') +
         location.hostname + ':' + location.port + '/gameplay';
@@ -102,7 +103,7 @@ function startGame() {
         handleMessage(event);
     };
     socket.onerror = function() {
-        ;
+        stopGame();
     }
 }
 

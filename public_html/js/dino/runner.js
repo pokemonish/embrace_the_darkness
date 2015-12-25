@@ -715,8 +715,14 @@ Runner.prototype = {
     this.time = getTimeStamp();
   
     if(this.onPlayerDied) {
-      this.onPlayerDied()
+      this.onPlayerDied(this.getScore())
     }
+  },
+
+  getScore: function() {
+    return this.distanceMeter.digits.reduce(function(sum, current) {
+      return sum + current;
+    }, 0);
   },
 
   stop: function() {
