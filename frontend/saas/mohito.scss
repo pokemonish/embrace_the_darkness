@@ -14,7 +14,10 @@ body {
 
 .login {
     display: block;
-}
+    &__btn {
+      width: 100%;
+    }
+} 
 
 .scoreboard {
     display: block;
@@ -28,19 +31,14 @@ body {
 
 .title {
     font-size: 32px;
-}
-
-.title_center {
-    margin: 10px;
-    text-align: center;
+    &_center {
+      margin: 10px;
+      text-align: center;
+    }
 }
 
 .field {
     margin: 10px;
-}
-
-.login__btn {
-    width: 100%;
 }
 
 .main-btn {
