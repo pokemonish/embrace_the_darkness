@@ -52,7 +52,7 @@ public class GameWebSocket {
             jsonStart.add("enemyNames", JSONenemies);
             System.out.println("send string start " + new Date().getTime());
             session.getRemote().sendString(jsonStart.toString());
-            System.out.println("send string start " + new Date().getTime());
+            System.out.println("send string finish " + new Date().getTime());
         } catch (IOException | WebSocketException e) {
             System.out.print(e.toString());
         }
