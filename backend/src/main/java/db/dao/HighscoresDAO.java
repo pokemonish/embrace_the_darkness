@@ -29,7 +29,8 @@ public class HighscoresDAO {
                 JsonArray array = new JsonArray();
                 while (result.next()) {
                     JsonObject object = new JsonObject();
-                    object.addProperty(result.getString(1), String.valueOf(result.getInt(2)));
+                    object.addProperty("name", result.getString(1));
+                    object.addProperty("score", String.valueOf(result.getInt(2)));
                     array.add(object);
                 }
                 return array;
