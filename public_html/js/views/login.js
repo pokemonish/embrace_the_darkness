@@ -46,7 +46,6 @@ define([
         },
         login: function() {
             // Validate here
-            // validate("login__form")
             
             var data = $(".login__form").serialize().split("&");
             var userDetails={};
@@ -62,7 +61,8 @@ define([
                   alert(data.Status);
                   console.log(data)
                   if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
-                    localStorage.setItem('logined',true)
+                    localStorage.setItem('logined',true);
+                    Backbone.history.navigate('#', {trigger: true});
                   }
                 });
                 return false;

@@ -46,8 +46,7 @@ define([
         },
         signup: function() {
             // Validate here
-            // validate("signup__form")
-
+            
             var data = $(".signup__form").serialize().split("&");
             var userDetails={};
             
@@ -60,6 +59,10 @@ define([
             
                 response.success(function (data) {
                   alert(data.Status);
+                  if(data.Status=='New user created') {
+                    localStorage.setItem('logined',true);
+                    Backbone.history.navigate('#login', {trigger: true});
+                  }
                 }); 
                 return false;
             }
