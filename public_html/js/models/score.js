@@ -28,6 +28,9 @@ define([
                 case 'score':
                     options.url = '/score';
                     return Backbone.sync('create', this, options);
+                case 'top':
+                    options.url = '/top';
+                    return Backbone.sync('create', this, options);
             }
         },
         checkScore: function() {
