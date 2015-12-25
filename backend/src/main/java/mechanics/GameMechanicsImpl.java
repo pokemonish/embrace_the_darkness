@@ -59,23 +59,15 @@ public class GameMechanicsImpl implements GameMechanics {
     @Override
     public void addUser(String user) {
 
-        System.out.print(countWaiters());
-
-        int waitersNumber = countWaiters();
-
-        System.out.print(playersNumber - 1);
-        System.out.print(waitersNumber == playersNumber - 1);
-        System.out.print(" User is " + user + ' ');
-
-        if (waitersNumber == playersNumber - 1) {
-            waiters[waitersNumber] = user;
-
-            startGame();
-
-            waiters = new String[playersNumber];
-        } else {
-            waiters[waitersNumber] = user;
+        for (int i = 0; i < waiters.length; ++i) {
+            if (waiters[i] == null) {
+                waiters[i] = user;
+                break;
+            }
         }
+        System.out.print(countWaiters());
+        System.out.print(playersNumber - 1);
+        System.out.print(" User is " + user + ' ');
     }
 
     private int countWaiters() {
@@ -146,7 +138,19 @@ public class GameMechanicsImpl implements GameMechanics {
 
     private void gmStep() {
         checkEverybodyDied();
+        checkGameIsReady();
         //checkTimeIsOver();
+    }
+
+    private void checkGameIsReady() {
+        int waitersNumber = countWaiters();
+
+        if (waitersNumber == playersNumber) {
+
+            startGame();
+
+            waiters = new String[playersNumber];
+        }
     }
 
     @Override
