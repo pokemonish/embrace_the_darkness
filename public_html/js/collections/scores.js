@@ -23,14 +23,15 @@ define([
     this.model.sync('top', {
         success: function(model, response, options) {
             console.log(model)
-              for (var i = 0; i < model.highscores.length; ++i) {
-                var value = getRandomArbitary(0, 100500);
-                var name = "Летучий Голландец #" + value;
-                var score = model.highscores[i][i + 1];
+            for (name in model.highscores) {
 
-                collection.add({name: name, score: score});
+                for (_name in model.highscores[name]) {
+                    var value = _name;
+                    var score = model.highscores[name][_name];
+
+                    collection.add({name: value, score: score});
+                }
             }
-
             console.log(collection)
 
             Backbone.trigger("update:top", collection);
