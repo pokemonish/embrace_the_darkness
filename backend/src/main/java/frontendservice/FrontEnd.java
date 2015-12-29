@@ -33,7 +33,8 @@ public class FrontEnd implements FrontEndService, Abonent, Runnable {
     }
 
     @Override
-    public void register(UserProfile userProfile) {
+    public void register(UserProfile userProfile, String sessionId) {
+        setAuthStatus(sessionId, AuthorizationStates.WAITING_FOR_REGISTRATION);
         final Message messageRegister = new MessageRegister(
                 address, messageSystem.getAddressService().getAccountServiceAddress(), userProfile);
         messageSystem.sendMessage(messageRegister);

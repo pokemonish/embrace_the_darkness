@@ -22,6 +22,8 @@ public class SignUpServletTest extends AuthBasicTest {
     public void doBeforeTests() throws ServletException, IOException, AccountServiceException {
         when(mockedResponse.getWriter()).thenReturn(mockedWriter);
         when(mockedRequest.getReader()).thenReturn(mockedReader);
+        when(mockedRequest.getSession()).thenReturn(mockedSession);
+        when(mockedSession.getAttribute("userId")).thenReturn(TEST_USER_ID);
     }
 
     public void testDoPost(String message, long expectedStatus, int timesNumber)

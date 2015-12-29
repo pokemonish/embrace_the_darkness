@@ -11,6 +11,7 @@ public class Statuses {
     }
 
     public enum AuthorizationStates {
+        WAITING_FOR_REGISTRATION,
         WAITING_FOR_AUTHORIZATION,
         AUTHORIZED,
         WRONG_AUTHORIZATION_DATA,

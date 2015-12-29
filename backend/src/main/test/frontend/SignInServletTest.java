@@ -99,7 +99,7 @@ public class SignInServletTest extends AuthBasicTest {
     @Test
     public void testRightDataDoPost() throws ServletException, IOException, AccountServiceException {
         when(mockedFrontEnd.getAuthStatus(eq(String.valueOf(TEST_USER_ID))))
-                .thenReturn(null).thenReturn(null).thenReturn(Statuses.AuthorizationStates.AUTHORIZED);
+                .thenReturn(null).thenReturn(null).thenReturn(null).thenReturn(Statuses.AuthorizationStates.AUTHORIZED);
 
         parametersJson.addProperty("email", EMAIL_TEST);
         parametersJson.addProperty("password", PASSWORD_TEST);

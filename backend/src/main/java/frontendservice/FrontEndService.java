@@ -7,7 +7,7 @@ import accountservice.UserProfile;
  * @author e.shubin
  */
 public interface FrontEndService {
-    void register(UserProfile profile);
+    void register(UserProfile profile, String sessionId);
 
     Statuses.SignUpStatuses getRegistrationResult(String name);
 

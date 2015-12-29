@@ -1,11 +1,10 @@
 package frontend;
 
+import accountservice.Statuses;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import accountservice.UserProfile;
 import frontendservice.FrontEnd;
-import messagesystem.MyTimeOutException;
-import messagesystem.TimeOutHelper;
 import org.jetbrains.annotations.NotNull;
 import utils.JsonRequestParser;
 import main.ResponseHandler;
@@ -14,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -33,8 +33,10 @@ public class SignUpServlet extends HttpServlet {
     public void doPost(@NotNull HttpServletRequest request,
                        @NotNull HttpServletResponse response) throws ServletException {
 
+        HttpSession session = request.getSession();
         JsonObject jsonResponse = new JsonObject();
 
+        String userId = String.valueOf(session.getAttribute("userId"));
         JsonObject requestJsonData;
 
         try {
@@ -56,7 +58,10 @@ public class SignUpServlet extends HttpServlet {
             jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
             jsonResponse.addProperty("Status", "password is required");
+        } else if (frontEnd.getAuthStatus(name) == Statuses.AuthorizationStates.WAITING_FOR_REGISTRATION) {
+            jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
         } else {
+                frontEnd.register(new UserProfile(name, password, ""), userId);
             switch (frontEnd.getRegistrationResult(name)) {
                 case ERROR:
                     jsonResponse.addProperty("Status", "Error occured, please, try again later.");

@@ -4,8 +4,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import frontendservice.FrontEnd;
 import main.ResponseHandler;
-import messagesystem.MyTimeOutException;
-import messagesystem.TimeOutHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.servlet.ServletException;
@@ -63,7 +61,8 @@ public class SignInServlet extends HttpServlet {
             jsonResponse.addProperty("Status", "login is required");
         } else if (password.isEmpty()) {
             jsonResponse.addProperty("Status", "password is required");
-        } else if (frontEnd.getAuthStatus(String.valueOf(userId)) == AuthorizationStates.WAITING_FOR_AUTHORIZATION) {
+        } else if (frontEnd.getAuthStatus(String.valueOf(userId)) == AuthorizationStates.WAITING_FOR_AUTHORIZATION ||
+                frontEnd.getAuthStatus(String.valueOf(userId)) == AuthorizationStates.WAITING_FOR_REGISTRATION) {
             jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
         } else if (frontEnd.getAuthStatus(String.valueOf(userId)) != AuthorizationStates.AUTHORIZED) {
             final String[] id = new String[1];
@@ -80,6 +79,10 @@ public class SignInServlet extends HttpServlet {
                     jsonResponse.addProperty("Status", "Wrong login/password");
                     break;
                 case WAITING_FOR_AUTHORIZATION:
+                    jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
+                    break;
+                case WAITING_FOR_REGISTRATION:
+                    jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
                     break;
             }
         } else {
