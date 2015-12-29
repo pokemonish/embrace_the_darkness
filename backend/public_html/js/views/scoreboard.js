@@ -19,10 +19,18 @@ define([
         
         initialize: function () {
             // Add Top10 to template
-            this.template = tmpl({'users': Scores})
+            var self = this;
+            Backbone.on("update:top", function (collection) {
+                console.log(collection)
+                self.template = tmpl({'users': collection})
 
-            this.render();
-            this.hide();
+                self.render();
+                // self.hide();
+            });
+
+            self.render();
+            self.hide();
+            
         },
         render: function () {
             $(this.el).html(this.template);

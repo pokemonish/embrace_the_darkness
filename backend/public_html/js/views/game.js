@@ -26,6 +26,7 @@ define([
 
             var self = this;
             Backbone.on("score:newScore", function (distanceMeter) {
+<<<<<<< Updated upstream
                 // var response = self.model.send("/score", 'POST', {score: distanceMeter});
 
                 // console.log(distanceMeter);
@@ -44,15 +45,22 @@ define([
                     },
                     error: function(model, response, options) {
                         localStorage.setItem('score', distanceMeter);
+=======
+                self.model.attributes['score'] = distanceMeter
+
+                self.model.sync('score', {
+                    success: function(model, response, options) {
+                        self.model.removeScore();
+                    },
+                    error: function(model, response, options) {
+                        self.model.setScore(distanceMeter);
+>>>>>>> Stashed changes
                     }
                 });
             });
         },
         render: function () {
-            $(this.el).html(this.template);
-            
-            // dino.start();
-            
+            $(this.el).html(this.template);            
         },
         hide: function () {
             console.log("gameView.hide()");

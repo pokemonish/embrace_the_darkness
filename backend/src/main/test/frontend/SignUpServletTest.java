@@ -43,17 +43,6 @@ public class SignUpServletTest extends AuthBasicTest {
                 HttpServletResponse.SC_BAD_REQUEST, 1);
     }
 
-    /*@Test
-    public void testTooLongRequest() throws ServletException, IOException {
-        when(mockedFrontEnd.getAuthStatus(any())).thenReturn(null).thenReturn(null)
-                .thenReturn(Statuses.AuthorizationStates.WAITING_FOR_AUTHORIZATION);
-
-        parametersJson.addProperty("email", EMAIL_TEST);
-        parametersJson.addProperty("password", PASSWORD_TEST);
-
-        testDoPost("Request took too long", HttpServletResponse.SC_OK, 1);
-    }*/
-
     @Test
     public void testNoDataDoPost() throws ServletException, IOException {
         testDoPost("login is required", HttpServletResponse.SC_OK, 1);
@@ -84,7 +73,7 @@ public class SignUpServletTest extends AuthBasicTest {
     @Test
     public void testDuplicateDataDoPost() throws ServletException, IOException, AccountServiceException {
         when(mockedFrontEnd.getRegistrationResult(TEST_USER_PROFILE.getLogin()))
-                .thenReturn(Statuses.SignUpStatuses.SUCCESS).thenReturn(Statuses.SignUpStatuses.SUCCESS)
+                .thenReturn(Statuses.SignUpStatuses.SUCCESS)
                 .thenReturn(Statuses.SignUpStatuses.USER_ALREADY_EXISTS);
 
         parametersJson.addProperty("email", EMAIL_TEST);

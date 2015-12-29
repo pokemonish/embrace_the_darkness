@@ -57,24 +57,16 @@ public class SignUpServlet extends HttpServlet {
         } else if (password.isEmpty()) {
             jsonResponse.addProperty("Status", "password is required");
         } else {
-            try {
-                new TimeOutHelper().doInTime(() -> {
-                    frontEnd.register(new UserProfile(name, password, ""));
-                    while (frontEnd.getRegistrationResult(name) == null) ;
-                });
-                switch (frontEnd.getRegistrationResult(name)) {
-                    case ERROR:
-                        jsonResponse.addProperty("Status", "Error occured, please, try again later.");
-                        break;
-                    case SUCCESS:
-                        jsonResponse.addProperty("Status", "New user created");
-                        break;
-                    case USER_ALREADY_EXISTS:
-                        jsonResponse.addProperty("Status", "User with name: " + name + " already exists");
-                        break;
-                }
-            } catch (MyTimeOutException e) {
-                jsonResponse.addProperty("Status", "Request took too long");
+            switch (frontEnd.getRegistrationResult(name)) {
+                case ERROR:
+                    jsonResponse.addProperty("Status", "Error occured, please, try again later.");
+                    break;
+                case SUCCESS:
+                    jsonResponse.addProperty("Status", "New user created");
+                    break;
+                case USER_ALREADY_EXISTS:
+                    jsonResponse.addProperty("Status", "User with name: " + name + " already exists");
+                    break;
             }
         }
 

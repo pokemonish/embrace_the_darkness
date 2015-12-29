@@ -58,9 +58,15 @@ define([
                 this.model.attributes['email'] = userDetails['email']
                 this.model.attributes['password'] = userDetails['password']
 
+<<<<<<< Updated upstream
                 this.model.sync('login', this.model, {
                     success: function(model, response, options) {
                         if(data.Status=='Login passed' || data.Status=='You are alredy logged in') {
+=======
+                this.model.sync('login', {
+                    success: function(model, response, options) {
+                        if(model.Status=='Login passed' || model.Status=='You are alredy logged in') {
+>>>>>>> Stashed changes
                             localStorage.setItem('logined',true)
                             Backbone.history.navigate('#main', {trigger: true});
                         } else {

@@ -85,17 +85,6 @@ public class SignInServletTest extends AuthBasicTest {
         testDoPost("Your request for authorization is processing, please, wait.", HttpServletResponse.SC_OK, 1);
     }
 
-    /*@Test
-    public void testTooLongRequest() throws ServletException, IOException {
-        when(mockedFrontEnd.getAuthStatus(any())).thenReturn(null).thenReturn(null)
-                .thenReturn(Statuses.AuthorizationStates.WAITING_FOR_AUTHORIZATION);
-
-        parametersJson.addProperty("email", EMAIL_TEST);
-        parametersJson.addProperty("password", PASSWORD_TEST);
-
-        testDoPost("Request took too long", HttpServletResponse.SC_OK, 1);
-    }*/
-
     @Test
     public void testWrongLoginDoPost() throws ServletException, IOException, AccountServiceException {
         when(mockedFrontEnd.getAuthStatus(eq(String.valueOf(TEST_USER_ID))))

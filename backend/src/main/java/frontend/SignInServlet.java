@@ -66,29 +66,21 @@ public class SignInServlet extends HttpServlet {
         } else if (frontEnd.getAuthStatus(String.valueOf(userId)) == AuthorizationStates.WAITING_FOR_AUTHORIZATION) {
             jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
         } else if (frontEnd.getAuthStatus(String.valueOf(userId)) != AuthorizationStates.AUTHORIZED) {
-            try {
-                final String[] id = new String[1];
-                new TimeOutHelper().doInTime(() -> {
-                    id[0] = frontEnd.authenticate(email, password);
-                    while (frontEnd.getAuthStatus(id[0]) == AuthorizationStates.WAITING_FOR_AUTHORIZATION);
-                });
-                switch (frontEnd.getAuthStatus(id[0])) {
-                    case AUTHORIZED:
-                        session.setAttribute("userId", id[0]);
-                        jsonResponse.addProperty("Status", "Login passed");
-                        break;
-                    case ERROR:
-                        jsonResponse.addProperty("Status", "Error occured, please, try again later.");
-                        break;
-                    case WRONG_AUTHORIZATION_DATA:
-                        jsonResponse.addProperty("Status", "Wrong login/password");
-                        break;
-                    case WAITING_FOR_AUTHORIZATION:
-                        break;
-                }
-
-            } catch (MyTimeOutException e) {
-                jsonResponse.addProperty("Status", "Request took too long");
+            final String[] id = new String[1];
+                id[0] = frontEnd.authenticate(email, password);
+            switch (frontEnd.getAuthStatus(id[0])) {
+                case AUTHORIZED:
+                    session.setAttribute("userId", id[0]);
+                    jsonResponse.addProperty("Status", "Login passed");
+                    break;
+                case ERROR:
+                    jsonResponse.addProperty("Status", "Error occured, please, try again later.");
+                    break;
+                case WRONG_AUTHORIZATION_DATA:
+                    jsonResponse.addProperty("Status", "Wrong login/password");
+                    break;
+                case WAITING_FOR_AUTHORIZATION:
+                    break;
             }
         } else {
             jsonResponse.addProperty("Status", "You are already logged in");

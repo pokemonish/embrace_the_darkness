@@ -47,8 +47,7 @@ define([
         },
         signup: function() {
             // Validate here
-            // validate("signup__form")
-
+            
             var data = $(".signup__form").serialize().split("&");
             var userDetails={};
             
@@ -57,6 +56,7 @@ define([
             };
 
 
+<<<<<<< Updated upstream
             if (userDetails['email'] && userDetails['password']) {
                 this.model.attributes['email'] = userDetails['email']
                 this.model.attributes['password'] = userDetails['password']
@@ -74,12 +74,22 @@ define([
                 return false;
             }
             /*
+=======
+>>>>>>> Stashed changes
             if (userDetails['email'] && userDetails['password']) {
-               var response = this.model.send("/api/v1/auth/signup", 'POST', userDetails);
-            
-                response.success(function (data) {
-                  alert(data.Status);
-                }); 
+                this.model.attributes['email'] = userDetails['email']
+                this.model.attributes['password'] = userDetails['password']
+
+                this.model.sync('signup', {
+                    success: function(model, response, options) {
+                        alert(model.Status);
+                        Backbone.history.navigate('#login', {trigger: true});
+                    },
+                    error: function(model, response, options) {
+                        console.log("signup error");
+                        alert(model.Status);
+                    }
+                });
                 return false;
             }
             */

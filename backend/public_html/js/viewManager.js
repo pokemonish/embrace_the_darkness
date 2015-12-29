@@ -7,7 +7,7 @@ define([
         initialize: function() {
             console.log("ViewManager init");
         },
-        foo: function(views) {
+        initHandlers: function(views) {
             var self = this;
             views.forEach(function(item, i) {
                 Backbone.on(item.getName(), function(payload){
