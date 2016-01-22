@@ -36,19 +36,6 @@ public class AddressServiceTest {
 
     private AddressService addressService = new AddressService();
 
-    @Before
-    public void setUp() {
-    }
-
-    @Test
-    public void testGetAccountServiceAddress() throws InterruptedException {
-        Set<Address> addresses = Collections.synchronizedSet(new HashSet<>());
-
-        startAttackThreads(addresses, addresses);
-
-        assertEquals(MAX_SIZE, addresses.size());
-    }
-
     private void startAttackThreads(Set<Address> addresses1, Set<Address> addresses2)
             throws InterruptedException {
         int times1 = new Random().nextInt(MAX_SIZE - MIN_SIZE) + MIN_SIZE;
@@ -70,6 +57,15 @@ public class AddressServiceTest {
 
         t1.join();
         t2.join();
+    }
+
+    @Test
+    public void testGetAccountServiceAddress() throws InterruptedException {
+        Set<Address> addresses = Collections.synchronizedSet(new HashSet<>());
+
+        startAttackThreads(addresses, addresses);
+
+        assertEquals(MAX_SIZE, addresses.size());
     }
 
     @Test
