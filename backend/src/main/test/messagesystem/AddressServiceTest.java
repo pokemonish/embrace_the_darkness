@@ -80,7 +80,5 @@ public class AddressServiceTest {
         startAttackThreads(addresses1, addresses2);
 
         assertFalse(addresses1.removeAll(addresses2));
-        System.out.println(addresses1.toString());
-        System.out.println(addresses2.toString());
     }
 }
