@@ -39,15 +39,8 @@ public class SignOutServlet extends HttpServlet {
         if (frontEnd.isAuthenticated(userId) == null) {
             jsonResponse.addProperty("Status", "You are alredy signed out");
         } else {
-            try {
-                new TimeOutHelper().doInTime(() -> {
-                    frontEnd.exit(userId);
-                    while (frontEnd.getAuthStatus(userId) != null) ;
-                    jsonResponse.addProperty("Status", "Signed out successfully!\nSee you soon!");
-                });
-            } catch (MyTimeOutException e) {
-                jsonResponse.addProperty("Status", "Request took too long");
-            }
+            frontEnd.exit(userId);
+            jsonResponse.addProperty("Status", "Signed out successfully!\nSee you soon!");
         }
 
         ResponseHandler.respondWithJSON(response, jsonResponse);

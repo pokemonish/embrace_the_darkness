@@ -66,29 +66,35 @@ public class SignInServlet extends HttpServlet {
             jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
         } else if (frontEnd.getAuthStatus(String.valueOf(userId)) != AuthorizationStates.AUTHORIZED) {
             final String[] id = new String[1];
-                id[0] = frontEnd.authenticate(email, password);
-            switch (frontEnd.getAuthStatus(id[0])) {
-                case AUTHORIZED:
-                    session.setAttribute("userId", id[0]);
-                    jsonResponse.addProperty("Status", "Login passed");
-                    break;
-                case ERROR:
-                    jsonResponse.addProperty("Status", "Error occured, please, try again later.");
-                    break;
-                case WRONG_AUTHORIZATION_DATA:
-                    jsonResponse.addProperty("Status", "Wrong login/password");
-                    break;
-                case WAITING_FOR_AUTHORIZATION:
-                    jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
-                    break;
-                case WAITING_FOR_REGISTRATION:
-                    jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
-                    break;
-            }
+            id[0] = frontEnd.authenticate(email, password);
+            handleStatus(id[0], session, jsonResponse);
         } else {
             jsonResponse.addProperty("Status", "You are already logged in");
         }
 
         ResponseHandler.respondWithJSON(response, jsonResponse);
     }
+
+    private void handleStatus(String id, HttpSession session, JsonObject jsonResponse) {
+
+        switch (frontEnd.getAuthStatus(id)) {
+            case AUTHORIZED:
+                session.setAttribute("userId", id);
+                jsonResponse.addProperty("Status", "Login passed");
+                break;
+            case ERROR:
+                jsonResponse.addProperty("Status", "Error occured, please, try again later.");
+                break;
+            case WRONG_AUTHORIZATION_DATA:
+                jsonResponse.addProperty("Status", "Wrong login/password");
+                break;
+            case WAITING_FOR_AUTHORIZATION:
+                jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
+                break;
+            case WAITING_FOR_REGISTRATION:
+                jsonResponse.addProperty("Status", "Your request for authorization is processing, please, wait.");
+                break;
+        }
+    }
+
 }
